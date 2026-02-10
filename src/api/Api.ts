@@ -14,7 +14,6 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig): InternalAxios
     // if (token) {
     //     config.headers.Authorization = `Bearer ${token}`
     // }
-    console.log('Request sent to: ', config.url)
     return config
 },
     (error: AxiosError) => {
@@ -23,14 +22,14 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig): InternalAxios
 )
 
 api.interceptors.response.use((response: AxiosResponse): AxiosResponse => {
-    console.log('Response received from:', response.config.url);
     return response
 },
     (error: AxiosError) => {
         if(error.response && error.response.status === 401){
             console.log("Unauthorized request. Redirecting to login...");
         }
-        return Promise.reject(error)
+        console.log(error.response?.data);
+        return Promise.reject(error.response?.data)
     }
 )
 

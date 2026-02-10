@@ -1,4 +1,5 @@
-import type { PagedResponse, TravelResponse, TravelResponseWithTraveler } from "../type/Types";
+import type { ErrorResponse } from "react-router-dom";
+import type { PagedResponse, TravelCreateRequest, TravelResponse, TravelResponseWithTraveler } from "../type/Types";
 import api from "./Api";
 
 // export const getProducts = async ():
@@ -26,9 +27,6 @@ import api from "./Api";
 export const GetHrTravel = async ({pageNumber = 1,pageSize = 10}) : Promise<PagedResponse<TravelResponse>> =>{
     try {
         const token = localStorage.getItem("token")
-        console.log(pageNumber);
-        console.log(pageSize);
-        
         const response = await api.get<PagedResponse<TravelResponse>>(`/travel/hr?PageSize=${pageSize}&PageNumber=${pageNumber}`,{
             headers : {
                 'Authorization' : `Bearer ${token}`
@@ -54,5 +52,22 @@ export const GetTravelWithTravelers = async (travelId:number) : Promise<TravelRe
     } catch (error) {
         console.error("Error White fetching Travel : "+travelId, error)
         throw new Error('failed to fetch Travel ' + travelId)
+    }
+}
+
+export const CreateTravel = async (travel: TravelCreateRequest) : Promise<TravelResponse> =>{
+    try {
+        const token = localStorage.getItem("token")
+        const response = await api.post<TravelResponse>(`/travel`, travel,{
+            headers : {
+                'Authorization' : `Bearer ${token}`
+            }
+        })
+        return response.data
+    } catch (error : any) {
+        console.log(error.response.data.details);
+        
+        console.error("Error While creating Travel : ", error)
+        throw new Error(error.response.data.details)
     }
 }

@@ -5,6 +5,7 @@ import HrLayout from '../components/HR/HrLayout'
 import HrDashboard from '../components/HR/HrDashboard'
 import HrTravel from '../components/HR/HrTravel'
 import TravelDetail from '../components/HR/Travel/TravelDetail'
+import TravelForm from '../components/HR/Travel/TravelForm'
 
 const router = createBrowserRouter([
     {
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
                         children : [
                             {index : true,element : <HrTravel/>},
                             {path : ":id",element : <TravelDetail />},
+                            {path : "add",element : <TravelForm />},
                         ]
                     },
                     {path : "*", element : <NotFound />}

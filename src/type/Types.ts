@@ -33,6 +33,14 @@ export interface TravelResponse{
    createdBy : number,
    maxAmountLimit : number
 }
+export interface TravelCreateRequest{
+   Title : string,
+   Description : string,
+   StartDate : Date | null,
+   EndDate : Date | null,
+   Location : string,
+   MaxAmountLimit : number
+}
 
 export interface Traveler{
   id : number,
