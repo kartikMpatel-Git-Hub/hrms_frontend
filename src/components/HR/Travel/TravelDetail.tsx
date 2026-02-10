@@ -6,32 +6,31 @@ import { type TravelResponseWithTraveler } from "../../../type/Types";
 import TravelerCard from "./TravelerCard";
 
 function TravelDetail() {
-    const { id } = useParams()
-    console.log(id);
+    const { id } = useParams<number | any>()
     const [travel,setTravel] = useState<TravelResponseWithTraveler>()
 
     const queryClient = useQueryClient();
     const {
         mutate,
         isPending,
+        error
     } = useMutation({
         mutationFn: GetTravelWithTravelers,
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ['hr-travel'] });
-            console.log(res);
             setTravel(res)
         },
         onError: (err: any) => {
-            const msg =
-                err?.response?.data?.message ||
-                err?.message ||
-                'Login failed. Please try again.';
+            console.log(err);
         },
     });
 
     useEffect(() => {
-        mutate(id)
+        mutate(Number(id))
     }, [])
+
+    if(error)
+        return (<div className="text-red-700">{error}</div>)
 
     if(isPending)
         return (<div>Fetching...</div>)
@@ -47,9 +46,16 @@ function TravelDetail() {
                 <div className="font-bold flex justify-center text-2xl border-b-2 border-t-2 m-4">Travelers</div>
                 <div className="flex gap-3 justify-center">
                     {
-                        travel?.travelers?.map((t)=>(
-                            <TravelerCard traveler={t.travelerr} key={t.id}/>
-                        ))
+                        travel?.travelers && travel?.travelers?.length > 0 ?
+                            travel?.travelers?.map((t)=>(
+                                <TravelerCard traveler={t.travelerr} key={t.id}/>
+                            ))
+                        :
+                        (
+                            <div className="text-2xl font-semibold text-red-700">
+                                No Travelers
+                            </div>
+                        )
                     }
                 </div>
             </div>
