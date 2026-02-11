@@ -43,8 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     },
     onError: (err: any) => {
       const msg =
-        err?.response?.data?.message ||
-        err?.message ||
+        err.error.details ||
         'Login failed. Please try again.';
       setAuthError(msg);
       setUser(null);

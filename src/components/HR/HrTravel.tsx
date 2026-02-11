@@ -1,6 +1,6 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { GetHrTravel } from "../../api/TravelService";
-import { useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { type TravelResponse } from "../../type/Types";
 import TravelCard from "./Travel/TravelCard";
 import { CircleAlert, Loader, Plus } from "lucide-react";
@@ -8,15 +8,22 @@ import { useNavigate } from "react-router-dom";
 
 function HrTravel() {
 
-  const queryClient = useQueryClient();
   const [pageNumber,setPageNumber] = useState<number>(1)
   const [pageSize,setPageSize] = useState<number>(10)
+  const [travels,setTravels] = useState<TravelResponse[]>()
   const navigator = useNavigate()
 
-  const {isLoading,error,data:travels} = useQuery({
+  const {isLoading,error,data} = useQuery({
     queryKey : ['travels'],
     queryFn : () => GetHrTravel({pageNumber,pageSize})
   })
+
+  useEffect(()=>{
+    if(data)
+      setTravels(data.data)
+  },[data])
+
+  
 
   const handleOpenAddForm = ()=>{
     navigator(`./add`)
@@ -42,7 +49,7 @@ function HrTravel() {
         
         <div className="flex gap-3">
           {
-            travels?.data?.map((t)=>(
+            travels?.map((t)=>(
               <TravelCard travel={t} key={t.id} />
             ))
           }

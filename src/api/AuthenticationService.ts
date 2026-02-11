@@ -23,11 +23,7 @@ import api from "./Api";
 //     }
 // }
 
-export const LoginService = async (credentials : LoginRequest)=>{
-    try {
-        const response = await api.post(`Authentication/login`,credentials)
-        return response.data
-    } catch (error : any) {
-        throw new Error(error.response.data.error.details)
-    }
+export const LoginService = async (credentials: LoginRequest) => {
+    const response = await api.post(`Authentication/login`, credentials)
+    return response.data
 }

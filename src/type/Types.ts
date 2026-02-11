@@ -50,7 +50,8 @@ export interface Traveler{
   role : string,
   dateOfBirth : Date,
   dateOfJoin : Date,
-  managerId : number
+  managerId : number,
+  designation : string
 }
 
 export interface TravelerResponse{
@@ -68,4 +69,43 @@ export interface TravelResponseWithTraveler{
    createdBy : number,
    maxAmountLimit : number,
    travelers : TravelerResponse[]
+}
+
+export interface DepartmentResponseDto{
+  id : number,
+  departmentName : string
+}
+export interface DepartmentCreateDto{
+  departmentName : string
+}
+
+export interface ExpenseCategoryResponseDto{
+  id : number,
+  category : string
+}
+
+export interface ExpenseCategoryCreateDto{
+  category : string
+}
+
+export interface ExpenseProofDto{
+  id : number,
+  proofDocumentUrl : string,
+  documentType : string,
+  remakrs : string
+}
+
+export interface TravelerExpenseDto{
+  id : number,
+  amount : number,
+  category : ExpenseCategoryResponseDto,
+  status : string,
+  remarks : string,
+  details : string,
+  proofs : ExpenseProofDto[]
+}
+
+export interface ExpenseStatusCreateDto{
+  status : string,
+  remarks : string | null
 }
