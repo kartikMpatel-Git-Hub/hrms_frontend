@@ -10,10 +10,10 @@ const api: AxiosInstance = axios.create({
 })
 
 api.interceptors.request.use((config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    // const token = localStorage.getItem("jwtToken")
-    // if (token) {
-    //     config.headers.Authorization = `Bearer ${token}`
-    // }
+    const token = localStorage.getItem("token")
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+    }
     return config
 },
     (error: AxiosError) => {
@@ -28,7 +28,6 @@ api.interceptors.response.use((response: AxiosResponse): AxiosResponse => {
         if(error.response && error.response.status === 401){
             console.log("Unauthorized request. Redirecting to login...");
         }
-        console.log(error.response?.data);
         return Promise.reject(error.response?.data)
     }
 )

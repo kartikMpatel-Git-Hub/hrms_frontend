@@ -39,7 +39,6 @@ function TravelForm() {
         if(!validateForm()){
             return
         }
-        console.log(newTravel);
         mutate(newTravel)
     }
 
@@ -51,6 +50,10 @@ function TravelForm() {
         }
         if(newTravel.Title.trim().length < 5 || newTravel.Title.trim().length >= 50){
             setError((prev)=>[...prev, "Title Must contain atlest 5 charatcer and atmost 50 character"])
+            flag = false
+        }
+        if(newTravel.Location.trim().length < 5 || newTravel.Location.trim().length >= 50){
+            setError((prev)=>[...prev, "Location Must contain atlest 5 charatcer and atmost 50 character"])
             flag = false
         }
         if(newTravel.Description.trim().length < 20 || newTravel.Description.trim().length >= 300){

@@ -24,10 +24,10 @@ function Login() {
 
     try {
       const user = await login(credentials);
-      if (user.role === 'HR') {
-        navigate('/hr/dashboard');
-      } else {
-        navigate('/welcome');
+      switch(user.role){
+        case "HR" : navigate("/hr/dashboard"); break;
+        case "EMPLOYEE" : navigate("/employee/dashboard"); break;
+        default : navigate("./")
       }
     } catch {
     }

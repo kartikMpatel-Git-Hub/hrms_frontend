@@ -1,11 +1,10 @@
 import { Outlet, useNavigate } from "react-router-dom"
-import HrNavigation from "./HrNavigation"
-import HrFooter from "./HrFooter"
 import { useAuth } from "../../context/AuthContext"
 import { useEffect } from "react"
-import { ToastContainer } from "react-toastify"
+import EmployeeNavigation from "./EmployeeNavigation"
+import EmployeeFooter from "./EmployeeFooter"
 
-function HrLayout() {
+function EmployeeLayout() {
 
   const {user} = useAuth()
   const navigator = useNavigate()
@@ -16,12 +15,12 @@ function HrLayout() {
 
   return (
     <div>
-      <HrNavigation />
-      <div className="pt-10">
+      <EmployeeNavigation />
+      <div className="pt-15">
         <Outlet />
       </div>
-      <HrFooter />
+      <EmployeeFooter />
     </div>
   )
 }
-export default HrLayout
+export default EmployeeLayout

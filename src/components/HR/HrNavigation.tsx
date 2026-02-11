@@ -21,6 +21,18 @@ function HrNavigation() {
                 >
                 Travel
             </NavLink>
+            <NavLink
+                className={({isActive}) => (isActive ? "underline" : "")}
+                to={"./department"}
+                >
+                Department
+            </NavLink>
+            <NavLink
+                className={({isActive}) => (isActive ? "underline" : "")}
+                to={"./expense"}
+                >
+                Expense
+            </NavLink>
         </div>
         <div>
             <User />
