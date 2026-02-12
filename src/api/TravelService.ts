@@ -38,6 +38,10 @@ export const GetHrTravel = async ({ pageNumber = 1, pageSize = 10 }): Promise<Pa
         throw new Error('failed to fetch Travel')
     }
 }
+export const GetEmployeeTravel = async ({ pageNumber = 1, pageSize = 10 }): Promise<PagedResponse<TravelResponse>> => {
+    const response = await api.get<PagedResponse<TravelResponse>>(`/travel/employee?PageSize=${pageSize}&PageNumber=${pageNumber}`)
+    return response.data
+}
 export const GetTravelWithTravelers = async (travelId: number): Promise<TravelResponseWithTraveler> => {
     try {
         if (!travelId)
@@ -91,5 +95,4 @@ export const AddTraveler = async ({ travelId, travelerId }: any): Promise<Travel
         }
     })
     return response.data
-
 }

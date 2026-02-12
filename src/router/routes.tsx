@@ -15,6 +15,11 @@ import Expenses from '../components/HR/Expense/Expenses'
 import ExpenseCategory from '../components/HR/Expense/ExpenseCategory'
 import ExpenseCategoryForm from '../components/HR/Expense/ExpenseCategoryForm'
 import TravelTravelerExpense from '../components/HR/Travel/TravelTravelerExpense'
+import EmployeeTravels from '../components/EMPLOYEE/Travel/EmployeeTravels'
+import EmployeeTravelExpense from '../components/EMPLOYEE/Expense/EmployeeTravelExpense'
+import ExpenseCreateForm from '../components/EMPLOYEE/Expense/ExpenseCreateForm'
+import EmployeeNotification from '../components/EMPLOYEE/EmployeeNotification'
+import Notifications from '../components/EMPLOYEE/utility/Notifications'
 
 const router = createBrowserRouter([
     {
@@ -74,6 +79,17 @@ const router = createBrowserRouter([
                 errorElement : <NotFound />,
                 children : [
                     {index: true, path : "dashboard" ,element: <EmployeeDashboard />},
+                    {path : "notification" ,element: <Notifications />},
+                    {
+                        path : "travel",
+                        errorElement : <NotFound />,
+                        children : [
+                            {index : true,element : <EmployeeTravels />},
+                            {path : ":id",element : <TravelDetail />},
+                            {path : ":id/expense",element : <EmployeeTravelExpense />},
+                            {path : ":id/expense/add",element : <ExpenseCreateForm />},
+                        ]
+                    },
                     {path : "*", element : <NotFound />}
                 ]
             }
