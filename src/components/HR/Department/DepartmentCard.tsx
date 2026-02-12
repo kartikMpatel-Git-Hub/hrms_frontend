@@ -10,10 +10,10 @@ function DepartmentCard({ department }: { department: DepartmentResponseDto }) {
         navigator(`./${department.id}`)
     }
     return (
-        <tr>
-            <td className='border-2 p-3'>{department.id}</td>
-            <td className='border-2 p-3'>{department.departmentName}</td>
-            <td className='border-b-2 p-3 flex gap-3'>
+        <div className='grid grid-cols-4 gap-4 p-4'>
+            <div>{department.id}</div>
+            <div>{department.departmentName}</div>
+            <div>
                 <button
                     className='bg-slate-800 p-2 text-white rounded-2xl flex'
                     onClick={handleOpenDepartment}
@@ -21,8 +21,8 @@ function DepartmentCard({ department }: { department: DepartmentResponseDto }) {
                 >
                     <ArrowUpRight />
                 </button>
-            </td>
-        </tr>
+            </div>
+        </div>
     )
 }
 

@@ -17,11 +17,12 @@ function Department() {
 
     useEffect(() => {
         if (data) {
+            console.log(data);
             setDepartments(data)
         }
     }, [data])
 
-    const handleOpenAddForm = ()=>{
+    const handleOpenAddForm = () => {
         navigator("./add")
     }
 
@@ -38,20 +39,19 @@ function Department() {
                     <Plus className="font-bold" />
                 </div>
             </div>
-            <div className="flex justify-center m-3">
-                <div>
-                    <table className="border-2">
-                        <td className='border-2 p-3 font-bold'>ID</td>
-                        <td className='border-2 p-3 font-bold'>Department</td>
-                        <td className='border-2 p-3 font-bold'>Action</td>
-                        <tbody>
-                            {
-                                departments && departments?.map(d => (
-                                    <DepartmentCard department={d} key={d.id} />
-                                ))
-                            }
-                        </tbody>
-                    </table>
+            <div className="flex justify-center">
+                <div className="border-2 m-2">
+                    <div className="grid grid-cols-4 gap-4 p-4 font-bold">
+                        <div>ID</div>
+                        <div>Department</div>
+                        <div>Action</div>
+                    </div>
+                    <hr />
+                    {
+                        departments && departments?.map(d => (
+                            <DepartmentCard department={d} key={d.id} />
+                        ))
+                    }
                 </div>
             </div>
         </div>

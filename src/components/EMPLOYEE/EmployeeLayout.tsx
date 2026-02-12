@@ -6,12 +6,14 @@ import EmployeeFooter from "./EmployeeFooter"
 
 function EmployeeLayout() {
 
-  const {user} = useAuth()
+  const { user } = useAuth()
   const navigator = useNavigate()
-  useEffect(()=>{
-    if(!user)
+  useEffect(() => {
+    if (!user)
       navigator("/")
-  },[])
+  }, [])
+
+  
 
   return (
     <div>

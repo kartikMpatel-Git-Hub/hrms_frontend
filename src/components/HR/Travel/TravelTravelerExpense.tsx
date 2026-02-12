@@ -29,13 +29,13 @@ function TravelTravelerExpense() {
 
     return (
         <div className="flex justify-center">
-            <div className="flex">
+            <div className="grid grid-cols-4">
                 {
                     expenses && (
                         expenses?.length > 0
                             ? (
                                 expenses?.map((e) => (
-                                    <ExpenseCard expense={e} key={e.id} />
+                                    <ExpenseCard expense={e} travelId={Number(id)} travelerId={Number(travelerId)} key={e.id} />
                                 ))
                             )
                             : (

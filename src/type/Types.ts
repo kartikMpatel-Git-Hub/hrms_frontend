@@ -102,10 +102,34 @@ export interface TravelerExpenseDto{
   status : string,
   remarks : string,
   details : string,
+  expenseDate : Date,
   proofs : ExpenseProofDto[]
 }
 
 export interface ExpenseStatusCreateDto{
   status : string,
   remarks : string | null
+}
+
+export interface PagedRequestDto{
+  pageNumber: number,
+  pageSize : number
+}
+
+export interface ExpenseCreateDto{
+  Amount : number,
+  CategoryId : number,
+  Details : string,
+  ExpenseDate : Date | null
+}
+
+export interface NotificationResponseDto{
+  id : number,
+  title : string,
+  description : string,
+  notificationDate : Date
+}
+
+export interface NotificationCountDto {
+  count : number
 }

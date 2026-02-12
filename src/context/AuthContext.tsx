@@ -58,6 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = async () => {
     try {
+      localStorage.removeItem("token")
       console.log("logout...");
     } catch {
     }
