@@ -53,6 +53,12 @@ function HrNavigation() {
                 >
                     Expense
                 </NavLink>
+                <NavLink
+                    className={({ isActive }) => (isActive ? "underline" : "")}
+                    to={"./job"}
+                >
+                    Job
+                </NavLink>
             </div>
             <div className="flex gap-5">
                 <div

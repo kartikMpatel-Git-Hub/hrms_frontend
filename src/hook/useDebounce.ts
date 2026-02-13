@@ -1,22 +1,21 @@
 import { useEffect, useState } from "react"
-import { GetTravelersByName } from "../api/TravelService";
 import type { Traveler } from "../type/Types";
 
-function useDebounce(value : string, delay : number) {
+function useDebounce<T>(value : string, delay : number,fn : (value : string) => any) {
 
-    const [travelers, setTravelers] = useState<Traveler[]>([])
+    const [response, setResponse] = useState<T[]>([])
     
     useEffect(() => {
         const handler = setTimeout(async () => {
-            const res : Traveler[] = await GetTravelersByName(value)
-            setTravelers(res)
+            const res : T[] = await fn(value)
+            setResponse(res)
         }, delay);
         return () => {
             clearTimeout(handler);
         };
     }, [value, delay]);
 
-    return travelers;
+    return response;
 }
 
 export default useDebounce;

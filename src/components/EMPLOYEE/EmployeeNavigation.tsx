@@ -15,7 +15,7 @@ function EmployeeNavigation() {
         navigator("/")
     }
 
-    const { data, isLoading } = useQuery({
+    const { data } = useQuery({
         queryKey: ["my-notification"],
         queryFn: GetMyNotificationCount
     })
@@ -49,6 +49,12 @@ function EmployeeNavigation() {
                     to={"./travel"}
                 >
                     Travel
+                </NavLink>
+                <NavLink
+                    className={({ isActive }) => (isActive ? "underline" : "")}
+                    to={"./job"}
+                >
+                    Job
                 </NavLink>
             </div>
             <div className="flex gap-5">

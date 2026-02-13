@@ -15,7 +15,7 @@ function EmployeeTravels() {
     const [travels, setTravels] = useState<TravelResponse[]>()
 
     const { isLoading, data, error } = useQuery({
-        queryKey: ["employee-travels"],
+        queryKey: ["travels"],
         queryFn: () => GetEmployeeTravel(pagedRequest)
     })
 
@@ -33,19 +33,21 @@ function EmployeeTravels() {
 
     return (
         <div>
-            {
-                travels
-                    ? (
-                        travels.length > 0
-                            ? (
-                                travels.map((t) => (
-                                    <EmployeeTravelCard travel={t} key={t.id} />
-                                ))
-                            )
-                            : (<div>You Have no Travel Yet</div>)
-                    )
-                    : (<div>Not Travel Found</div>)
-            }
+            <div className="grid grid-cols-4 m-10">
+                {
+                    travels
+                        ? (
+                            travels.length > 0
+                                ? (
+                                    travels.map((t) => (
+                                        <EmployeeTravelCard travel={t} key={t.id} />
+                                    ))
+                                )
+                                : (<div>You Have no Travel Yet</div>)
+                        )
+                        : (<div>Not Travel Found</div>)
+                }
+            </div>
         </div>
     )
 }
