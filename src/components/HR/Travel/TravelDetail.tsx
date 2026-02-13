@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
-import { AddTraveler, GetTravelWithTravelers } from "../../../api/TravelService";
-import { type Traveler, type TravelResponseWithTraveler } from "../../../type/Types";
+import { AddTraveler, GetTravelersByName, GetTravelWithTravelers } from "../../../api/TravelService";
+import { type Traveler, type TravelerResponse, type TravelResponseWithTraveler } from "../../../type/Types";
 import TravelerCard from "./TravelerCard";
 import { Loader } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify"
@@ -15,7 +15,7 @@ function TravelDetail() {
     const [searchTerm, setSearchTerm] = useState('');
     const [travelers, setTravelers] = useState<Traveler[]>();
     const [loading, setLoading] = useState<boolean>(true)
-    const fetchedTraveler = useDebounce(searchTerm, 1000);
+    const fetchedTraveler = useDebounce<Traveler>(searchTerm, 1000,() => GetTravelersByName(searchTerm));
     const navigator = useNavigate()
 
     const queryClient = useQueryClient();
@@ -52,7 +52,7 @@ function TravelDetail() {
                     .filter(
                         (ft) => travel?.travelers.every((t) => t.travelerr.id !== ft.id) ?? true
                     )
-            setTravelers(filteredTraveler)
+            setTravelers(fetchedTraveler)
         }
         setLoading(false)
     }, [fetchedTraveler,travel]);
@@ -74,6 +74,11 @@ function TravelDetail() {
         if(travelerId == null || travel?.id == null)
             return
         navigator(`./traveler/${travelerId}/expense`)
+    }
+    const handleOpenDocument = (travelerId : number) => {
+        if(travelerId == null || travel?.id == null)
+            return
+        navigator(`./traveler/${travelerId}/document`)
     }
 
     if (isLoading)
@@ -99,6 +104,7 @@ function TravelDetail() {
                                 <TravelerCard 
                                     traveler={t.travelerr} 
                                     handleOpenExpense={handleOpenExpense}
+                                    handleOpenDocument={handleOpenDocument}
                                     key={t.id} />
                             ))
                             :

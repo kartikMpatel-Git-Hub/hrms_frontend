@@ -20,6 +20,11 @@ import EmployeeTravelExpense from '../components/EMPLOYEE/Expense/EmployeeTravel
 import ExpenseCreateForm from '../components/EMPLOYEE/Expense/ExpenseCreateForm'
 import EmployeeNotification from '../components/EMPLOYEE/EmployeeNotification'
 import Notifications from '../components/EMPLOYEE/utility/Notifications'
+import HrJobs from '../components/HR/Job/HrJobs'
+import HrJobDetail from '../components/HR/Job/HrJobDetail'
+import HrJobCreateForm from '../components/HR/Job/HrJobCreateForm'
+import EmployeeJob from '../components/EMPLOYEE/Job/EmployeeJob'
+import HrTravelDocuments from '../components/HR/Travel/HrTravelDocuments'
 
 const router = createBrowserRouter([
     {
@@ -42,7 +47,8 @@ const router = createBrowserRouter([
                                 path : ":id",
                                 children : [
                                     {index : true,element : <TravelDetail />},
-                                    {path : "traveler/:travelerId/expense",element:<TravelTravelerExpense />}
+                                    {path : "traveler/:travelerId/expense",element:<TravelTravelerExpense />},
+                                    {path : "traveler/:travelerId/document",element:<HrTravelDocuments />}
                                 ]
                             },
                             {path : "add",element : <TravelForm />},
@@ -57,10 +63,17 @@ const router = createBrowserRouter([
                         ]
                     },
                     {
+                        path : "job" ,
+                        children : [
+                            {index : true,element : <HrJobs/>},
+                            {path : ":id",element : <HrJobDetail />},
+                            {path : "add",element : <HrJobCreateForm />},
+                        ]
+                    },
+                    {
                         path : "expense" ,
                         children : [
                             {index : true,element : <Expenses/>},
-                           // {path : ":id",element : <DepartmentDetail />},// -> with department employees
                             {
                                 path : "category",
                                 children : [
@@ -88,6 +101,13 @@ const router = createBrowserRouter([
                             {path : ":id",element : <TravelDetail />},
                             {path : ":id/expense",element : <EmployeeTravelExpense />},
                             {path : ":id/expense/add",element : <ExpenseCreateForm />},
+                        ]
+                    },
+                    {
+                        path : "job",
+                        errorElement : <NotFound />,
+                        children : [
+                            {index : true,element : <EmployeeJob />},
                         ]
                     },
                     {path : "*", element : <NotFound />}

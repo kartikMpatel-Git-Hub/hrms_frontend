@@ -37,7 +37,8 @@ function ExpenseCreateForm() {
             setProofs(null)
         },
         onError: (err : any) => {
-            toast.error(err.error.details)
+            console.log(err);
+            toast.error(err.error.details || "something went wrong while adding expense")
         }
     })
 
