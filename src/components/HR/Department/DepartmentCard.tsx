@@ -1,28 +1,29 @@
-import { ArrowUpRight, Trash } from 'lucide-react'
+import { ArrowUpRight, Building2, Eye, InboxIcon, Trash } from 'lucide-react'
 import type { DepartmentResponseDto } from '../../../type/Types'
 import { useNavigate } from 'react-router-dom'
-
+import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/ui/item'
+import { Button } from '@/components/ui/button'
 function DepartmentCard({ department }: { department: DepartmentResponseDto }) {
 
     const navigator = useNavigate()
 
-    const handleOpenDepartment = ()=>{
+    const handleOpenDepartment = () => {
         navigator(`./${department.id}`)
     }
     return (
-        <div className='grid grid-cols-4 gap-4 p-4'>
-            <div>{department.id}</div>
-            <div>{department.departmentName}</div>
-            <div>
-                <button
-                    className='bg-slate-800 p-2 text-white rounded-2xl flex'
-                    onClick={handleOpenDepartment}
-                    title='View Department'
-                >
-                    <ArrowUpRight />
-                </button>
-            </div>
-        </div>
+        <Item variant="outline">
+            <ItemMedia variant="icon">
+                <Building2 />
+            </ItemMedia>
+            <ItemContent>
+                <ItemTitle>{department.departmentName}</ItemTitle>
+            </ItemContent>
+            <ItemActions>
+                <Button variant={"outline"} onClick={handleOpenDepartment} disabled={true}>
+                    <Eye /> 
+                </Button>
+            </ItemActions>
+        </Item>
     )
 }
 

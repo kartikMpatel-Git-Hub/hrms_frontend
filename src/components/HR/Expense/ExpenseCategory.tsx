@@ -8,7 +8,7 @@ function ExpenseCategory() {
 
     const [categories, setCategories] = useState<ExpenseCategoryResponseDto[]>([])
 
-    const { isLoading, data, error } = useQuery({
+    const { isLoading, data } = useQuery({
         queryKey: ["expense-categories"],
         queryFn: GetExpensesCategories
     })
@@ -21,19 +21,13 @@ function ExpenseCategory() {
     }, [data])
 
     return (
-        <div className="flex justify-center m-3">
-            <div>
-                <table className="border-2">
-                    <td className='border-2 p-3 font-bold'>ID</td>
-                    <td className='border-2 p-3 font-bold'>Category</td>
-                    <tbody>
-                        {
-                            categories && categories?.map(c => (
-                                <ExpenseCategoryCard category={c} key={c.id} />
-                            ))
-                        }
-                    </tbody>
-                </table>
+        <div className="m-5">
+            <div className="grid grid-cols-6 gap-3">
+                {
+                    categories && categories?.map(c => (
+                        <ExpenseCategoryCard category={c} key={c.id} />
+                    ))
+                }
             </div>
         </div>
     )

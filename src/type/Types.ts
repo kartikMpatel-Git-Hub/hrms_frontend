@@ -17,7 +17,10 @@ export interface UserReponseDto {
   dateOfBirth: Date,
   dateOfJoin: Date,
   managerId: number,
-  department: number | null,
+  department: {
+    id : number,
+    departmentName : string
+  },
   designation: string
 }
 
@@ -190,4 +193,35 @@ export interface TravelDocumentDto {
   documentType: string,
   uploader: UserReponseDto,
   uploadedAt: Date
+}
+
+export interface ShareJobRequestDto {
+  id: number,
+  dto: {
+    SharedTo: string
+  }
+}
+
+export interface ShareResponseDto {
+  id: number,
+  sharedTo: string,
+  sharedBy: number,
+  jobId: number,
+  sharedAt: Date
+}
+
+
+export interface ReferredJobRequestDto {
+  id: number,
+  dto: FormData
+}
+export interface ReferredResponseDto {
+  id: number,
+  referedPersonName: string,
+  referedPersonEmail: string,
+  cvUrl: string,
+  note: string,
+  referedBy: number,
+  jobId: number,
+  referedAt: Date
 }

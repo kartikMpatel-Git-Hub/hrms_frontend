@@ -5,6 +5,7 @@ import { GetHrJobs } from "../../../api/JobService"
 import HrJobCard from "./HrJobCard"
 import { useNavigate } from "react-router-dom"
 import { Plus } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 function HrJobs() {
 
@@ -35,22 +36,21 @@ function HrJobs() {
 
     return (
         <div>
-            <div className="flex justify-end">
-                <div
+            <div className="flex justify-end mr-5">
+                <Button
+                    title="Add New Job"
                     onClick={handleOpenAddForm}
-                    className="p-3 bg-slate-800 text-white m-3 rounded-2xl hover:cursor-pointer flex">
-                    <Plus className="font-bold" /> Add New Job
-                </div>
+                >
+                    <Plus />
+                </Button>
             </div>
-            <div className="flex justify-center">
 
-                <div className="grid grid-cols-4 m-5 gap-3">
-                    {
-                        jobs && jobs.map((j) => (
-                            <HrJobCard job={j} key={j.id} />
-                        ))
-                    }
-                </div>
+            <div className="grid grid-cols-2 m-5 gap-3">
+                {
+                    jobs && jobs.map((j) => (
+                        <HrJobCard job={j} key={j.id} />
+                    ))
+                }
             </div>
         </div>
     )

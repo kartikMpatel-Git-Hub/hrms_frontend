@@ -1,27 +1,32 @@
 import { Outlet, useNavigate } from "react-router-dom"
 import HrNavigation from "./HrNavigation"
 import HrFooter from "./HrFooter"
-import { useAuth } from "../../context/AuthContext"
-import { useEffect } from "react"
-import { ToastContainer } from "react-toastify"
-
+import { SidebarProvider, SidebarTrigger } from "../ui/sidebar"
+import { AppSidebar } from "../ui/app-sidebar"
+import { GetMyNotificationCount } from "@/api/NotificationService"
+import { Bell } from "lucide-react"
+import { useQuery } from "@tanstack/react-query"
 function HrLayout() {
-
-  const {user} = useAuth()
+  
   const navigator = useNavigate()
-  useEffect(()=>{
-    if(!user)
-      navigator("/")
-  },[])
+  
+  const { data } = useQuery({
+    queryKey: ["my-notification"],
+    queryFn: GetMyNotificationCount
+  })
 
+  const handleOpenNotification = () => {
+    navigator("./notification")
+  }
   return (
-    <div>
-      <HrNavigation />
-      <div className="pt-10">
+    <SidebarProvider>
+      <AppSidebar />
+      <main className="w-full">
+        {/* <HrNavigation /> */}
+        <SidebarTrigger />
         <Outlet />
-      </div>
-      <HrFooter />
-    </div>
+      </main>
+    </SidebarProvider>
   )
 }
 export default HrLayout

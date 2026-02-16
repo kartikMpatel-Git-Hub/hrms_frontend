@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button"
 import { Eye, Plus } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 
@@ -15,19 +16,17 @@ function Expenses() {
 
     return (
         <div>
-            <div className="flex justify-end">
-                <div
+            <div className="flex justify-end mx-5 gap-4">
+                <Button
                     onClick={handleOpenCategory}
-                    title="View Expense Category"
-                    className="p-3 bg-slate-800 text-white m-3 rounded-2xl hover:cursor-pointer flex">
+                    title="View Expense Category">
                     <Eye />
-                </div>
-                <div
+                </Button>
+                <Button
                     onClick={handleOpenAddForm}
-                    title="Add New Expense Category"
-                    className="p-3 bg-slate-800 text-white m-3 rounded-2xl hover:cursor-pointer flex">
+                    title="Add New Expense Category">
                     <Plus className="font-bold" />
-                </div>
+                </Button>
             </div>
         </div>
     )

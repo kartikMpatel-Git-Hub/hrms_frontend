@@ -28,8 +28,8 @@ function TravelTravelerExpense() {
 
 
     return (
-        <div className="flex justify-center">
-            <div className="grid grid-cols-4">
+        <div className="m-10">
+            <div className="grid grid-cols-4 gap-4">
                 {
                     expenses && (
                         expenses?.length > 0

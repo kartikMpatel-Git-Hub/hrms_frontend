@@ -1,16 +1,18 @@
 import { useQuery } from "@tanstack/react-query"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { GetJobById } from "../../../api/JobService"
 import { Loader } from "lucide-react"
 import { useEffect, useState } from "react"
 import type { JobResponseWithReviewerDto } from "../../../type/Types"
-import UserCard from "./UserCard"
 import ContactToCard from "./ContactToCard"
 import ReviewerCard from "./ReviewerCard"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 
 function HrJobDetail() {
     const { id } = useParams()
     const [job, setJob] = useState<JobResponseWithReviewerDto>()
+    const navigator = useNavigate()
 
     const { data, error, isLoading } = useQuery({
         queryKey: ["job-detail"],
@@ -32,48 +34,72 @@ function HrJobDetail() {
         )
     }
 
+    const handleDownloadJD = () => {
+        if (job?.jdUrl) {
+
+        }
+    }
+
+    const handleOpenReferral = ()=>{
+        navigator(`./referrals`)
+    }
+
     return (
         <div className="flex justify-center p-5">
-            <div className="">
-                <div className="flex justify-center">
-                    <div >
-                        <div><span className="font-bold italic">Title : </span>{job?.title}</div>
-                        <div><span className="font-bold italic">Job Role : </span>{job?.title}</div>
-                        <div><span className="font-bold italic">Place : </span>{job?.place}</div>
-                        <div><span className="font-bold italic">Requirements : </span>{job?.requirements}</div>
-                        <div><span className="font-bold italic">Activation Status : </span>{job?.isActive ? "Active" : "Inactive"}</div>
-                        <div className="flex justify-center border-2 p-2">
-                            <img
-                                src={job?.jdUrl}
-                                className="w-20"
-                            />
+            <div className="w-full">
+                <Card>
+                    <CardHeader>
+                        <div className="flex flex-col gap-3">
+                            <div className="flex gap-1 font-bold text-black/90 text-3xl">
+                                {job?.title.toUpperCase()} <span className={`text-sm font-normal text-black/50 ${job?.isActive ? "text-green-500" : "text-red-500"}`}>{job?.isActive ? "Active" : "Inactive"}</span>
+                            </div>
+                            <div className="flex gap-1 text-black/60">
+                                <span className="font-semibold text-black">Job Role :</span>
+                                {job?.jobRole}
+                            </div>
+                            <div className="text-black/50 text-sm flex gap-1"><span className="font-semibold text-black">Place :</span> {job?.place}</div>
+                            <div className="flex gap-1 text-black/60">
+                                <span className="font-semibold text-black">Requirements :</span>
+                                {job?.requirements}
+                            </div>
+                            <div className="flex gap-1 text-black/60">
+                                <span className="font-semibold text-black">Activation Status :</span>
+                                {job?.isActive ? "Active" : "Inactive"}
+                            </div>
+                            <div className="flex gap-3">
+                                <Button variant="outline" className="mt-2" onClick={() => window.open(job?.jdUrl, "_blank")}>
+                                    View JD
+                                </Button>
+                                <Button variant="outline" className="mt-2" onClick={handleOpenReferral}>
+                                    View Referrals
+                                </Button>
+                                <Button variant="outline" className="mt-2" onClick={handleDownloadJD} disabled={true}>
+                                    Download JD
+                                </Button>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div className="flex justify-center">
-                    <div >
-                        <div className="p-2 border-t-2 border-b-2 m-2 w-full flex justify-center font-bold text-2xl">
-                            Contact To
-                        </div>
-                        {
-                            job && <ContactToCard contact={job?.contact} />
-                        }
-                    </div>
-                </div>
-                <div className="flex justify-center">
-                    <div >
-                        <div className="p-2 border-t-2 border-b-2 m-2 w-full flex justify-center  font-bold text-2xl">
-                            Reviewers
-                        </div>
-                        <div className="grid grid-cols-3 gap-3">
+                        <div className="flex flex-col gap-3">
+                            <div className="font-bold text-black/90 text-3xl">Contact To</div>
                             {
-                                job && job?.reviewers.length > 0
-                                    ? job?.reviewers.map((r) => <ReviewerCard reviewer={r.reviewer} />)
-                                    : <div>Not Reviewers</div>
+                                job && <ContactToCard contact={job?.contact} />
                             }
                         </div>
-                    </div>
-                </div>
+
+                    </CardHeader>
+                    <hr />
+                    <CardContent>
+                        <div className="w-full flex justify-center font-bold text-2xl">
+                            Reviewers
+                        </div>
+                        <div className="grid grid-cols-3 gap-3 m-2">
+                            {
+                                job && job?.reviewers.length > 0
+                                    ? job?.reviewers.map((r) => <ReviewerCard reviewer={r.reviewer} key={job.id} />)
+                                    : <div className="flex justify-center font-bold">Not Reviewers</div>
+                            }
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
         </div>
     )

@@ -3,6 +3,8 @@ import { useAuth } from "../../context/AuthContext"
 import { useEffect } from "react"
 import EmployeeNavigation from "./EmployeeNavigation"
 import EmployeeFooter from "./EmployeeFooter"
+import { SidebarProvider, SidebarTrigger } from "../ui/sidebar"
+import { AppSidebar } from "../ui/app-sidebar"
 
 function EmployeeLayout() {
 
@@ -13,16 +15,17 @@ function EmployeeLayout() {
       navigator("/")
   }, [])
 
-  
+
 
   return (
-    <div>
-      <EmployeeNavigation />
-      <div className="pt-15">
+    <SidebarProvider>
+      <AppSidebar />
+      <main className="w-full">
+        {/* <HrNavigation /> */}
+        <SidebarTrigger />
         <Outlet />
-      </div>
-      <EmployeeFooter />
-    </div>
+      </main>
+    </SidebarProvider>
   )
 }
 export default EmployeeLayout
