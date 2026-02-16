@@ -26,6 +26,7 @@ api.interceptors.response.use((response: AxiosResponse): AxiosResponse => {
     (error: AxiosError) => {
         if(error.response && error.response.status === 401){
             console.log("Unauthorized request. Redirecting to login...");
+            window.location.href = "/"
         }
         return Promise.reject(error.response?.data)
     }

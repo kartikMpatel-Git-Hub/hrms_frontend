@@ -42,8 +42,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setAuthError(null);
     },
     onError: (err: any) => {
+      console.log(err);
       const msg =
-        err.error.details ||
+        err?.error?.details ||
         'Login failed. Please try again.';
       setAuthError(msg);
       setUser(null);

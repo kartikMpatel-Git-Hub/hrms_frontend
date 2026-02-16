@@ -1,13 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom"
 import { AddTraveler, GetTravelersByName, GetTravelWithTravelers } from "../../../api/TravelService";
-import { type Traveler, type TravelerResponse, type TravelResponseWithTraveler } from "../../../type/Types";
+import { type Traveler, type TravelResponseWithTraveler } from "../../../type/Types";
 import TravelerCard from "./TravelerCard";
-import { Loader } from "lucide-react";
+import { CalendarClock, IndianRupee, InfoIcon, MapPin, PlaneTakeoff, Search } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify"
 import useDebounce from "../../../hook/useDebounce";
 import EmployeesCard from "./EmployeesCard";
+import { ItemGroup } from "@/components/ui/item";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 function TravelDetail() {
     const { id } = useParams<number | any>()
@@ -15,7 +20,7 @@ function TravelDetail() {
     const [searchTerm, setSearchTerm] = useState('');
     const [travelers, setTravelers] = useState<Traveler[]>();
     const [loading, setLoading] = useState<boolean>(true)
-    const fetchedTraveler = useDebounce<Traveler>(searchTerm, 1000,() => GetTravelersByName(searchTerm));
+    const fetchedTraveler = useDebounce<Traveler>(searchTerm, 1000, () => GetTravelersByName(searchTerm));
     const navigator = useNavigate()
 
     const queryClient = useQueryClient();
@@ -52,10 +57,10 @@ function TravelDetail() {
                     .filter(
                         (ft) => travel?.travelers.every((t) => t.travelerr.id !== ft.id) ?? true
                     )
-            setTravelers(fetchedTraveler)
+            setTravelers(filteredTraveler)
         }
         setLoading(false)
-    }, [fetchedTraveler,travel]);
+    }, [fetchedTraveler, travel]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { value } = e.target
@@ -70,13 +75,14 @@ function TravelDetail() {
         mutate({ travelId, travelerId })
     }
 
-    const handleOpenExpense = (travelerId : number) => {
-        if(travelerId == null || travel?.id == null)
+
+    const handleOpenExpense = (travelerId: number) => {
+        if (travelerId == null || travel?.id == null)
             return
         navigator(`./traveler/${travelerId}/expense`)
     }
-    const handleOpenDocument = (travelerId : number) => {
-        if(travelerId == null || travel?.id == null)
+    const handleOpenDocument = (travelerId: number) => {
+        if (travelerId == null || travel?.id == null)
             return
         navigator(`./traveler/${travelerId}/document`)
     }
@@ -88,21 +94,28 @@ function TravelDetail() {
         <div className="flex justify-center p-3">
             <ToastContainer position="top-right" />
             <div>
-                <div><span className="font-bold italic">Title</span> : {travel?.title}</div>
-                <div><span className="font-bold italic">Detail</span> : {travel?.description || "N/A"}</div>
-                <div><span className="font-bold italic">Date</span> : {travel?.startDate.toString().substring(0, 10)} to {travel?.endDate.toString().substring(0, 10)}</div>
-                <div><span className="font-bold italic">Location</span> : {travel?.location}</div>
-                <div className="italic"><span className="font-bold italic">Max Amount Per Expense</span> : ₹{travel?.maxAmountLimit}</div>
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-2xl flex gap-3"><PlaneTakeoff className=""/> {travel?.title?.toUpperCase()}</CardTitle>
+                        <CardDescription>{travel?.description || "No description available"}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex flex-col gap-3">
+                        <div className="flex font-semibold"><span className="text-black/50"><CalendarClock className="w-5 h-5 mr-2" /></span> : {travel?.startDate.toString().substring(0, 10)} to {travel?.endDate.toString().substring(0, 10)}</div>
+                        <div className="flex font-semibold"><span className="text-black/50"><MapPin className="w-5 h-5 mr-2" /></span> : {travel?.location}</div>
+                        <div className="flex font-semibold"><span className="text-black/50"><IndianRupee className="w-5 h-5 mr-2" /></span> : ₹{travel?.maxAmountLimit}/Ex.</div>
+                    </CardContent>
+
+                </Card>
                 <div className="font-bold flex justify-center text-2xl border-b-2 border-t-2 m-4">Travelers</div>
                 <div>
-                    
+
                 </div>
-                <div className="flex gap-3 justify-center">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-3">
                     {
                         travel?.travelers && travel?.travelers?.length > 0 ?
                             travel?.travelers?.map((t) => (
-                                <TravelerCard 
-                                    traveler={t.travelerr} 
+                                <TravelerCard
+                                    traveler={t.travelerr}
                                     handleOpenExpense={handleOpenExpense}
                                     handleOpenDocument={handleOpenDocument}
                                     key={t.id} />
@@ -119,37 +132,61 @@ function TravelDetail() {
                     Search Traveler
                 </div>
                 <div>
-                    <input
-                        type="text"
-                        placeholder="Search Employee..."
-                        className="border-2 w-full"
-                        value={searchTerm}
-                        onChange={handleChange}
-                    />
+                    <InputGroup className="">
+                        <InputGroupInput placeholder="Search Traveler..." onChange={handleChange} value={searchTerm} />
+                        <InputGroupAddon>
+                            <Search />
+                        </InputGroupAddon>
+                        <InputGroupAddon align="inline-end">{travelers?.length || 0} results</InputGroupAddon>
+                    </InputGroup>
                 </div>
-                <div>
+                <div className="my-4">
                     {
                         !loading
                             ? (travelers && travelers?.length > 0
                                 ? (
-                                    <div className="p-3">
+                                    <ItemGroup className="p-3">
                                         {
                                             travelers?.map((t) => (
-                                                <EmployeesCard 
+                                                <EmployeesCard
                                                     key={t.id}
-                                                    t={t} 
+                                                    t={t}
                                                     handleAddTraveler={handleAddTraveler}
                                                     isPending={isPending}
-                                                    />
+                                                />
                                             ))
                                         }
-                                    </div>
+                                    </ItemGroup>
                                 )
-                                : (<div>-Not Found-</div>)
+                                : (<Alert>
+                                    <InfoIcon />
+                                    <AlertTitle>No Travelers Found</AlertTitle>
+                                    <AlertDescription>Try searching with different name</AlertDescription>
+                                </Alert>)
                             )
-                            : (<div className="flex justify-center"><Loader /> Fetching...</div>)
+                            : (
+                                <div className="flex flex-col gap-4 p-3">
+                                    {
+                                        Array.from({ length: 5 }).map((_, i) => (
+                                            <SkeletonAvatar key={i} />
+                                        ))
+                                    }
+                                </div>
+                            )
                     }
                 </div>
+            </div>
+        </div>
+    )
+}
+
+function SkeletonAvatar() {
+    return (
+        <div className="flex w-fit items-center gap-4">
+            <Skeleton className="size-10 shrink-0 rounded-full" />
+            <div className="grid gap-2">
+                <Skeleton className="h-4 w-[150px]" />
+                <Skeleton className="h-4 w-[100px]" />
             </div>
         </div>
     )

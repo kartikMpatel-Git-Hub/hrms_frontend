@@ -3,6 +3,20 @@ import type { TravelCreateRequest } from "../../../type/Types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { CreateTravel } from "../../../api/TravelService"
 import { useNavigate } from "react-router-dom"
+import { Button } from "@/components/ui/button"
+import {
+    Field,
+    FieldDescription,
+    FieldGroup,
+    FieldLabel,
+    FieldLegend,
+    FieldSeparator,
+    FieldSet,
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { ALargeSmall, AlertCircleIcon, CalendarClock, IndianRupee, MapPin, PlaneTakeoff, Text } from "lucide-react"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Textarea } from "@/components/ui/textarea"
 
 function TravelForm() {
 
@@ -12,7 +26,7 @@ function TravelForm() {
         StartDate: null,
         EndDate: null,
         Location: "",
-        MaxAmountLimit: 0
+        MaxAmountLimit: 1
     })
     const [error, setError] = useState<string[]>([])
     const queryClient = useQueryClient()
@@ -41,7 +55,8 @@ function TravelForm() {
         setNewTravel((prev) => ({ ...prev, [name]: value }))
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
         setError([])
         if (!validateForm()) {
             return
@@ -84,85 +99,126 @@ function TravelForm() {
 
 
     return (
-        <div className="flex justify-center">
-            <div className="border-2 p-3 m-3 rounded-2xl">
-                <div>
-                    Title
-                    <input
-                        type="text"
-                        name="Title"
-                        className="border-2 m-1"
-                        value={newTravel.Title}
-                        onChange={handleInputChange} />
-                </div>
-                <div>
-                    Description
-                    <textarea
-                        name="Description"
-                        value={newTravel.Description}
-                        className="border-2 m-1"
-                        onChange={handleInputChange} />
-                </div>
-                <div>
-                    Start Date
-                    <input
-                        type="date"
-                        name="StartDate"
-                        min={minDate}
-                        value={newTravel.StartDate ? newTravel.StartDate.toString().substring(0, 10) : ""}
-                        onChange={handleInputChange}
-                        className="border-2 m-1" />
-                </div>
-                <div>
-                    End Date
-                    <input
-                        type="date"
-                        name="EndDate"
-                        min={minDate}
-                        value={newTravel.EndDate ? newTravel.EndDate.toString().substring(0, 10) : ""}
-                        onChange={handleInputChange}
-                        className="border-2 m-1" />
-                </div>
-                <div>
-                    Location
-                    <input
-                        type="text"
-                        name="Location"
-                        value={newTravel.Location}
-                        onChange={handleInputChange}
-                        className="border-2 m-1" />
-                </div>
-                <div>
-                    Max Amount Limit
-                    <input
-                        type="number"
-                        name="MaxAmountLimit"
-                        min={0}
-                        value={newTravel.MaxAmountLimit}
-                        onChange={handleInputChange}
-                        className="border-2 m-1" />
-                </div>
-                <div>
-                    <button
-                        onClick={handleSubmit}
-                        className={`p-3 bg-slate-800 text-white rounded-2xl hover:cursor-pointer disabled:opacity-50`}
-                        disabled={isPending}
-                    >
-                        {isPending ? "Creating..." : "Create Travel"}
-                    </button>
-                </div>
-                <div>
-                    {
-                        error.length > 0 && (
-                            <div className="text-red-700">
-                                {error.map((err, index) => (
-                                    <div key={index}>{err}</div>
-                                ))}
-                            </div>
-                        )
-                    }
-                </div>
-            </div>
+
+        <div className="mx-20 my-5">
+            <form onSubmit={handleSubmit}>
+                <FieldGroup>
+                    <FieldSet>
+                        <FieldLegend><div className="text-2xl flex gap-2"><PlaneTakeoff /> ADD TRAVEL</div></FieldLegend>
+                        <FieldDescription>
+                            Add New Travel with minimal required information and details. After adding travel you can add travelers and expenses related to that travel.
+                        </FieldDescription>
+                        <FieldGroup>
+                            <Field>
+                                <FieldLabel htmlFor="checkout-7j9-card-name-43j">
+                                    <ALargeSmall className="w-4 h-4" />Travel Title
+                                </FieldLabel>
+                                <Input
+                                    placeholder="Enter Travel Title"
+                                    required
+                                    name="Title"
+                                    value={newTravel.Title}
+                                    onChange={handleInputChange}
+                                />
+                            </Field>
+                            <Field>
+                                <FieldLabel htmlFor="checkout-7j9-card-name-43j">
+                                    <Text className="w-4 h-4" />Travel Description
+                                </FieldLabel>
+                                <Textarea
+                                    placeholder="Enter Travel Description"
+                                    required
+                                    name="Description"
+                                    value={newTravel.Description}
+                                    onChange={handleInputChange}
+                                />
+                            </Field>
+                            <Field>
+                                <FieldLabel htmlFor="checkout-7j9-card-number-uw1">
+                                    <MapPin className="w-4 h-4" /> Travel Location
+                                </FieldLabel>
+                                <Input
+                                    placeholder="Enter Travel Location"
+                                    required
+                                    name="Location"
+                                    value={newTravel.Location}
+                                    onChange={handleInputChange}
+                                />
+                            </Field>
+                            <Field className="">
+                                <div className="flex">
+                                    <div>
+                                        <div className="flex mx-2 gap-1 text-sm">
+                                            <CalendarClock className="w-4 h-4 m-1" /> Start Date
+                                        </div>
+                                        <div>
+                                            <input
+                                                type="date"
+                                                name="StartDate"
+                                                min={minDate}
+                                                required={true}
+                                                value={newTravel.StartDate ? newTravel.StartDate.toString().substring(0, 10) : ""}
+                                                onChange={handleInputChange}
+                                                className="border-1 shadow-2xl shadow-black/50 text-black/50 p-1 m-1 rounded-sm" />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div className="flex mx-2 gap-1 text-sm">
+                                            <CalendarClock className="w-4 h-4 m-1" /> End Date
+                                        </div>
+                                        <div>
+                                            <input
+                                                type="date"
+                                                name="EndDate"
+                                                min={minDate}
+                                                required={true}
+                                                value={newTravel.EndDate ? newTravel.EndDate.toString().substring(0, 10) : ""}
+                                                onChange={handleInputChange}
+                                                className="border-1 shadow-2xl shadow-black/50 text-black/50 p-1 m-1 rounded-sm" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </Field>
+                            <Field>
+                                <FieldLabel htmlFor="checkout-7j9-card-number-uw1">
+                                    <IndianRupee className="w-4 h-4" /> Max Amount Per Expense
+                                </FieldLabel>
+                                <Input
+                                    placeholder="Enter Max Amount Limit"
+                                    required
+                                    name="MaxAmountLimit"
+                                    type="number"
+                                    min={1}
+                                    value={newTravel.MaxAmountLimit}
+                                    onChange={handleInputChange}
+                                />
+                            </Field>
+                        </FieldGroup>
+                    </FieldSet>
+                    <FieldSeparator />
+                    <Field orientation="horizontal">
+                        <Button type="submit" disabled={isPending}>Submit</Button>
+                        <Button variant="outline" type="button">
+                            Cancel
+                        </Button>
+                    </Field>
+                </FieldGroup>
+            </form>
+            {
+                error && error.length > 0 && (
+                    <Alert variant={"destructive"}>
+                        <AlertCircleIcon />
+                        <AlertTitle>Validation Failed</AlertTitle>
+                        <AlertDescription>
+                            {
+                                error.map((e) => (
+                                    <div>{e}</div>
+                                ))
+                            }
+                        </AlertDescription>
+                    </Alert>
+                )
+            }
         </div>
     )
 }

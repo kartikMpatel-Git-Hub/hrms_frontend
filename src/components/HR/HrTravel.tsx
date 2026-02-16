@@ -5,6 +5,7 @@ import { type TravelResponse } from "../../type/Types";
 import TravelCard from "./Travel/TravelCard";
 import { CircleAlert, Loader, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../ui/button";
 
 function HrTravel() {
 
@@ -38,16 +39,16 @@ function HrTravel() {
 
   return (
     <div>
-      <div className="flex justify-end">
-        <div 
-        onClick={handleOpenAddForm}
-        className="p-3 bg-slate-800 text-white m-3 rounded-2xl hover:cursor-pointer flex">
+      <div className="flex justify-end mr-3">
+        <Button
+          onClick={handleOpenAddForm}
+          >
           <Plus className="font-bold"/> Add New Travel
-        </div>
+        </Button>
       </div>
-      <div className="flex justify-center">
+      <div className="flex justify-center ">
         
-        <div className="flex gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-3">
           {
             travels?.map((t)=>(
               <TravelCard travel={t} key={t.id} />

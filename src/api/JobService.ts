@@ -1,4 +1,4 @@
-import type { JobCreateDto, JobResponseDto, JobResponseWithReviewerDto, PagedRequestDto, PagedResponse, UserReponseDto } from "../type/Types"
+import type { JobCreateDto, JobResponseDto, JobResponseWithReviewerDto, PagedRequestDto, PagedResponse, ReferredJobRequestDto, ReferredResponseDto, ShareJobRequestDto, ShareResponseDto, UserReponseDto } from "../type/Types"
 import api from "./Api"
 
 export const AddJob = async ({ dto }: any): Promise<JobResponseDto> => {
@@ -32,5 +32,18 @@ export const GetUserByKey = async (key: string): Promise<UserReponseDto[]> => {
 
 export const GetHrByKey = async (key: string): Promise<UserReponseDto[]> => {
     const response = await api.get<UserReponseDto[]>(`/user/search/hr?key=${key}`,)
+    return response.data
+}
+
+export const ShareJob = async ({ id, email }: any): Promise<ShareResponseDto> => {
+    const response = await api.post<ShareResponseDto>(`/job/${id}/share`, { SharedTo: email })
+    return response.data
+}
+export const ReferedJob = async ({ id, dto }: ReferredJobRequestDto): Promise<ReferredResponseDto> => {
+    const response = await api.post<ReferredResponseDto>(`/job/${id}/referred`, dto, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    })
     return response.data
 }

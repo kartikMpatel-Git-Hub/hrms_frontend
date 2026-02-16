@@ -5,6 +5,7 @@ import { type DepartmentResponseDto } from "../../../type/Types"
 import { Loader, Plus } from "lucide-react"
 import DepartmentCard from "./DepartmentCard"
 import { useNavigate } from "react-router-dom"
+import { Button } from "@/components/ui/button"
 
 function Department() {
 
@@ -31,28 +32,20 @@ function Department() {
 
     return (
         <div>
-            <div className="flex justify-end">
-                <div
+            <div className="flex justify-end mr-5">
+                <Button
                     onClick={handleOpenAddForm}
-                    title="Add New Department"
-                    className="p-3 bg-slate-800 text-white m-3 rounded-2xl hover:cursor-pointer flex">
-                    <Plus className="font-bold" />
-                </div>
+                    title="Add New Department">
+                    <Plus className="font-bold" /> Add Department
+                </Button>
             </div>
-            <div className="flex justify-center">
-                <div className="border-2 m-2">
-                    <div className="grid grid-cols-4 gap-4 p-4 font-bold">
-                        <div>ID</div>
-                        <div>Department</div>
-                        <div>Action</div>
-                    </div>
-                    <hr />
-                    {
-                        departments && departments?.map(d => (
-                            <DepartmentCard department={d} key={d.id} />
-                        ))
-                    }
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-3">
+
+                {
+                    departments && departments?.map(d => (
+                        <DepartmentCard department={d} key={d.id} />
+                    ))
+                }
             </div>
         </div>
     )
