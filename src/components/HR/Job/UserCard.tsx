@@ -1,4 +1,4 @@
-import { Mouse, MousePointer, MousePointer2, MousePointerClick, Plus } from "lucide-react"
+import { Plus } from "lucide-react"
 import type { UserReponseDto } from "../../../type/Types"
 
 interface UserCardProps{
@@ -9,24 +9,27 @@ interface UserCardProps{
 
 function UserCard({user,fn,isPending}:UserCardProps) {
   return (
-    <div className="flex gap-3 border-2 m-2 justify-between">
-            <div className="p-3"><img src={user.image} className="w-10" /></div>
-            <div>
-                <div className="font-bold">{user.fullName}</div>
-                <div>{user.email}</div>
-            </div>
-            <div className="p-3">
-                <button
-                    title="Add Traveler"
-                    onClick={() => fn(user)}
-                    className="border-2 rounded-2xl h-fit m-auto hover:cursor-pointer hover:bg-slate-800 hover:text-white hover:border-slate-800 disabled:opacity-50"
-                    disabled={isPending}
-                >
-                    <MousePointer2/>
-                </button>
-            </div>
-            
+    <div className="flex gap-3 items-center justify-between p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group">
+      <div className="flex gap-3 items-center flex-1 min-w-0">
+        <img 
+          src={user.image} 
+          alt={user.fullName}
+          className="w-10 h-10 rounded-full object-cover shrink-0" 
+        />
+        <div className="min-w-0 flex-1">
+          <div className="font-semibold text-sm text-slate-900 dark:text-slate-100 truncate">{user.fullName}</div>
+          <div className="text-xs text-muted-foreground truncate">{user.email}</div>
         </div>
+      </div>
+      <button
+        title={`${user.fullName}`}
+        onClick={() => fn(user)}
+        className="shrink-0 p-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:border-blue-300 dark:hover:border-blue-700 transition-colors text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={isPending}
+      >
+        <Plus className="w-4 h-4" />
+      </button>
+    </div>
   )
 }
 

@@ -1,36 +1,16 @@
-import React from 'react'
 import type { UserReponseDto } from '../../../type/Types'
-import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { TableCell, TableRow } from '@/components/ui/table'
 
 function ReviewerCard({ reviewer }: { reviewer: UserReponseDto }) {
     return (
-        <>
-            <Card className="relative mx-auto w-full max-w-sm pt-0 ">
-                <div className="absolute inset-0 z-30 aspect-video bg-black/35" />
-                <img
-                    src={reviewer.image}
-                    alt="Event cover"
-                    className="relative z-20 aspect-video w-full object-cover brightness-100 grayscale dark:brightness-40"
-                />
-                <CardHeader>
-                    <CardAction>
-                        <div className="bg-slate-900 text-white p-1 rounded-sm font-bold text-sm">{reviewer.role}</div>
-                    </CardAction>
-                    <CardTitle>{reviewer.fullName.toUpperCase()}</CardTitle>
-                    <div className="text-black/50 text-sm">{reviewer.email}</div>
-                    <CardDescription>
-                        <div className="py-2">
-                            <div><span className="font-semibold text-black">DOJ :</span> {reviewer.dateOfJoin.toString().substring(0, 10)}</div>
-                            <div><span className="font-semibold text-black">DOB :</span> {reviewer.dateOfBirth.toString().substring(0, 10)}</div>
-                        </div>
-                        <div>
-                            <div><span className="font-semibold text-black">Designation :</span> {reviewer.designation}</div>
-                        </div>
-
-                    </CardDescription>
-                </CardHeader>
-            </Card>
-        </>
+        <TableRow>
+            <TableCell>
+                <img src={reviewer.image} className="h-10 w-10 rounded-full" />
+            </TableCell>
+            <TableCell>{reviewer.fullName}</TableCell>
+            <TableCell>{reviewer.email}</TableCell>
+            <TableCell>{reviewer.designation}</TableCell>
+        </TableRow>
     )
 }
 

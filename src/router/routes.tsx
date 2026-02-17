@@ -10,7 +10,6 @@ import EmployeeLayout from '../components/EMPLOYEE/EmployeeLayout'
 import EmployeeDashboard from '../components/EMPLOYEE/EmployeeDashboard'
 import Department from '../components/HR/Department/Department'
 import DepartmentForm from '../components/HR/Department/DepartmentForm'
-import DepartmentDetail from '../components/HR/Department/DepartmentDetail'
 import Expenses from '../components/HR/Expense/Expenses'
 import ExpenseCategory from '../components/HR/Expense/ExpenseCategory'
 import ExpenseCategoryForm from '../components/HR/Expense/ExpenseCategoryForm'
@@ -27,6 +26,8 @@ import HrTravelDocuments from '../components/HR/Travel/HrTravelDocuments'
 import HrJobReferrals from '@/components/HR/Job/HrJobReferrals'
 import EmployeeOrganizationChart from '@/components/utility/EmployeeOrganizationChart'
 import EmployeeChart from '@/components/utility/EmployeeChart'
+import HrGames from '@/components/HR/Game/HrGames'
+import HrGameDetail from '@/components/HR/Game/HrGameDetail'
 
 const router = createBrowserRouter([
     {
@@ -60,7 +61,6 @@ const router = createBrowserRouter([
                         path: "department",
                         children: [
                             { index: true, element: <Department /> },
-                            { path: ":id", element: <DepartmentDetail /> },// -> with department employees
                             { path: "add", element: <DepartmentForm /> },
                         ]
                     },
@@ -71,6 +71,15 @@ const router = createBrowserRouter([
                             { path: ":id", element: <HrJobDetail /> },
                             { path: "add", element: <HrJobCreateForm /> },
                             { path: ":id/referrals", element: <HrJobReferrals /> },
+                        ]
+                    },
+                    {
+                        path: "game",
+                        children: [
+                            { index: true, element: <HrGames /> },
+                            { path: ":id", element: <HrGameDetail /> },
+                            // { path: "add", element: <HrJobCreateForm /> },
+                            // { path: ":id/referrals", element: <HrJobReferrals /> },
                         ]
                     },
                     {

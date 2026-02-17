@@ -7,7 +7,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Briefcase, Building2, HomeIcon, IndianRupeeIcon, LogOut, TicketsPlane, User2 } from "lucide-react"
+import { Briefcase, Building2, ChartArea, ChartNetwork, ChessPawn, ChessQueen, Gamepad, Gamepad2, GamepadDirectional, HomeIcon, IndianRupeeIcon, LogOut, LucideGamepad, TicketsPlane, User2 } from "lucide-react"
 import { NavLink } from "react-router"
 
 export function AppSidebar() {
@@ -60,6 +60,14 @@ export function AppSidebar() {
                                 <Briefcase className="w-4 h-4" /> Job
                             </NavLink>
                         </SidebarMenuButton>
+                        <SidebarMenuButton className="my-2">
+                            <NavLink
+                                className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
+                                to={"./game"}
+                            >
+                                <Gamepad2 className="w-4 h-4" /> Game
+                            </NavLink>
+                        </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarContent>
@@ -71,7 +79,7 @@ export function AppSidebar() {
                                 className={`flex gap-2 w-full rounded-md`}
                                 to={"./organization-chart"}
                             >
-                                <User2 className="w-4 h-4"/> Username
+                                <ChartNetwork className="w-4 h-4"/> Organization Chart
                             </NavLink>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

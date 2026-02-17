@@ -1,8 +1,6 @@
 import { Outlet, useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
 import { useEffect } from "react"
-import EmployeeNavigation from "./EmployeeNavigation"
-import EmployeeFooter from "./EmployeeFooter"
 import { SidebarProvider, SidebarTrigger } from "../ui/sidebar"
 import { AppSidebar } from "../ui/app-sidebar"
 
@@ -21,7 +19,6 @@ function EmployeeLayout() {
     <SidebarProvider>
       <AppSidebar />
       <main className="w-full">
-        {/* <HrNavigation /> */}
         <SidebarTrigger />
         <Outlet />
       </main>

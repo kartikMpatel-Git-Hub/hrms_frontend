@@ -39,7 +39,7 @@ function Department() {
                     <Plus className="font-bold" /> Add Department
                 </Button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 m-3">
 
                 {
                     departments && departments?.map(d => (

@@ -1,4 +1,3 @@
-import { data } from "react-router-dom";
 import type { ExpenseCategoryCreateDto, ExpenseCategoryResponseDto, TravelerExpenseDto } from "../type/Types";
 import api from "./Api";
 
