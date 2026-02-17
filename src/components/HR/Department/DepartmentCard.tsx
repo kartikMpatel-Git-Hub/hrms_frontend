@@ -18,11 +18,6 @@ function DepartmentCard({ department }: { department: DepartmentResponseDto }) {
             <ItemContent>
                 <ItemTitle>{department.departmentName}</ItemTitle>
             </ItemContent>
-            <ItemActions>
-                <Button variant={"outline"} onClick={handleOpenDepartment} disabled={true}>
-                    <Eye /> 
-                </Button>
-            </ItemActions>
         </Item>
     )
 }

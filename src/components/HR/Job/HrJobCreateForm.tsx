@@ -3,9 +3,15 @@ import type { UserReponseDto, JobCreateDto } from "../../../type/Types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { AddJob, GetHrByKey, GetUserByKey } from "../../../api/JobService"
 import useDebounce from "../../../hook/useDebounce"
-import UserCard from "./UserCard"
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
+import { Card, CardHeader } from "@/components/ui/card"
+import { Field } from "@/components/ui/field"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { ALargeSmall, FileArchive, List, MapPin, Paperclip, User2 } from "lucide-react"
+import UserCard from "./UserCard"
 
 function HrJobCreateForm() {
 
@@ -64,9 +70,6 @@ function HrJobCreateForm() {
         if (!isValidForm()) {
             return;
         }
-        console.log(newJob);
-        console.log(reviewers);
-        console.log(contactTo);
         const formData = new FormData()
         formData.append("Title", String(newJob.Title))
         formData.append("JobRole", String(newJob.JobRole))
@@ -74,8 +77,8 @@ function HrJobCreateForm() {
         formData.append("Requirements", String(newJob.Requirements))
         formData.append("ContactTo", String(contactTo?.id))
         Array.from(reviewers).forEach(r => formData.append("Reviewer", String(r.id)))
-        if(Jd)
-            formData.append("Jd",Jd);
+        if (Jd)
+            formData.append("Jd", Jd);
         mutate({ dto: formData })
     }
 
@@ -128,185 +131,195 @@ function HrJobCreateForm() {
     })
 
     return (
-        <div className="flex justify-center">
-            <div>
-                <div className="flex justify-center p-2 font-bold text-2xl">
-                    Add New Job
-                </div>
-                <div className="border-2 p-3 m-3">
-                    <div>
-                    </div>
-                    <div className="flex gap-3 m-2">
-                        Title :
-                        <input
-                            type="text"
-                            name="Title"
-                            className="border-2"
-                            onChange={handleInputChange}
-                            value={newJob.Title}
-                            required={true}
-                        />
-                    </div>
-                    <div className="flex gap-3 m-2">
-                        JobRole :
-                        <input
-                            type="text"
-                            name="JobRole"
-                            className="border-2"
-                            onChange={handleInputChange}
-                            value={newJob.JobRole}
-                            required={true}
-                        />
-                    </div>
-                    <div className="flex gap-3 m-2">
-                        Place :
-                        <input
-                            type="text"
-                            name="Place"
-                            className="border-2"
-                            onChange={handleInputChange}
-                            value={newJob.Place}
-                            required={true}
-                        />
-                    </div>
-
-                    <div className="flex gap-3 m-2">
-                        Requirements :
-                        <input
-                            type="text"
-                            name="Requirements"
-                            className="border-2"
-                            onChange={handleInputChange}
-                            value={newJob.Requirements}
-                            required={true}
-                        />
-                    </div>
-
-                    <div className="flex gap-3 m-2">
-                        JD PDF :
-                        <input
-                            name="Jd"
-                            multiple
-                            type="file"
-                            onChange={(event) => {
-                                if (event.target.files && event.target.files[0]) {
-                                    setJd(event.target.files[0]);
+        <div className="m-10">
+            <div className="">
+                <Card className="w-full">
+                    <CardHeader className="">
+                        <div className="flex flex-col gap-3">
+                            <div className="font-bold text-black/90 text-3xl flex justify-center">Job Details</div>
+                            <Field className="m-1">
+                                <Label><span className="flex"><ALargeSmall className="w-4 h-4 mr-2" /><span className="">Title</span></span></Label>
+                                <Input name="Title" placeholder="Enter Job Title" onChange={handleInputChange} value={newJob.Title} required />
+                            </Field>
+                            <Field className="m-1">
+                                <Label><span className="flex"><User2 className="w-4 h-4 mr-2" /><span className="">Job Role</span></span></Label>
+                                <Input name="JobRole" placeholder="Enter Job Role" onChange={handleInputChange} value={newJob.JobRole} required />
+                            </Field>
+                            <Field className="m-1">
+                                <Label><span className="flex"><MapPin className="w-4 h-4 mr-2" /><span className="">Place</span></span></Label>
+                                <Input name="Place" placeholder="Enter Place" onChange={handleInputChange} value={newJob.Place} required />
+                            </Field>
+                            <Field className="m-1">
+                                <Label><span className="flex"><List className="w-4 h-4 mr-2" /><span className="">Requirements</span></span></Label>
+                                <Input name="Requirements" placeholder="Enter Requirements" onChange={handleInputChange} value={newJob.Requirements} required />
+                            </Field>
+                            <Field className="m-1">
+                                <Label><span className="flex"><Paperclip className="w-4 h-4 mr-2" /><span className="">JD PDF</span></span></Label>
+                                <Input
+                                    name="Jd"
+                                    type="file"
+                                    onChange={(event) => {
+                                        if (event.target.files && event.target.files[0]) {
+                                            setJd(event.target.files[0]);
+                                        }
+                                    }}
+                                    required
+                                />
+                            </Field>
+                            <Button
+                                disabled={isPending}
+                                className="bg-slate-800 mt-4"
+                                onClick={HandleSubmitForm}>Submit</Button>
+                            <div>
+                                {
+                                    errors.length > 0 && (
+                                        <div className="text-red-700">
+                                            {errors.map((err, index) => (
+                                                <div key={index}>{err}</div>
+                                            ))}
+                                        </div>
+                                    )
                                 }
-                            }}
-                            required={true}
-                        />
-                    </div>
-                    <button
-                        disabled={isPending}
-                        className="bg-slate-800 p-3 rounded-sm text-white disabled:opacity-50"
-                        onClick={HandleSubmitForm}>Submit</button>
+                            </div>
+                        </div>
+                    </CardHeader>
+                </Card>
+            </div>
+            <div className="mt-8 space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <Card className="border-slate-200 dark:border-slate-700">
+                        <CardHeader className="pb-3">
+                            <div className="flex items-center gap-2 text-lg font-semibold">
+                                <User2 className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+                                <span>Selected HR - Contact To</span>
+                            </div>
+                        </CardHeader>
+                        <div className="px-6 pb-6">
+                            <div className="rounded-lg border border-slate-200 dark:border-slate-700 p-4 bg-slate-50 dark:bg-slate-900/30 min-h-30 flex items-center justify-center">
+                                {contactTo ? (
+                                    <UserCard user={contactTo} fn={handleRemoveContactTo} isPending={isPending} />
+                                ) : (
+                                    <div className="text-center text-muted-foreground">
+                                        {/* <User2 className="w-8 h-8 mx-auto mb-2 opacity-50" /> */}
+                                        <p>No HR selected</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </Card>
 
-                    <div>
-                        {
-                            errors.length > 0 && (
-                                <div className="text-red-700">
-                                    {errors.map((err, index) => (
-                                        <div key={index}>{err}</div>
-                                    ))}
-                                </div>
-                            )
-                        }
-                    </div>
+                    <Card className="border-slate-200 dark:border-slate-700">
+                        <CardHeader className="pb-3">
+                            <div className="flex items-center gap-2 text-lg font-semibold">
+                                <User2 className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+                                <span>Selected Reviewers</span>
+                            </div>
+                        </CardHeader>
+                        <div className="px-6 pb-6">
+                            <div className="rounded-lg border border-slate-200 dark:border-slate-700 p-4 bg-slate-50 dark:bg-slate-900/30 max-h-75 overflow-y-auto">
+                                {reviewers && reviewers.length > 0 ? (
+                                    <div className="space-y-2">
+                                        {reviewers.map((u) => (
+                                            <UserCard key={u.id} user={u} fn={handleRemoveReviewer} isPending={isPending} />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center text-muted-foreground py-8">
+                                        {/* <User2 className="w-8 h-8 mx-auto mb-2 opacity-50" /> */}
+                                        <p>No reviewers selected</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </Card>
                 </div>
-                <div className="grid grid-cols-2 gap-5">
-                    <div>
-                        <div className="flex justify-center p-3 font-bold text-2xl border-t-2 border-b-2 m-3">
-                            Selected Hr For Contact To
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <Card className="border-slate-200 dark:border-slate-700">
+                        <CardHeader className="pb-3">
+                            <div className="flex items-center gap-2 text-lg font-semibold">
+                                <FileArchive className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+                                <span>Search HR</span>
+                            </div>
+                        </CardHeader>
+                        <div className="px-6 pb-6 space-y-4">
+                            <Field>
+                                <Input
+                                    type="text"
+                                    placeholder="Type HR name or email..."
+                                    value={hrKey}
+                                    onChange={(e) => setHrKey(e.target.value)}
+                                    className="bg-background"
+                                />
+                            </Field>
+                            <div className="rounded-lg border border-slate-200 dark:border-slate-700 p-3 bg-slate-50 dark:bg-slate-900/30 max-h-75 overflow-y-auto">
+                                {hrs && hrs.length > 0 ? (
+                                    <div className="space-y-2">
+                                        {hrs.map((u) => (
+                                            <UserCard key={u.id} user={u} fn={handleSelectContacTo} isPending={isPending} />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center text-muted-foreground py-6">
+                                        {hrKey.length > 0 ? (
+                                            <>
+                                                <User2 className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                                                <p>No HR found</p>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <FileArchive className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                                                <p>Start typing to search</p>
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                        <div>
-                            {
-                                contactTo ? <UserCard user={contactTo} fn={handleRemoveContactTo} isPending={isPending} /> : <div className="flex justify-center">Not Selected</div>
-                            }
+                    </Card>
+
+                    <Card className="border-slate-200 dark:border-slate-700">
+                        <CardHeader className="pb-3">
+                            <div className="flex items-center gap-2 text-lg font-semibold">
+                                <FileArchive className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+                                <span>Search Employees</span>
+                            </div>
+                        </CardHeader>
+                        <div className="px-6 pb-6 space-y-4">
+                            <Field>
+                                <Input
+                                    type="text"
+                                    placeholder="Type employee name or email..."
+                                    value={reviewerKey}
+                                    onChange={(e) => setReviewerKey(e.target.value)}
+                                    className="bg-background"
+                                />
+                            </Field>
+                            <div className="rounded-lg border border-slate-200 dark:border-slate-700 p-3 bg-slate-50 dark:bg-slate-900/30 max-h-75 overflow-y-auto">
+                                {allReviewers && allReviewers.length > 0 ? (
+                                    <div className="space-y-2">
+                                        {allReviewers.map((u) => (
+                                            <UserCard key={u.id} user={u} fn={handleSelectReviewer} isPending={isPending} />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center text-muted-foreground py-6">
+                                        {reviewerKey.length > 0 ? (
+                                            <>
+                                                <User2 className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                                                <p>No employees found</p>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <FileArchive className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                                                <p>Start typing to search</p>
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <div className="flex justify-center p-3 font-bold text-2xl border-t-2 border-b-2 m-3">
-                            Selected Reviewers
-                        </div>
-                        <div>
-                            {
-                                (reviewers && reviewers?.length > 0
-                                    ? (
-                                        <div className="p-3">
-                                            {
-                                                reviewers?.map((u) => (
-                                                    <UserCard user={u} key={u.id} fn={handleRemoveReviewer} isPending={isPending} />
-                                                ))
-                                            }
-                                        </div>
-                                    )
-                                    : (<div className="flex justify-center">Not Selected</div>)
-                                )
-                            }
-                        </div>
-                    </div>
-                </div>
-                <div className="grid grid-cols-2 gap-5">
-                    <div>
-                        <div className="flex justify-center p-3 font-bold text-2xl border-t-2 border-b-2 m-3">
-                            Search Hr
-                        </div>
-                        <div>
-                            <input
-                                type="text"
-                                placeholder="Search Hrs..."
-                                className="border-2 w-full"
-                                value={hrKey}
-                                onChange={(e) => setHrKey(e.target.value)}
-                            />
-                        </div>
-                        <div>
-                            {
-                                (hrs && hrs?.length > 0
-                                    ? (
-                                        <div className="p-3">
-                                            {
-                                                hrs?.map((u) => (
-                                                    <UserCard user={u} key={u.id} fn={handleSelectContacTo} isPending={isPending} />
-                                                ))
-                                            }
-                                        </div>
-                                    )
-                                    : (<div className="flex justify-center">-Not Found-</div>)
-                                )
-                            }
-                        </div>
-                    </div>
-                    <div>
-                        <div className="flex justify-center p-3 font-bold text-2xl border-t-2 border-b-2 m-3">
-                            Search Employee
-                        </div>
-                        <div>
-                            <input
-                                type="text"
-                                placeholder="Search Employes..."
-                                className="border-2 w-full"
-                                value={reviewerKey}
-                                onChange={(e) => setReviewerKey(e.target.value)}
-                            />
-                        </div>
-                        <div>
-                            {
-                                (allReviewers && allReviewers?.length > 0
-                                    ? (
-                                        <div className="p-3">
-                                            {
-                                                allReviewers?.map((u) => (
-                                                    <UserCard user={u} key={u.id} fn={handleSelectReviewer} isPending={isPending} />
-                                                ))
-                                            }
-                                        </div>
-                                    )
-                                    : (<div className="flex justify-center">-Not Found-</div>)
-                                )
-                            }
-                        </div>
-                    </div>
+                    </Card>
                 </div>
             </div>
         </div>

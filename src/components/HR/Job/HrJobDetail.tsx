@@ -5,9 +5,10 @@ import { Loader } from "lucide-react"
 import { useEffect, useState } from "react"
 import type { JobResponseWithReviewerDto } from "../../../type/Types"
 import ContactToCard from "./ContactToCard"
-import ReviewerCard from "./ReviewerCard"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { TableBody, TableCell, TableHeader, TableRow, Table } from "@/components/ui/table"
+import ReviewerCard from "./ReviewerCard"
 
 function HrJobDetail() {
     const { id } = useParams()
@@ -40,7 +41,7 @@ function HrJobDetail() {
         }
     }
 
-    const handleOpenReferral = ()=>{
+    const handleOpenReferral = () => {
         navigator(`./referrals`)
     }
 
@@ -51,7 +52,7 @@ function HrJobDetail() {
                     <CardHeader>
                         <div className="flex flex-col gap-3">
                             <div className="flex gap-1 font-bold text-black/90 text-3xl">
-                                {job?.title.toUpperCase()} <span className={`text-sm font-normal text-black/50 ${job?.isActive ? "text-green-500" : "text-red-500"}`}>{job?.isActive ? "Active" : "Inactive"}</span>
+                                {job?.title.toUpperCase()} <span className={`text-sm font-normal text-black/50 ${job?.isActive ? "text-green-600" : "text-red-500"}`}>{job?.isActive ? "Active" : "Inactive"}</span>
                             </div>
                             <div className="flex gap-1 text-black/60">
                                 <span className="font-semibold text-black">Job Role :</span>
@@ -70,7 +71,7 @@ function HrJobDetail() {
                                 <Button variant="outline" className="mt-2" onClick={() => window.open(job?.jdUrl, "_blank")}>
                                     View JD
                                 </Button>
-                                <Button variant="outline" className="mt-2" onClick={handleOpenReferral}>
+                                <Button variant="outline" className="mt-2" onClick={handleOpenReferral} disabled={true}>
                                     View Referrals
                                 </Button>
                                 <Button variant="outline" className="mt-2" onClick={handleDownloadJD} disabled={true}>
@@ -91,13 +92,23 @@ function HrJobDetail() {
                         <div className="w-full flex justify-center font-bold text-2xl">
                             Reviewers
                         </div>
-                        <div className="grid grid-cols-3 gap-3 m-2">
-                            {
-                                job && job?.reviewers.length > 0
-                                    ? job?.reviewers.map((r) => <ReviewerCard reviewer={r.reviewer} key={job.id} />)
-                                    : <div className="flex justify-center font-bold">Not Reviewers</div>
-                            }
-                        </div>
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableCell className="font-bold">Image</TableCell>
+                                    <TableCell className="font-bold">Reviewer Name</TableCell>
+                                    <TableCell className="font-bold">Email</TableCell>
+                                    <TableCell className="font-bold">Designation</TableCell>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {
+                                    job && job?.reviewers.length > 0
+                                        ? job?.reviewers.map((r) => <ReviewerCard reviewer={r.reviewer} key={job.id} />)
+                                        : <TableRow><TableCell colSpan={4} className="flex justify-center font-bold">Not Reviewers</TableCell></TableRow>
+                                }
+                            </TableBody>
+                        </Table>
                     </CardContent>
                 </Card>
             </div>

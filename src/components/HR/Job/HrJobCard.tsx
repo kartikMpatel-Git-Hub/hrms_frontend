@@ -3,8 +3,9 @@ import type { JobResponseDto } from "../../../type/Types"
 import { useNavigate } from "react-router-dom"
 import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { TableCell, TableRow } from "@/components/ui/table"
 
-function HrJobCard({ job }: { job: JobResponseDto }) {
+function HrJobCard({ job, idx }: { job: JobResponseDto, idx: number }) {
 
     const navigator = useNavigate()
     const handleOpenJob = () => {
@@ -12,32 +13,14 @@ function HrJobCard({ job }: { job: JobResponseDto }) {
     }
 
     return (
-        <>
-            <Card className="relative mx-auto w-full max-w-sm p-3 ">
-                <CardHeader>
-                    <CardAction>
-                        <div className={`${job.isActive ? "bg-green-700" : "bg-red-500"} p-1 rounded-sm font-bold text-sm text-white`}>{job.isActive ? "Active" : "Inactive"}</div>
-                    </CardAction>
-                    <CardTitle>
-                        <div className="flex gap-1 font-bold text-black/90">
-                            <Briefcase className="w-4 h-4 inline " />
-                            {job.title}
-                        </div>
-                    </CardTitle>
-                    <div className="text-black/50 text-sm flex gap-1"><MapPin className="w-4 h-4 mt-0.5" /> {job.place}</div>
-                    <CardDescription>
-                        <div className="flex gap-1 text-black/60">
-                            <ALargeSmall className="w-4 h-4 inline " />
-                            {job.requirements}
-                        </div>
-                    </CardDescription>
-                </CardHeader>
-                <CardFooter>
-                    <Button className="w-full" onClick={() => handleOpenJob()}><Eye /> View</Button>
-                </CardFooter>
-            </Card>
-            
-        </>
+        <TableRow>
+            <TableCell>{idx + 1}</TableCell>
+            <TableCell>{job.title}</TableCell>
+            <TableCell>{job.jobRole}</TableCell>
+            <TableCell>{job.isActive ? <span className="text-green-600 font-semibold">Active</span> : <span className="text-red-500 font-semibold">Inactive</span>}</TableCell>
+            <TableCell>{job.place}</TableCell>
+            <TableCell><Button onClick={() => handleOpenJob()}><Eye /></Button></TableCell>
+        </TableRow>
     )
 }
 

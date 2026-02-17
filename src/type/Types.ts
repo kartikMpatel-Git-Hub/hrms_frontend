@@ -18,8 +18,8 @@ export interface UserReponseDto {
   dateOfJoin: Date,
   managerId: number,
   department: {
-    id : number,
-    departmentName : string
+    id: number,
+    departmentName: string
   },
   designation: string
 }
@@ -224,4 +224,42 @@ export interface ReferredResponseDto {
   referedBy: number,
   jobId: number,
   referedAt: Date
+}
+
+export interface GameResponseDto {
+  id: number,
+  name: string,
+  maxPlayer: number,
+  minPlayer: number,
+}
+
+export interface GameCreateDto {
+  Name: string,
+  MaxPlayer: number,
+  MinPlayer: number,
+}
+
+export interface SlotCreateDto {
+  StartTime: string,
+  EndTime: string,
+}
+
+export interface GameSlotCreateDto {
+  id : number,
+  dto : SlotCreateDto
+}
+
+export interface GameSlotResponseDto {
+  id: number,
+  GameId: number,
+  startTime: string,
+  endTime: string,
+}
+
+export interface GameResponseWithSlotDto {
+  id: number,
+  name: string,
+  maxPlayer: number,
+  minPlayer: number,
+  slots: GameSlotResponseDto[]
 }

@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/card"
 import {
   Field,
-  FieldDescription,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
@@ -19,13 +18,14 @@ import { useEffect, useState, type ChangeEvent } from "react"
 import { useNavigate } from "react-router-dom"
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert"
 import { InfoIcon } from "lucide-react"
+import { logout } from "@/slice/AuthSlice"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
 
-  const { login, isAuthenticating, authError,logout } = useAuth();
+  const { login, isAuthenticating, authError, user } = useAuth();
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [formErrors, setFormErrors] = useState<string[]>([]);
   const navigate = useNavigate();
@@ -51,13 +51,14 @@ export function LoginForm({
         case "EMPLOYEE": navigate("/employee/dashboard"); break;
         default: navigate("./")
       }
-    } catch {
+    } catch (error) {
+      console.error("Login error:", error);
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     logout()
-  },[])
+  }, [])
 
   const handleChangeEvent = (e: ChangeEvent<HTMLInputElement>) => {
     setCredentials((prev) => ({ ...prev, [e.target.name]: e.target.value }));

@@ -1,19 +1,18 @@
 import { useState } from "react"
 import type { ExpenseStatusCreateDto, TravelerExpenseDto } from "../../../type/Types"
-import ExpenseProofCard from "./ExpenseProofCard"
 import { ChangeExpenseStatus } from "../../../api/ExpenseService"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { CircleAlert, IndianRupee } from "lucide-react"
+import { CircleAlert, Edit, Eye, IndianRupee } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { toast, ToastContainer } from "react-toastify"
+import { toast } from "react-toastify"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Table, TableCell, TableRow } from "@/components/ui/table"
 
-function ExpenseCard({ expense, travelId, travelerId }: {
+function ExpenseCard({ expense, travelId, travelerId, idx }: {
     expense: TravelerExpenseDto,
     travelId: number,
     travelerId: number,
-    onStatusChange?: () => void
+    idx: number,
 }) {
 
     const [expenseStatus, setExpenseStatus] = useState<ExpenseStatusCreateDto>({
@@ -22,6 +21,7 @@ function ExpenseCard({ expense, travelId, travelerId }: {
     })
 
     const queryClient = useQueryClient()
+    const [isEditOpen, setIsEditOpen] = useState<boolean>(false)
 
     const { isPending, mutate, error: err } = useMutation({
         mutationKey: ["travel-traveler-expense"],
@@ -45,22 +45,129 @@ function ExpenseCard({ expense, travelId, travelerId }: {
     }
 
     const handleApplyChanges = async () => {
+        setError("")
         if (expenseStatus.status === "REJECTED" && !expenseStatus?.remarks.trim()) {
-            toast.error("Remarks is required when rejecting an expense.")
+            setError("Remarks is required when rejecting an expense.")
             return
         }
         if (expenseStatus.status === "PENDING") {
-            toast.error("Status cannot be set to Pending.")
+            setError("Status cannot be set to Pending.")
             return
         }
-        setError("")
         const expenseId = expense.id
         mutate({ travelId, travelerId, expenseId, dto: expenseStatus })
+        setIsEditOpen(false)
     }
 
     return (
         <>
-            <Card>
+            <TableRow>
+                <TableCell>{idx + 1}</TableCell>
+                <TableCell>{expense.details}</TableCell>
+                <TableCell className="flex w-9"><IndianRupee /><span>{expense.amount}</span></TableCell>
+                <TableCell>{expense.expenseDate.toString().substring(0, 10)}</TableCell>
+                <TableCell><span className={`${expense.status === "Approved" ? "text-green-500" : expense.status === "Rejected" ? "text-red-500" : "text-yellow-500"}`}>{expense.status}</span></TableCell>
+                <TableCell className="flex gap-2">
+                    <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+                        <DialogTrigger asChild>
+                            <Button disabled={expense.status !== "Pending"}>
+                                <Edit />
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-sm">
+                            <DialogHeader>
+                                <DialogTitle>Edit Expense Status</DialogTitle>
+                            </DialogHeader>
+                            <div className="mt-2">
+                                <label className="font-bold italic">Change Status:</label>
+                                <select
+                                    className="border-2 w-full p-2 rounded"
+                                    name="status"
+                                    value={expenseStatus.status}
+                                    onChange={handleInputChange}
+                                >
+                                    <option value="PENDING">Pending</option>
+                                    <option value="APPROVED">Approved</option>
+                                    <option value="REJECTED">Rejected</option>
+                                </select>
+                                {expenseStatus.status === "REJECTED" && (
+                                    <div className="mt-2">
+                                        <label className="font-bold italic">Remarks: <span className="text-red-600">*</span></label>
+                                        <textarea
+                                            className="border-2 w-full p-2 rounded"
+                                            name="remarks"
+                                            value={expenseStatus.remarks || ""}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter reason for rejection..."
+                                            rows={3}
+                                        />
+                                    </div>
+                                )}
+                                <Button className="mt-2" onClick={handleApplyChanges} disabled={isPending}>
+                                    Apply Changes
+                                </Button>
+                                {
+                                    error && (
+                                        <div className="flex items-center gap-2 mt-2 text-red-600">
+                                            <CircleAlert className="w-4 h-4" />
+                                            <span>{error}</span>
+                                        </div>
+                                    )
+                                }
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button>
+                                <Eye />
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-sm">
+                            <DialogHeader>
+                                <DialogTitle>Expense Proof</DialogTitle>
+                                <DialogDescription>{expense.remarks && (
+                                    <div className="flex text-red-600 ">
+                                        <CircleAlert className="w-3 h-3 m-1" /> <span className="text-red-600">{expense.remarks}</span>
+                                    </div>
+                                )}
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div>
+                                <Table>
+                                    <TableRow>
+                                        <TableCell className="font-bold">Sr. No</TableCell>
+                                        <TableCell className="font-bold">Document Type</TableCell>
+                                        <TableCell className="font-bold">Action</TableCell>
+                                    </TableRow>
+                                    {
+                                        expense?.proofs && expense.proofs.length > 0 ? (
+                                            expense.proofs.map((p, idx) => (
+                                                <TableRow key={p.id}>
+                                                    <TableCell>{idx + 1}</TableCell>
+                                                    <TableCell>{p.documentType}</TableCell>
+                                                    <TableCell>
+                                                        <Button size="sm" onClick={() => window.open(p.proofDocumentUrl, "_blank")}>
+                                                            <Eye />
+                                                        </Button>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))
+                                        ) : (
+                                            <TableRow>
+                                                <TableCell colSpan={3} className="text-center">
+                                                    No Proofs Available
+                                                </TableCell>
+                                            </TableRow>
+                                        )
+                                    }
+                                </Table>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                </TableCell>
+            </TableRow>
+            {/* <Card>
                 <ToastContainer />
                 <CardHeader>
                     <CardTitle>{expense.details}</CardTitle>
@@ -110,125 +217,10 @@ function ExpenseCard({ expense, travelId, travelerId }: {
                             </div>
                         )
                     }
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button variant="outline" className="mt-4 w-full">
-                                View Proof
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-sm">
-                            <DialogHeader>
-                                <DialogTitle>Expense Proof</DialogTitle>
-                                <DialogDescription>{expense.remarks && (
-                                    <div className="flex text-red-600 ">
-                                        <CircleAlert className="w-3 h-3 m-1" /> <span className="text-red-600">{expense.remarks}</span>
-                                    </div>
-                                )}
-                                </DialogDescription>
-                            </DialogHeader>
-                            <div className="grid grid-cols-3 gap-3">
-                                {
-                                    expense?.proofs && expense.proofs.length > 0 ? (
-                                        expense.proofs.map((p, idx) => (
-                                            <ExpenseProofCard proof={p} key={p.id} />
-                                        ))
-                                    ) : (
-                                        <div className="text-center py-10 text-2xl font-bold">
-                                            No Proofs Found
-                                        </div>
-                                    )
-                                }
-                            </div>
-                        </DialogContent>
-                    </Dialog>
+                    
                 </CardContent>
-            </Card>
+            </Card> */}
         </>
-        // <div className="border-2 p-3 m-3 flex justify-center">
-        //     <div className="">
-        //         <div className="bg-slate-800 text-white w-fit px-2 rounded-2xl">{expense.id}</div>
-        //         <div className="flex justify-center  border-t-2 border-b-2 m-3 text-2xl font-bold">Details</div>
-        //         <div className="flex justify-center">
-        //             <div>
-        //                 <div className="p-1"><span className="font-bold italic">Amount : </span>{expense.amount}</div>
-        //                 <div className="p-1"><span className="font-bold italic">Category : </span>{expense.category.category}</div>
-        //                 <div className="p-1"><span className="font-bold italic">Status : </span><span className="bg-slate-800 text-white p-1 rounded-sm">{expense.status}</span></div>
-        //                 <div className="p-1"><span className="font-bold italic">Details : </span>{expense.details || "N/A"}</div>
-        //             </div>
-        //         </div>
-        //         {
-        //             expense.status === "Pending" && (
-        //                 <div className="flex justify-center">
-        //                     <div className="w-full">
-        //                         <div>
-        //                             <label className="font-bold italic">Change Status:</label>
-        //                             <select
-        //                                 className="border-2 w-full p-2 rounded"
-        //                                 name="status"
-        //                                 value={expenseStatus.status}
-        //                                 onChange={handleInputChange}
-        //                                 disabled={isPending}
-        //                             >
-        //                                 <option value="PENDING">Pending</option>
-        //                                 <option value="APPROVED">Approved</option>
-        //                                 <option value="REJECTED">Rejected</option>
-        //                             </select>
-        //                         </div>
-
-        //                         {expenseStatus.status === "REJECTED" && (
-        //                             <div className="mt-2">
-        //                                 <label className="font-bold italic">Remarks: <span className="text-red-600">*</span></label>
-        //                                 <textarea
-        //                                     className="border-2 w-full p-2 rounded"
-        //                                     name="remarks"
-        //                                     value={expenseStatus.remarks || ""}
-        //                                     onChange={handleInputChange}
-        //                                     placeholder="Enter reason for rejection..."
-        //                                     rows={3}
-        //                                     disabled={isPending}
-        //                                 />
-        //                             </div>
-        //                         )}
-
-        //                         {error && (
-        //                             <div className="text-red-600 text-sm mt-2">
-        //                                 {error}
-        //                             </div>
-        //                         )}
-
-        //                         <div>
-        //                             <button
-        //                                 className="bg-slate-800 m-2 text-white rounded-sm p-2 disabled:bg-slate-400 disabled:cursor-not-allowed hover:bg-slate-700"
-        //                                 onClick={handleApplyChanges}
-        //                                 disabled={isPending}
-        //                             >
-        //                                 {isPending ? "Applying..." : "Apply Changes"}
-        //                             </button>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //             )
-        //         }
-        //         <div className="flex justify-center border-t-2 border-b-2 m-3 text-2xl font-bold">
-        //             Proofs
-        //         </div>
-        //         <div className="flex gap-3">
-        //             {
-        //                 expense?.proofs?.map((p,idx) => (
-        //                     <div className="border-2 p-3">
-        //                         <div className="font-bold rounded-2xl bg-slate-800 w-fit text-white px-2">{idx+1}</div>
-        //                         <ExpenseProofCard proof={p} key={p.id} />
-        //                     </div>
-        //                 ))
-        //             }
-        //         </div>
-        //         {expense.remarks && (
-        //             <div className="text-red-700 mt-2 p-2 bg-red-50 rounded">
-        //                 <span className="font-bold">Remarks:</span> {expense.remarks}
-        //             </div>
-        //         )}
-        //     </div>
-        // </div>
     )
 }
 

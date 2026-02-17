@@ -13,6 +13,7 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/in
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableCell, TableRow, TableHeader, TableBody } from "@/components/ui/table";
 
 function TravelDetail() {
     const { id } = useParams<number | any>()
@@ -96,7 +97,7 @@ function TravelDetail() {
             <div>
                 <Card>
                     <CardHeader>
-                        <CardTitle className="text-2xl flex gap-3"><PlaneTakeoff className=""/> {travel?.title?.toUpperCase()}</CardTitle>
+                        <CardTitle className="text-2xl flex gap-3"><PlaneTakeoff className="" /> {travel?.title?.toUpperCase()}</CardTitle>
                         <CardDescription>{travel?.description || "No description available"}</CardDescription>
                     </CardHeader>
                     <CardContent className="flex flex-col gap-3">
@@ -107,27 +108,40 @@ function TravelDetail() {
 
                 </Card>
                 <div className="font-bold flex justify-center text-2xl border-b-2 border-t-2 m-4">Travelers</div>
-                <div>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableCell className="font-bold">Image</TableCell>
+                            <TableCell className="font-bold">Traveler Name</TableCell>
+                            <TableCell className="font-bold">Email</TableCell>
+                            <TableCell className="font-bold">Designation</TableCell>
+                            <TableCell className="font-bold">Action</TableCell>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {
+                            travel?.travelers && travel?.travelers?.length > 0 ?
+                                travel?.travelers?.map((t, idx) => (
+                                    <TravelerCard
+                                        traveler={t.travelerr}
+                                        handleOpenExpense={handleOpenExpense}
+                                        handleOpenDocument={handleOpenDocument}
+                                        key={t.id} />
+                                ))
+                                :
+                                (
+                                    <TableRow>
+                                        <TableCell colSpan={6} >
+                                            <div className="flex justify-center font-bold text-red-700">
+                                                No Travelers
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                        }
+                    </TableBody>
 
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-3">
-                    {
-                        travel?.travelers && travel?.travelers?.length > 0 ?
-                            travel?.travelers?.map((t) => (
-                                <TravelerCard
-                                    traveler={t.travelerr}
-                                    handleOpenExpense={handleOpenExpense}
-                                    handleOpenDocument={handleOpenDocument}
-                                    key={t.id} />
-                            ))
-                            :
-                            (
-                                <div className="text-2xl font-semibold text-red-700">
-                                    No Travelers
-                                </div>
-                            )
-                    }
-                </div>
+                </Table>
                 <div className="flex justify-center p-3 font-bold text-2xl border-t-2 border-b-2 m-3">
                     Search Traveler
                 </div>
