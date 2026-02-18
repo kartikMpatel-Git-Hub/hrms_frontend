@@ -1,7 +1,6 @@
-import { ALargeSmall, Briefcase, Eye, MapPin } from "lucide-react"
+import { Eye } from "lucide-react"
 import type { JobResponseDto } from "../../../type/Types"
 import { useNavigate } from "react-router-dom"
-import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { TableCell, TableRow } from "@/components/ui/table"
 

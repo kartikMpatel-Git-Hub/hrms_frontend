@@ -263,3 +263,13 @@ export interface GameResponseWithSlotDto {
   minPlayer: number,
   slots: GameSlotResponseDto[]
 }
+
+export interface BookingSlotResponseDto{
+  id : number,
+  gameId : number,
+  bookedBy : number,
+  startTime : string,
+  endTime : string,
+  date : Date,
+  status : string
+}

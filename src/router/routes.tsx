@@ -28,6 +28,8 @@ import EmployeeOrganizationChart from '@/components/utility/EmployeeOrganization
 import EmployeeChart from '@/components/utility/EmployeeChart'
 import HrGames from '@/components/HR/Game/HrGames'
 import HrGameDetail from '@/components/HR/Game/HrGameDetail'
+import EmployeeGames from '@/components/EMPLOYEE/game/EmployeeGames'
+import EmployeeGameDetail from '@/components/EMPLOYEE/game/EmployeeGameDetail'
 
 const router = createBrowserRouter([
     {
@@ -128,6 +130,14 @@ const router = createBrowserRouter([
                         errorElement: <NotFound />,
                         children: [
                             { index: true, element: <EmployeeJob /> },
+                        ]
+                    },
+                    {
+                        path: "game",
+                        errorElement: <NotFound />,
+                        children: [
+                            { index: true, element: <EmployeeGames /> },
+                            { path : ":id" , element: <EmployeeGameDetail /> },
                         ]
                     },
                     {
