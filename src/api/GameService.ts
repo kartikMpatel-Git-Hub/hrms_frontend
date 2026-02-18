@@ -1,4 +1,4 @@
-import type { GameCreateDto, GameResponseDto, GameResponseWithSlotDto, GameSlotCreateDto, GameSlotResponseDto, PagedResponse } from "@/type/Types";
+import type { BookingSlotResponseDto, GameCreateDto, GameResponseDto, GameResponseWithSlotDto, GameSlotCreateDto, GameSlotResponseDto, PagedResponse, UserReponseDto } from "@/type/Types";
 import api from "./Api";
 
 export const GetAllGames = async (): Promise<PagedResponse<GameResponseDto>> => {
@@ -26,4 +26,14 @@ export const DeleteGameSlot = async (gameId: number, slotId: number): Promise<an
 export const DeleteGame = async (id: number): Promise<any> => {
     const response = await api.delete(`/game/${id}`)
     return response.data
+}
+
+export const GetGameSlots = async (id: number): Promise<BookingSlotResponseDto[]> => {
+    const response = await api.get<BookingSlotResponseDto[]>(`/game/${id}/booking`)
+    return response.data
+}
+
+export const GetAvailablePlayers = async (gameId: number, pageSize: number, pageNumber: number, key: string): Promise<UserReponseDto[]> => {
+    const response = await api.get<PagedResponse<UserReponseDto>>(`/game/${gameId}/booking/available-players?pageNumber=${pageNumber}&pageSize=${pageSize}&key=${key}`)
+    return response.data.data
 }
