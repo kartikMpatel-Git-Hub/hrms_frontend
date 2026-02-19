@@ -30,6 +30,9 @@ import HrGames from '@/components/HR/Game/HrGames'
 import HrGameDetail from '@/components/HR/Game/HrGameDetail'
 import EmployeeGames from '@/components/EMPLOYEE/game/EmployeeGames'
 import EmployeeGameDetail from '@/components/EMPLOYEE/game/EmployeeGameDetail'
+import GameSlotOfferes from '@/components/EMPLOYEE/game/GameSlotOfferes'
+import ManagerLayout from '@/components/Manager/ManagerLayout'
+import ManagerDashboard from '@/components/Manager/ManagerDashboard'
 
 const router = createBrowserRouter([
     {
@@ -80,6 +83,7 @@ const router = createBrowserRouter([
                         children: [
                             { index: true, element: <HrGames /> },
                             { path: ":id", element: <HrGameDetail /> },
+                            { path : ":id/offere" , element: <GameSlotOfferes /> },
                             // { path: "add", element: <HrJobCreateForm /> },
                             // { path: ":id/referrals", element: <HrJobReferrals /> },
                         ]
@@ -105,6 +109,7 @@ const router = createBrowserRouter([
                             { path: ":id", element: <EmployeeChart /> }
                         ]
                     },
+                    { path: "notification", element: <Notifications /> },
                     { path: "*", element: <NotFound /> }
                 ]
             },
@@ -138,6 +143,7 @@ const router = createBrowserRouter([
                         children: [
                             { index: true, element: <EmployeeGames /> },
                             { path : ":id" , element: <EmployeeGameDetail /> },
+                            { path : ":id/offere" , element: <GameSlotOfferes /> },
                         ]
                     },
                     {
@@ -148,6 +154,16 @@ const router = createBrowserRouter([
                             { path: ":id", element: <EmployeeChart /> }
                         ]
                     },
+                    { path: "*", element: <NotFound /> }
+                ]
+            },
+            {
+                path: 'manager',
+                element: <ManagerLayout />,
+                errorElement: <NotFound />,
+                children: [
+                    { index: true, path: "dashboard", element: <ManagerDashboard /> },
+                    { path: "notification", element: <Notifications /> },
                     { path: "*", element: <NotFound /> }
                 ]
             }

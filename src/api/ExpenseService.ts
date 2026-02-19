@@ -1,4 +1,4 @@
-import type { ExpenseCategoryCreateDto, ExpenseCategoryResponseDto, TravelerExpenseDto } from "../type/Types";
+import type { ExpenseCategoryCreateDto, ExpenseCategoryResponseDto, PagedResponse, TravelerExpenseDto } from "../type/Types";
 import api from "./Api";
 
 // export const GetExpenses = async (): Promise<[]> => {
@@ -34,5 +34,10 @@ export const AddExpense = async ({travelId,dto}:any) : Promise<TravelerExpenseDt
             "Content-Type" : "multipart/form-data"
         }
     })
+    return response.data
+}
+
+export const GetAllExpenseForHr = async ({pageNumber,pageSize} : any): Promise<PagedResponse<TravelerExpenseDto>> => {
+    const response = await api.get<PagedResponse<TravelerExpenseDto>>(`/travel/all-expense?pageNumber=${pageNumber}&pageSize=${pageSize}`)
     return response.data
 }

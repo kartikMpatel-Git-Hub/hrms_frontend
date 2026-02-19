@@ -97,9 +97,6 @@ function ExpenseCreateForm() {
         }
 
         mutate({ travelId: id, dto: formData })
-
-
-        // navigator("../")
     }
     return (
         <div className="flex justify-center">

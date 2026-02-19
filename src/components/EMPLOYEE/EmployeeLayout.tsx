@@ -2,7 +2,7 @@ import { Outlet, useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
 import { useEffect } from "react"
 import { SidebarProvider, SidebarTrigger } from "../ui/sidebar"
-import { AppSidebar } from "../ui/app-sidebar"
+import { AppSidebarEmployee } from "../ui/app-sidebar-employee"
 
 function EmployeeLayout() {
 
@@ -17,7 +17,7 @@ function EmployeeLayout() {
 
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebarEmployee />
       <main className="w-full">
         <SidebarTrigger />
         <Outlet />

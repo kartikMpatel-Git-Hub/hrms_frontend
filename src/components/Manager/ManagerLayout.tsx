@@ -1,16 +1,15 @@
 import { Outlet } from "react-router-dom"
 import { SidebarProvider, SidebarTrigger } from "../ui/sidebar"
-import {  AppSidebarHr } from "../ui/app-sidebar-hr"
-function HrLayout() {
+import { AppSidebarManager } from "../ui/app-sidebar-manager"
+function ManagerLayout() {
   return (
     <SidebarProvider>
-      <AppSidebarHr />
+      <AppSidebarManager />
       <main className="w-full">
-        {/* <HrNavigation /> */}
         <SidebarTrigger />
         <Outlet />
       </main>
     </SidebarProvider>
   )
 }
-export default HrLayout
+export default ManagerLayout

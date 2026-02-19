@@ -7,10 +7,15 @@ import TravelDocumentCard from "./TravelDocumentCard"
 import { Card } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
 import { Skeleton } from "@/components/ui/skeleton"
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
+import { File, Search } from "lucide-react"
 
 function HrTravelDocuments() {
     const { id, travelerId } = useParams()
     const [documents, setDocuments] = useState<TravelDocumentDto[]>()
+    const [search, setSearch] = useState<string>("")
+    const [loading, setLoading] = useState<boolean>(false)
+    const [filteredData, setFilteredData] = useState<TravelDocumentDto[]>()
 
     const { data, isLoading } = useQuery({
         queryKey: ["travel-document"],
@@ -23,13 +28,36 @@ function HrTravelDocuments() {
         }
     }, [data])
 
+    useEffect(() => {
+        setLoading(true)
+        if (data) {
+            if (search.trim() === "") {
+                setDocuments(data)
+                setFilteredData(data)
+            } else {
+                const filtered = data?.filter(
+                    t =>
+                        t.documentName.toLowerCase().includes(search.toLowerCase()) ||
+                        t.documentType.toLowerCase().includes(search.toLowerCase())
+                )
+                setFilteredData(filtered)
+            }
+        }
+        setTimeout(() => {
+            setLoading(false)
+        }, 500);
+    }, [data, search])
+
     return (
-        <div className="m-5">
-            <Card>
-                <div className="flex justify-center text-2xl font-bold ">
-                    Traveler Document
-                </div>
-            </Card>
+        <Card className="m-10 p-5">
+            <div className="flex justify-center font-bold text-2xl gap-1 mx-10"><File className="h-8 mr-1" /><span>Traveler Expenses</span></div>
+            <InputGroup className="">
+                <InputGroupInput placeholder="Search Expense..." onChange={(e) => setSearch(e.target.value)} value={search} />
+                <InputGroupAddon>
+                    <Search />
+                </InputGroupAddon>
+                <InputGroupAddon align="inline-end">{documents?.length || 0} Results</InputGroupAddon>
+            </InputGroup>
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -41,8 +69,8 @@ function HrTravelDocuments() {
                 </TableHeader>
                 <TableBody>
                     {
-                        !isLoading ? (
-                            documents && documents.map((d) => (
+                        !loading ? (
+                            filteredData && filteredData.map((d) => (
                                 <TravelDocumentCard document={d} />
                             ))
                         ) : (
@@ -61,7 +89,8 @@ function HrTravelDocuments() {
                     }
                 </TableBody>
             </Table>
-        </div>
+        </Card>
+
     )
 }
 

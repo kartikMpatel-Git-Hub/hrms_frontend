@@ -181,7 +181,7 @@ function TravelForm() {
                             </Field>
                             <Field>
                                 <FieldLabel htmlFor="checkout-7j9-card-number-uw1">
-                                    <IndianRupee className="w-4 h-4" /> Max Amount Per Expense
+                                    <IndianRupee className="w-4 h-4" /> Max Amount Per Day
                                 </FieldLabel>
                                 <Input
                                     placeholder="Enter Max Amount Limit"
