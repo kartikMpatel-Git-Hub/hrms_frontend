@@ -46,7 +46,7 @@ function ExpenseCard({ expense, travelId, travelerId, idx }: {
 
     const handleApplyChanges = async () => {
         setError("")
-        if (expenseStatus.status === "REJECTED" && !expenseStatus?.remarks.trim()) {
+        if (expenseStatus.status === "REJECTED" && (!expenseStatus?.remarks || !expenseStatus?.remarks.trim())) {
             setError("Remarks is required when rejecting an expense.")
             return
         }
@@ -62,9 +62,9 @@ function ExpenseCard({ expense, travelId, travelerId, idx }: {
     return (
         <>
             <TableRow>
-                <TableCell>{idx + 1}</TableCell>
+                <TableCell>{idx + 1}.</TableCell>
                 <TableCell>{expense.details}</TableCell>
-                <TableCell className="flex w-9"><IndianRupee /><span>{expense.amount}</span></TableCell>
+                <TableCell className="flex"><IndianRupee className="w-4"/><span>{expense.amount}</span></TableCell>
                 <TableCell>{expense.expenseDate.toString().substring(0, 10)}</TableCell>
                 <TableCell><span className={`${expense.status === "Approved" ? "text-green-500" : expense.status === "Rejected" ? "text-red-500" : "text-yellow-500"}`}>{expense.status}</span></TableCell>
                 <TableCell className="flex gap-2">

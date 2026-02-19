@@ -114,6 +114,8 @@ export interface ExpenseProofDto {
 export interface TravelerExpenseDto {
   id: number,
   amount: number,
+  travelId : number,
+  travelerId : number,
   category: ExpenseCategoryResponseDto,
   status: string,
   remarks: string,
@@ -272,4 +274,11 @@ export interface BookingSlotResponseDto{
   endTime : string,
   date : Date,
   status : string
+}
+
+export interface GameSlotOffereResponseDto{
+  id : number,
+  slot : BookingSlotResponseDto,
+  status : string,
+  createdAt : Date
 }

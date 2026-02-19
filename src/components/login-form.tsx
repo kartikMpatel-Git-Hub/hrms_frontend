@@ -25,7 +25,7 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
 
-  const { login, isAuthenticating, authError, user } = useAuth();
+  const { login, isAuthenticating, authError } = useAuth();
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [formErrors, setFormErrors] = useState<string[]>([]);
   const navigate = useNavigate();
@@ -49,6 +49,7 @@ export function LoginForm({
       switch (user.role) {
         case "HR": navigate("/hr/dashboard"); break;
         case "EMPLOYEE": navigate("/employee/dashboard"); break;
+        case "MANAGER": navigate("/manager/dashboard"); break;
         default: navigate("./")
       }
     } catch (error) {

@@ -7,10 +7,10 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Briefcase, Building2, ChartArea, ChartNetwork, ChessPawn, ChessQueen, Gamepad, Gamepad2, GamepadDirectional, HomeIcon, IndianRupeeIcon, LogOut, LucideGamepad, TicketsPlane, User2 } from "lucide-react"
+import { Bell, Briefcase, Building2, ChartArea, ChartNetwork, ChessPawn, ChessQueen, Gamepad, Gamepad2, GamepadDirectional, HomeIcon, IndianRupeeIcon, LogOut, LucideGamepad, TicketsPlane, User2 } from "lucide-react"
 import { NavLink } from "react-router"
 
-export function AppSidebar() {
+export function AppSidebarManager() {
     return (
         <Sidebar className="">
             <SidebarHeader>
@@ -66,6 +66,15 @@ export function AppSidebar() {
                                 to={"./game"}
                             >
                                 <Gamepad2 className="w-4 h-4" /> Game
+                            </NavLink>
+                        </SidebarMenuButton>
+                        
+                        <SidebarMenuButton className="my-2">
+                            <NavLink
+                                className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
+                                to={"./notification"}
+                            >
+                                <Bell className="w-4 h-4" /> Notification
                             </NavLink>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

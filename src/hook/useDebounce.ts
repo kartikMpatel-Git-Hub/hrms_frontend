@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import type { Traveler } from "../type/Types";
 
 function useDebounce<T>(value : string, delay : number,fn : (value : string) => any) {
 
