@@ -33,6 +33,7 @@ import EmployeeGameDetail from '@/components/EMPLOYEE/game/EmployeeGameDetail'
 import GameSlotOfferes from '@/components/EMPLOYEE/game/GameSlotOfferes'
 import ManagerLayout from '@/components/Manager/ManagerLayout'
 import ManagerDashboard from '@/components/Manager/ManagerDashboard'
+import HrJobShared from '@/components/HR/Job/HrJobShared'
 
 const router = createBrowserRouter([
     {
@@ -76,6 +77,7 @@ const router = createBrowserRouter([
                             { path: ":id", element: <HrJobDetail /> },
                             { path: "add", element: <HrJobCreateForm /> },
                             { path: ":id/referrals", element: <HrJobReferrals /> },
+                            { path: ":id/shared", element: <HrJobShared /> },
                         ]
                     },
                     {

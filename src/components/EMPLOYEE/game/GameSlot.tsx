@@ -5,14 +5,16 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/in
 import { Skeleton } from "@/components/ui/skeleton"
 import useDebounce from "@/hook/useDebounce"
 import type { BookingSlotResponseDto, PagedRequestDto, UserReponseDto } from "@/type/Types"
-import { BookMarked, Eye, MoveRight, Plus, Search, Users2, X } from "lucide-react"
+import { BookMarked, CalendarCheck2, Eye, MoveRight, Plus, Search, Users2, X } from "lucide-react"
 import { useEffect, useState } from "react"
 
 interface GameSlotProps {
-    slot: BookingSlotResponseDto
+    slot: BookingSlotResponseDto,
+    handleBooking: (slotId: number, playerIds: number[]) => boolean,
+    isPending : boolean
 }
 
-function GameSlot({ slot }: GameSlotProps) {
+function GameSlot({ slot, handleBooking, isPending }: GameSlotProps) {
 
     const [search, setSearch] = useState<string>("")
     const [players, setPlayers] = useState<UserReponseDto[] | null>(null)
@@ -23,6 +25,7 @@ function GameSlot({ slot }: GameSlotProps) {
     })
     const [loading, setLoading] = useState<boolean>(false)
     const fetchedPlayers = useDebounce<UserReponseDto>(search || "", 1000, () => GetAvailablePlayers(slot.gameId, page.pageSize, page.pageNumber, search));
+    const [open, setOpen] = useState(false)
 
     useEffect(() => {
         if (fetchedPlayers) {
@@ -52,6 +55,10 @@ function GameSlot({ slot }: GameSlotProps) {
     }
 
 
+    function handleBookingSlot(): void {
+        setOpen(!handleBooking(slot.id, selectedPlayer.map((p) => p.id)))
+    }
+
     return (
         <div className="p-2 shadow-sm rounded-2xl font-bold">
             <div className="flex justify-center m-4 gap-2">
@@ -65,10 +72,10 @@ function GameSlot({ slot }: GameSlotProps) {
                 {
                     slot.status == "Available"
                         ? (
-                            <Dialog>
+                            <Dialog open={open} onOpenChange={setOpen}>
                                 <DialogTrigger asChild>
-                                    <Button className="w-full p-1">
-                                        <BookMarked /> Book
+                                    <Button className="w-full p-1" disabled={isPending || slot.startTime <= new Date().toTimeString().substring(0, 5)}>
+                                        <CalendarCheck2 /> Book
                                     </Button>
                                 </DialogTrigger>
                                 <DialogContent>
@@ -108,7 +115,7 @@ function GameSlot({ slot }: GameSlotProps) {
                                                             }
                                                         </div>
                                                         <div className="font-medium">{p.email}</div>
-                                                        <Button className="ml-auto" onClick={() => handleSelectPlayer(p)}>
+                                                        <Button className="ml-auto" onClick={() => handleSelectPlayer(p)} disabled={isPending}>
                                                             <X />
                                                         </Button>
                                                     </div>
@@ -138,7 +145,7 @@ function GameSlot({ slot }: GameSlotProps) {
                                                                                 )
                                                                             }</div>
                                                                         <div className="font-medium">{p.email}</div>
-                                                                        <Button className="ml-auto" onClick={() => handleSelectPlayer(p)}>
+                                                                        <Button className="ml-auto" onClick={() => handleSelectPlayer(p)} disabled={isPending}>
                                                                             <Plus />
                                                                         </Button>
                                                                     </div>
@@ -148,7 +155,7 @@ function GameSlot({ slot }: GameSlotProps) {
                                                         : (<div>No Player Found</div>)
                                                 )
                                                 : (<div>
-                                                    {Array.from({ length: 5 }).map((_, i) => (
+                                                    {Array.from({ length: 5 }).map((_) => (
                                                         <div className="p-1 flex gap-3">
                                                             <Skeleton className="h-8 w-100" />
                                                             <Skeleton className="h-8 w-8" />
@@ -157,6 +164,9 @@ function GameSlot({ slot }: GameSlotProps) {
                                                 </div>)
                                         }
                                     </div>
+                                    <Button className="w-full mt-4" onClick={handleBookingSlot} disabled={isPending}>
+                                        <BookMarked /> Confirm Booking
+                                    </Button>
                                 </DialogContent>
                             </Dialog>
                         )

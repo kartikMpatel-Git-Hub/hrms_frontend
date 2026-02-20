@@ -44,3 +44,17 @@ export const GetActiveOfferes = async (id : number): Promise<GameSlotOffereRespo
     return response.data
 }
 
+export const BookGameSlot = async (gameId: number, slotId: number, playerIds: number[]): Promise<any> => {
+    const response = await api.post(`/game/${gameId}/slot/${slotId}/book`, { Players : playerIds })
+    return response.data
+}
+
+export const IsUserInterestedInGame = async (gameId: number): Promise<{isInterested: boolean}> => {
+    const response = await api.get(`/game/${gameId}/is-interested`)
+    return response.data
+}
+
+export const ChangeUserInterest = async (gameId: number): Promise<any> => {
+    const response = await api.patch(`/game/${gameId}/toggle-interest`, {})
+    return response.data
+}

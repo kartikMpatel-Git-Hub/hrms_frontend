@@ -151,11 +151,11 @@ function HrGames() {
                     <Table>
                         <TableHeader>
                             <TableRow className="font-bold">
-                                <TableCell>Sr. No</TableCell>
-                                <TableCell>Name</TableCell>
-                                <TableCell>Max Player</TableCell>
-                                <TableCell>Min Player</TableCell>
-                                <TableCell>Action</TableCell>
+                                <TableCell ><div className="flex justify-center">Sr.No</div></TableCell>
+                                <TableCell ><div className="flex justify-center">Name</div></TableCell>
+                                <TableCell ><div className="flex justify-center">Max Player</div></TableCell>
+                                <TableCell ><div className="flex justify-center">Min Player</div></TableCell>
+                                <TableCell><div className="flex justify-center">Action</div></TableCell>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -192,6 +192,8 @@ function HrGames() {
                                                 <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                                 <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                                 <TableCell className="flex gap-2">
+                                                    <Skeleton className="h-8 w-8" />
+                                                    <Skeleton className="h-8 w-8" />
                                                     <Skeleton className="h-8 w-8" />
                                                     <Skeleton className="h-8 w-8" />
                                                 </TableCell>

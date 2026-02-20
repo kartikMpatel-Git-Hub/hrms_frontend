@@ -6,7 +6,6 @@ function HrLayout() {
     <SidebarProvider>
       <AppSidebarHr />
       <main className="w-full">
-        {/* <HrNavigation /> */}
         <SidebarTrigger />
         <Outlet />
       </main>

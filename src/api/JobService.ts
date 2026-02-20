@@ -1,4 +1,4 @@
-import type { JobCreateDto, JobResponseDto, JobResponseWithReviewerDto, PagedRequestDto, PagedResponse, ReferredJobRequestDto, ReferredResponseDto, ShareJobRequestDto, ShareResponseDto, UserReponseDto } from "../type/Types"
+import type { JobCreateDto, JobResponseDto, JobResponseWithReviewerDto, PagedRequestDto, PagedResponse, ReferredJobRequestDto, ReferredResponseDto, ShareJobRequestDto, ShareResponseDto, SimpleResponseDto, UserReponseDto } from "../type/Types"
 import api from "./Api"
 
 export const AddJob = async ({ dto }: any): Promise<JobResponseDto> => {
@@ -40,10 +40,25 @@ export const ShareJob = async ({ id, email }: any): Promise<ShareResponseDto> =>
     return response.data
 }
 export const ReferedJob = async ({ id, dto }: ReferredJobRequestDto): Promise<ReferredResponseDto> => {
-    const response = await api.post<ReferredResponseDto>(`/job/${id}/referred`, dto, {
+    const response = await api.post<ReferredResponseDto>(`/job/${id}/referre`, dto, {
         headers: {
             "Content-Type": "multipart/form-data"
         }
     })
+    return response.data
+}
+
+export const DeleteJob = async (id: number): Promise<SimpleResponseDto> => {
+    const response = await api.delete<SimpleResponseDto>(`/job/${id}`)
+    return response.data
+}
+
+export const GetSharedJobs = async ({jobid, paged}: {jobid: number, paged: PagedRequestDto}): Promise<PagedResponse<ShareResponseDto>> => {
+    const response = await api.get<PagedResponse<ShareResponseDto>>(`/job/${jobid}/share?pageNumber=${paged.pageNumber}&pageSize=${paged.pageSize}`)
+    return response.data
+}
+
+export const GetJobReferrals = async ({jobid, paged }: {jobid: number , paged : PagedRequestDto}): Promise<PagedResponse<ReferredResponseDto>> => {
+    const response = await api.get<PagedResponse<ReferredResponseDto>>(`/job/${jobid}/referred?pageNumber=${paged.pageNumber}&pageSize=${paged.pageSize}`)
     return response.data
 }

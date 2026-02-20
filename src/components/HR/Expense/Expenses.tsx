@@ -75,16 +75,16 @@ function Expenses() {
 
     const handleFilterChange = (type: string, value: string|number) => {
         let filtered = data?.data
-        if (type === "travel") {
-            filtered = filtered?.filter(e => e.travelId.toString() === value)
-        } else if (type === "traveler") {
-            filtered = filtered?.filter(e => e.travelerId.toString() === value)
-        }
-        else if (type === "category") {
-            filtered = filtered?.filter(e => e.category.category === value)
-        } else if (type === "status") {
-            filtered = filtered?.filter(e => e.status === value)
-        }
+        // if (type === "travel") {
+        //     filtered = filtered?.filter(e => e.travelId === value)
+        // } else if (type === "traveler") {
+        //     filtered = filtered?.filter(e => e.travelerId === value)
+        // }
+        // else if (type === "category") {
+        //     filtered = filtered?.filter(e => e.category.category === value)
+        // } else if (type === "status") {
+        //     filtered = filtered?.filter(e => e.status == value)
+        // }
         setFilteredExpense(filtered)
     }
 
@@ -113,7 +113,7 @@ function Expenses() {
                 </InputGroup>
                 <Card className="grid grid-cols-4 gap-5 p-2">
                     <div>
-                        <Combobox onValueChange={(value) => handleFilterChange("status", Number(value))}>
+                        <Combobox onValueChange={(value) => handleFilterChange("status", String(value))}>
                             <ComboboxInput placeholder="Select a Status" />
                             <ComboboxContent>
                                 <ComboboxList>
@@ -209,8 +209,13 @@ function Expenses() {
                             ) : (
                                 Array.from({ length: 5 }).map((_) => (
                                     <TableRow>
-                                        <TableCell><Skeleton className="h-4 w-40" /></TableCell>
+                                        <TableCell><Skeleton className="h-4 w-4" /></TableCell>
                                         <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                                        <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                                        <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                                        <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                                        <TableCell><Skeleton className="h-6 w-6" /></TableCell>
+                                        <TableCell><Skeleton className="h-6 w-6" /></TableCell>
                                         <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                         <TableCell className="flex gap-2">
                                             <Skeleton className="h-8 w-8" />
