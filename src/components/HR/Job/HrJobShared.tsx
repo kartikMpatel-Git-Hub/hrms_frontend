@@ -1,49 +1,46 @@
-import { GetJobReferrals } from "@/api/JobService"
+import { GetJobReferrals, GetSharedJobs } from "@/api/JobService"
 import { Card } from "@/components/ui/card"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
-import type { ReferredResponseDto } from "@/type/Types"
+import type { ReferredResponseDto, ShareResponseDto } from "@/type/Types"
 import { useQuery } from "@tanstack/react-query"
 import { Search, UserPlus } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import JobReferralCard from "./JobReferralCard"
+import JobShareCard from "./JobShareCard"
 
-function HrJobReferrals() {
+function HrJobShared() {
     const { id } = useParams()
     const [pagedRequest, setPagedRequest] = useState({
         pageNumber: 1,
         pageSize: 10
     })
-    const [referrals, setReferrals] = useState<ReferredResponseDto[]>([])
-    const [filteredReferrals, setFilteredReferrals] = useState<ReferredResponseDto[]>([])
+    const [shares, setShares] = useState<ShareResponseDto[]>([])
+    const [filterShares, setFilterShares] = useState<ShareResponseDto[]>([])
     const [search, setSearch] = useState<string>("")
     const [loading, setLoading] = useState<boolean>(false)
     const navigator = useNavigate()
 
     const { data, error, isLoading } = useQuery({
         queryKey: ["job-referrals", pagedRequest],
-        queryFn: () => GetJobReferrals({ jobid: Number(id), paged: pagedRequest })
+        queryFn: () => GetSharedJobs({ jobid: Number(id), paged: pagedRequest })
     })
 
-    const handleStatusChange = (id: number,status: string) => {
-        // Call API to update status
-        console.log("Updating referral with id:", id, "to status:", status)
-    }
 
     useEffect(() => {
         setLoading(true)
         if (data) {
             if (search.trim() === "") {
-                setReferrals(data.data)
-                setFilteredReferrals(data.data)
+                setShares(data.data)
+                setFilterShares(data.data)
             } else {
                 const filtered = data.data?.filter(
                     t =>
-                        t.referedPersonEmail.toLowerCase().includes(search.toLowerCase()) ||
-                        t.referedPersonName.toLowerCase().includes(search.toLowerCase()))
-                setFilteredReferrals(filtered)
+                        t.sharedTo.toLowerCase().includes(search.toLowerCase()) ||
+                        t.shared.toString().includes(search.toLowerCase()))
+                setFilterShares(filtered)
             }
         }
         setTimeout(() => {
@@ -54,36 +51,35 @@ function HrJobReferrals() {
     return (
         <div className="p-10">
             <Card className="m-2">
-                <div className="flex justify-center font-bold text-2xl gap-1"><UserPlus className="h-8" /><span>Jobs Referrals</span></div>
+                <div className="flex justify-center font-bold text-2xl gap-1"><UserPlus className="h-8" /><span>Jobs Shared</span></div>
                 <div className="mx-10">
                     <InputGroup className="">
-                        <InputGroupInput placeholder="Search Referral..." onChange={(e) => setSearch(e.target.value)} value={search} />
+                        <InputGroupInput placeholder="Search Shared Jobs..." onChange={(e) => setSearch(e.target.value)} value={search} />
                         <InputGroupAddon>
                             <Search />
                         </InputGroupAddon>
-                        <InputGroupAddon align="inline-end">{filteredReferrals?.length || 0} Results</InputGroupAddon>
+                        <InputGroupAddon align="inline-end">{filterShares?.length || 0} Results</InputGroupAddon>
                     </InputGroup>
                     <Table>
                         <TableHeader>
                             <TableRow className="font-bold">
                                 <TableCell>Sr.No</TableCell>
-                                <TableCell>Name</TableCell>
-                                <TableCell>Email</TableCell>
-                                <TableCell>Status</TableCell>
-                                <TableCell>Action</TableCell>
+                                <TableCell>Shared To</TableCell>
+                                <TableCell>Shared By</TableCell>
+                                <TableCell>Shared At</TableCell>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {
                                 !loading ?
                                     (
-                                        filteredReferrals && filteredReferrals.length > 0
+                                        filterShares && filterShares.length > 0
                                             ? (
-                                                filteredReferrals.map((r, idx) =>
-                                                    <JobReferralCard referral={r} idx={idx} key={idx} handleStatusChange={handleStatusChange} />
+                                                filterShares.map((r, idx) =>
+                                                    <JobShareCard share={r} idx={idx} key={idx}  />
                                                 )
                                             )
-                                            : (<TableRow><TableCell colSpan={5} className="flex justify-center font-bold">No Referrals Found</TableCell></TableRow>)
+                                            : (<TableRow><TableCell colSpan={5}><div className="flex justify-center font-bold py-2">No Shared Jobs Found</div></TableCell></TableRow>)
                                     ) :
                                     (
                                         Array.from({ length: 5 }, (_, i) => i + 1).map((_, idx) => (
@@ -92,7 +88,6 @@ function HrJobReferrals() {
                                                 <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                                 <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                                 <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                                                <TableCell><Skeleton className="h-10 w-10" /></TableCell>
                                             </TableRow>
                                         ))
                                     )
@@ -105,4 +100,4 @@ function HrJobReferrals() {
     )
 }
 
-export default HrJobReferrals
+export default HrJobShared

@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import type { JobResponseDto, PagedRequestDto } from "../../../type/Types"
-import { GetHrJobs } from "../../../api/JobService"
+import { DeleteJob, GetHrJobs } from "../../../api/JobService"
 import HrJobCard from "./HrJobCard"
 import { useNavigate } from "react-router-dom"
 import { Briefcase, CircleAlert, Plus, Search } from "lucide-react"
@@ -10,6 +10,7 @@ import { Card } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
 import { Skeleton } from "@/components/ui/skeleton"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
+import { toast, ToastContainer } from "react-toastify"
 
 function HrJobs() {
 
@@ -22,12 +23,24 @@ function HrJobs() {
     const [filteredJobs, setFilteredJobs] = useState<JobResponseDto[]>()
     const [search, setSearch] = useState<string>("")
     const [loading, setLoading] = useState<boolean>(false)
+    const queryClient = useQueryClient()
     const navigator = useNavigate()
 
 
-    const { data, isLoading, error } = useQuery({
+    const { data } = useQuery({
         queryKey: ["hr-jobs"],
         queryFn: () => GetHrJobs(pagedRequest)
+    })
+
+    const {mutate : deleteMutation,error : deleteError,isPending : isDeletePending} = useMutation({
+        mutationKey : ["delete-job"],
+         mutationFn : (id: number) => DeleteJob(id),
+         onSuccess : () => {
+            queryClient.invalidateQueries({ queryKey: ["hr-jobs"] })
+         },
+         onError : (error) => {
+            toast.error("Failed to delete job. Please try again.")
+         }
     })
 
     const handleOpenAddForm = () => {
@@ -53,8 +66,17 @@ function HrJobs() {
         }, 500);
     }, [data, search])
 
+    const handleJobDelete = (id: number) => {
+        if (window.confirm("Are you sure you want to delete this job?")) {
+            deleteMutation(id)
+        }
+    }
+
+
+
     return (
         <div>
+            <ToastContainer />
             <div className="flex justify-end mr-5">
                 <Button
                     title="Add New Job"
@@ -91,7 +113,7 @@ function HrJobs() {
                                         filteredJobs && filteredJobs?.length > 0
                                             ? (
                                                 filteredJobs.map((j, idx) => (
-                                                    <HrJobCard job={j} key={j.id} idx={idx} />
+                                                    <HrJobCard job={j} key={j.id} idx={idx} handleDelete={handleJobDelete} />
                                                 ))
                                             )
                                             : (
@@ -118,6 +140,8 @@ function HrJobs() {
                                                 <TableCell><Skeleton className="h-4 w-20" /></TableCell>
                                                 <TableCell><Skeleton className="h-4 w-20" /></TableCell>
                                                 <TableCell className="flex gap-2">
+                                                    <Skeleton className="h-8 w-8" />
+                                                    <Skeleton className="h-8 w-8" />
                                                     <Skeleton className="h-8 w-8" />
                                                 </TableCell>
                                             </TableRow>

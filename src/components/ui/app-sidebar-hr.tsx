@@ -8,7 +8,7 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/sidebar"
-import { Bell, Briefcase, Building2, ChartArea, ChartNetwork, ChessPawn, ChessQueen, Gamepad, Gamepad2, GamepadDirectional, HomeIcon, IndianRupeeIcon, LogOut, LucideGamepad, TicketsPlane, User2 } from "lucide-react"
+import { Bell, Briefcase, Building2, ChartArea, ChartNetwork, ChessPawn, ChessQueen, Gamepad, Gamepad2, GamepadDirectional, HomeIcon, Image, IndianRupeeIcon, LogOut, LucideGamepad, TicketsPlane, User2 } from "lucide-react"
 import { NavLink } from "react-router"
 
 export function AppSidebarHr() {
@@ -70,6 +70,14 @@ export function AppSidebarHr() {
                                 to={"./game"}
                             >
                                 <Gamepad2 className="w-4 h-4" /> {open && <span>Game</span>}
+                            </NavLink>
+                        </SidebarMenuButton>
+                        <SidebarMenuButton className="my-2">
+                            <NavLink
+                                className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
+                                to={"./post"}
+                            >
+                                <Image className="w-4 h-4" /> {open && <span>Post</span>}
                             </NavLink>
                         </SidebarMenuButton>
 

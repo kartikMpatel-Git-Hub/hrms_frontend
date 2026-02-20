@@ -208,6 +208,7 @@ export interface ShareResponseDto {
   id: number,
   sharedTo: string,
   sharedBy: number,
+  shared : string,
   jobId: number,
   sharedAt: Date
 }
@@ -224,8 +225,14 @@ export interface ReferredResponseDto {
   cvUrl: string,
   note: string,
   referedBy: number,
+  referer: string,
   jobId: number,
+  status : string,
   referedAt: Date
+}
+
+export interface JobSharedResponseDto {
+  
 }
 
 export interface GameResponseDto {
@@ -281,4 +288,8 @@ export interface GameSlotOffereResponseDto{
   slot : BookingSlotResponseDto,
   status : string,
   createdAt : Date
+}
+
+export interface SimpleResponseDto {
+  message: string
 }

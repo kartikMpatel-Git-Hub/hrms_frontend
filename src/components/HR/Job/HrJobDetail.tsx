@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { useNavigate, useParams } from "react-router-dom"
 import { GetJobById } from "../../../api/JobService"
-import { Loader } from "lucide-react"
+import { Download, File, Loader, Share, Share2, UserPlus } from "lucide-react"
 import { useEffect, useState } from "react"
 import type { JobResponseWithReviewerDto } from "../../../type/Types"
 import ContactToCard from "./ContactToCard"
@@ -45,6 +45,10 @@ function HrJobDetail() {
         navigator(`./referrals`)
     }
 
+    function handleOpenShared(): void {
+        navigator(`./shared`)
+    }
+
     return (
         <div className="flex justify-center p-5">
             <div className="w-full">
@@ -67,15 +71,18 @@ function HrJobDetail() {
                                 <span className="font-semibold text-black">Activation Status :</span>
                                 {job?.isActive ? "Active" : "Inactive"}
                             </div>
-                            <div className="flex gap-3">
+                            <div className="grid grid-cols-2 p-2 m-3 gap-2">
                                 <Button variant="outline" className="mt-2" onClick={() => window.open(job?.jdUrl, "_blank")}>
-                                    View JD
+                                    <File /> View JD
                                 </Button>
-                                <Button variant="outline" className="mt-2" onClick={handleOpenReferral} disabled={true}>
-                                    View Referrals
+                                <Button variant="outline" className="mt-2" onClick={handleOpenReferral}>
+                                    <UserPlus /> View Referrals
+                                </Button>
+                                <Button variant="outline" className="mt-2" onClick={handleOpenShared}>
+                                    <Share2 /> View Shared
                                 </Button>
                                 <Button variant="outline" className="mt-2" onClick={handleDownloadJD} disabled={true}>
-                                    Download JD
+                                    <Download /> Download JD
                                 </Button>
                             </div>
                         </div>
@@ -104,7 +111,7 @@ function HrJobDetail() {
                             <TableBody>
                                 {
                                     job && job?.reviewers.length > 0
-                                        ? job?.reviewers.map((r) => <ReviewerCard reviewer={r.reviewer} key={job.id} />)
+                                        ? job?.reviewers.map((r) => <ReviewerCard reviewer={r.reviewer} key={r.id} />)
                                         : <TableRow><TableCell colSpan={4} className="flex justify-center font-bold">Not Reviewers</TableCell></TableRow>
                                 }
                             </TableBody>
