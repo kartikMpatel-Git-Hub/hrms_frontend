@@ -129,13 +129,13 @@ function InappropriatePosts() {
                     <p className="text-muted-foreground">Review and manage flagged inappropriate posts</p>
                 </div>
                 <div className="flex gap-2">
-                    <Button
-                        onClick={() => navigate("/employee/post/mypost")}
+                    {/* <Button
+                        onClick={() => navigate("../my-posts")}
                         variant="outline"
                         className="flex items-center gap-2"
                     >
                         My Posts
-                    </Button>
+                    </Button> */}
                     <Button
                         onClick={() => navigate("../")}
                         variant="outline"

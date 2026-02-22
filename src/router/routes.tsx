@@ -48,6 +48,8 @@ import HrUsers from '@/components/HR/User/HrUsers'
 import HrUserAddForm from '@/components/HR/User/HrUserAddForm'
 import MyTeams from '@/components/Manager/Team/MyTeams'
 import MemberTravels from '@/components/Manager/Team/MemberTravels'
+import EmployeeTravelDetails from '@/components/EMPLOYEE/Travel/EmployeeTravelDetails'
+import Dashboard from '@/components/utility/Dashboard'
 
 const router = createBrowserRouter([
     {
@@ -61,7 +63,7 @@ const router = createBrowserRouter([
                 element: <HrLayout />,
                 errorElement: <NotFound />,
                 children: [
-                    { index: true, path: "dashboard", element: <HrDashboard /> },
+                    { index: true, path: "dashboard", element: <Dashboard /> },
                     {
                         path: "travel",
                         children: [
@@ -154,14 +156,14 @@ const router = createBrowserRouter([
                 element: <EmployeeLayout />,
                 errorElement: <NotFound />,
                 children: [
-                    { index: true, path: "dashboard", element: <EmployeeDashboard /> },
+                    { index: true, path: "dashboard", element: <Dashboard /> },
                     { path: "notification", element: <Notifications /> },
                     {
                         path: "travel",
                         errorElement: <NotFound />,
                         children: [
                             { index: true, element: <EmployeeTravels /> },
-                            { path: ":id", element: <TravelDetail /> },
+                            { path: ":id", element: <EmployeeTravelDetails /> },
                             { path: ":id/expense", element: <EmployeeTravelExpense /> },
                             { path: ":id/expense/add", element: <ExpenseCreateForm /> },
                         ]

@@ -17,8 +17,9 @@ function EmployeeTravelCard({ travel, idx }: { travel: TravelResponse, idx: numb
             <TableCell>{travel.title}</TableCell>
             <TableCell>{travel.startDate.toString().substring(0,10)}</TableCell>
             <TableCell>{travel.location}</TableCell>
-            <TableCell>
+            <TableCell className='flex gap-2'>
                 <Button onClick={handleViewTravelDetail}><IndianRupee /></Button>
+                <Button onClick={() => navigator(`./${travel.id}`)}><Eye /></Button>
             </TableCell>
         </TableRow>
     )

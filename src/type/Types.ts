@@ -398,3 +398,14 @@ export interface UserMinimalDto {
   email: string,
   image: string
 }
+
+export interface DailyCelebrationResponseDto {
+  id: number,
+  userId : number,
+  user : UserReponseDto,
+  eventType : string,
+  eventDate : Date,
+  type: string,
+  description: string,
+  celebrationDate: Date
+}

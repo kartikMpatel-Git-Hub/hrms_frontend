@@ -70,6 +70,7 @@ function EmployeeTravelExpense() {
                             <TableCell>Sr. No</TableCell>
                             <TableCell>Detail</TableCell>
                             <TableCell>Category</TableCell>
+                            <TableCell>Amount</TableCell>
                             <TableCell>Status</TableCell>
                             <TableCell>Expense Date</TableCell>
                             <TableCell>Action</TableCell>
@@ -101,6 +102,7 @@ function EmployeeTravelExpense() {
                                         <TableRow key={i}>
                                             <TableCell><Skeleton className="h-8 w-10" /></TableCell>
                                             <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                                            <TableCell><Skeleton className="h-4 w-15" /></TableCell>
                                             <TableCell><Skeleton className="h-4 w-15" /></TableCell>
                                             <TableCell><Skeleton className="h-4 w-15" /></TableCell>
                                             <TableCell><Skeleton className="h-4 w-15" /></TableCell>

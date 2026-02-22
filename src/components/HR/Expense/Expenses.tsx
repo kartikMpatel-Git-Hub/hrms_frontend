@@ -94,12 +94,12 @@ function Expenses() {
                 <Button
                     onClick={handleOpenCategory}
                     title="View Expense Category">
-                    <Eye />
+                    <Eye /> View Category
                 </Button>
                 <Button
                     onClick={handleOpenAddForm}
                     title="Add New Expense Category">
-                    <Plus className="font-bold" />
+                    <Plus className="font-bold" /> Create Category
                 </Button>
             </div>
             <Card className="m-2 p-5">
