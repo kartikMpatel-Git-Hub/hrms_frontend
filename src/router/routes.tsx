@@ -50,6 +50,10 @@ import MyTeams from '@/components/Manager/Team/MyTeams'
 import MemberTravels from '@/components/Manager/Team/MemberTravels'
 import EmployeeTravelDetails from '@/components/EMPLOYEE/Travel/EmployeeTravelDetails'
 import Dashboard from '@/components/utility/Dashboard'
+import Welcome from '@/components/Welcome'
+import TravelExpense from '@/components/Manager/Team/TravelExpense'
+import TravelDocument from '@/components/Manager/Team/TravelDocument'
+import EmployeeTravelDocuments from '@/components/EMPLOYEE/Travel/EmployeeTravelDocuments'
 
 const router = createBrowserRouter([
     {
@@ -57,6 +61,7 @@ const router = createBrowserRouter([
         errorElement: <NotFound />,
         children: [
             { index: true, element: <Login /> },
+            { path: "Welcome", element: <Welcome /> },
             { path: "*", element: <NotFound /> },
             {
                 path: 'hr',
@@ -93,8 +98,8 @@ const router = createBrowserRouter([
                             { path: "create", element: <PostCreateForm /> },
                             { path: "inappropriate", element: <InappropriatePosts /> },
                             { path: ":id", element: <PostDetails /> },
-                            { path : "mypost", element: <MyPosts /> },
-                            { path : "mypost/:id", element: <PostDetails /> },
+                            { path: "mypost", element: <MyPosts /> },
+                            { path: "mypost/:id", element: <PostDetails /> },
                         ]
                     },
                     {
@@ -165,6 +170,7 @@ const router = createBrowserRouter([
                             { index: true, element: <EmployeeTravels /> },
                             { path: ":id", element: <EmployeeTravelDetails /> },
                             { path: ":id/expense", element: <EmployeeTravelExpense /> },
+                            { path: ":id/documents", element: <EmployeeTravelDocuments /> },
                             { path: ":id/expense/add", element: <ExpenseCreateForm /> },
                         ]
                     },
@@ -187,14 +193,14 @@ const router = createBrowserRouter([
                         ]
                     },
                     {
-                        path : "post",
+                        path: "post",
                         errorElement: <NotFound />,
-                        children : [
-                            { index : true, element : <Posts /> },
-                            { path : "mypost", element : <MyPosts /> },
-                            { path : "mypost/:id", element : <PostDetails /> },
-                            { path : "create", element : <PostCreateForm /> },
-                            { path : ":id", element : <PostDetails /> },
+                        children: [
+                            { index: true, element: <Posts /> },
+                            { path: "mypost", element: <MyPosts /> },
+                            { path: "mypost/:id", element: <PostDetails /> },
+                            { path: "create", element: <PostCreateForm /> },
+                            { path: ":id", element: <PostDetails /> },
                         ]
                     },
                     {
@@ -213,7 +219,7 @@ const router = createBrowserRouter([
                 element: <ManagerLayout />,
                 errorElement: <NotFound />,
                 children: [
-                    { index: true, path: "dashboard", element: <ManagerDashboard /> },
+                    { index: true, path: "dashboard", element: <Dashboard /> },
                     { path: "notification", element: <Notifications /> },
                     { path: "job", element: <ManagerJob /> },
                     {
@@ -231,7 +237,28 @@ const router = createBrowserRouter([
                         errorElement: <NotFound />,
                         children: [
                             { index: true, element: <MyTeams /> },
-                            { path: ":id/travels", element: <MemberTravels /> }
+                            { path: ":id/travels", element: <MemberTravels /> },
+                            { path: ":id/travels/:travelId/expense", element: <TravelExpense /> },
+                            { path: ":id/travels/:travelId/document", element: <TravelDocument /> }
+                        ]
+                    },
+                    {
+                        path: "post",
+                        errorElement: <NotFound />,
+                        children: [
+                            { index: true, element: <Posts /> },
+                            { path: "mypost", element: <MyPosts /> },
+                            { path: "mypost/:id", element: <PostDetails /> },
+                            { path: "create", element: <PostCreateForm /> },
+                            { path: ":id", element: <PostDetails /> },
+                        ]
+                    },
+                    {
+                        path: "organization-chart",
+                        errorElement: <NotFound />,
+                        children: [
+                            { index: true, element: <EmployeeOrganizationChart /> },
+                            { path: ":id", element: <EmployeeChart /> }
                         ]
                     },
                     { path: "*", element: <NotFound /> }

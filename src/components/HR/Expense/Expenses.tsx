@@ -40,7 +40,7 @@ function Expenses() {
         if (data) {
             if (search.trim() === "") {
                 setExpense(data.data)
-                console.log(data);
+                // console.log(data);
 
                 setFilteredExpense(data.data)
             } else {

@@ -23,7 +23,7 @@ function ExpenseCategoryForm() {
             navigator("../")
         },
         onError: (err: any) => {
-            console.log(err.error.details);
+            // console.log(err.error.details);
             setError([err.error.details])
         }
     })

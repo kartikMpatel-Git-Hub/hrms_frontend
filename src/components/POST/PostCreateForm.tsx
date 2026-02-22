@@ -25,6 +25,15 @@ function PostCreateForm() {
     const [error, setError] = useState<string | null>(null)
     const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
+    const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+    const ALLOWED_IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp']
+
+    const isValidImageFile = (file: File): boolean => {
+        const hasValidMime = ALLOWED_IMAGE_TYPES.includes(file.type)
+        const hasValidExtension = ALLOWED_IMAGE_EXTENSIONS.some(ext => file.name.toLowerCase().endsWith(ext))
+        return hasValidMime || hasValidExtension
+    }
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target
         setFormData(prev => ({
@@ -34,17 +43,23 @@ function PostCreateForm() {
     }
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0] || null
-        if (file && !file.type.startsWith('image/')) {
-            setError('Only image files are allowed')
-            e.target.value = ''
-            return
-        }
         setError(null)
-        setFormData(prev => ({
-            ...prev,
-            post: file
-        }))
+        if (e.target.files) {
+            const file = e.target.files[0]
+            if (!isValidImageFile(file)) {
+                setError('Only image files (JPG, PNG, JPEG) are allowed!')
+                e.target.value = ''
+                setFormData(prev => ({
+                    ...prev,
+                    post: null
+                }))
+                return
+            }
+            setFormData(prev => ({
+                ...prev,
+                post: file
+            }))
+        }
     }
 
     const handleAddTag = () => {
@@ -127,7 +142,7 @@ function PostCreateForm() {
                 <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => navigate("/post")}
+                    onClick={() => navigate("../")}
                 >
                     <ArrowLeft size={18} /> Back
                 </Button>
@@ -193,14 +208,14 @@ function PostCreateForm() {
                                 id="post"
                                 name="post"
                                 type="file"
-                                accept="image/*"
+                                accept=".jpg,.jpeg,.png,.gif,.webp,image/jpeg,image/jpg,image/png,image/gif,image/webp"
                                 onChange={handleFileChange}
                                 required
                             />
                             {formData.post && (
                                 <p className="text-sm text-green-600">✓ File selected: {formData.post.name}</p>
                             )}
-                            <p className="text-xs text-gray-500">Only image files are allowed (JPG, PNG, GIF, etc.)</p>
+                            <p className="text-xs text-gray-500">Only image files are allowed (JPG, PNG, JPEG)</p>
                         </div>
 
                         {/* Tags */}

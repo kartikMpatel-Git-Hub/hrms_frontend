@@ -25,10 +25,10 @@ function ExpenseCard({ expense, idx }: {
         mutationFn: ChangeExpenseStatus,
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ["travel-traveler-expense"] })
-            console.log(res);
+            // console.log(res);
         },
         onError: (err) => {
-            console.log(err);
+            // console.log(err);
             toast.error("Failed to update expense status. Please try again.")
         }
     })

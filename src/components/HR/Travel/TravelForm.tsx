@@ -45,7 +45,7 @@ function TravelForm() {
             navigator("../")
         },
         onError: (err: any) => {
-            console.log(err);
+            // console.log(err);
             setError(["Failed To add Travel"])
         }
     })

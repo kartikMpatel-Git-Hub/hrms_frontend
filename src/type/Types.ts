@@ -240,17 +240,18 @@ export interface GameResponseDto {
   name: string,
   maxPlayer: number,
   minPlayer: number,
-  duration : number,
-  SlotAssignedBeforeMinutes : number,
-  SlotCreateForNextXDays : number
+  duration: number,
+  SlotAssignedBeforeMinutes: number,
+  SlotCreateForNextXDays: number
 }
 
 export interface GameCreateDto {
   Name: string,
   MaxPlayer: number,
   MinPlayer: number,
-  SlotAssignedBeforeMinutes : number,
-  SlotCreateForNextXDays : number
+  Duration: number,
+  SlotAssignedBeforeMinutes: number,
+  SlotCreateForNextXDays: number
 }
 
 export interface GameOperatingHourCreateDto {
@@ -274,7 +275,7 @@ export interface GameResponseWithSlotDto {
   name: string,
   maxPlayer: number,
   minPlayer: number,
-  duration : number,
+  duration: number,
   gameOperationWindows: GameOperatingHourResponseDto[]
 }
 
@@ -289,10 +290,10 @@ export interface GameSlotResponseDto {
 }
 
 export interface GameSlotPlayerResponseDto {
-  id : number,
-  slotId : number,
-  playerId : number,
-  player : UserMinimalDto
+  id: number,
+  slotId: number,
+  playerId: number,
+  player: UserMinimalDto
 }
 
 export interface GameSlotDetaildResponseDto {
@@ -301,11 +302,11 @@ export interface GameSlotDetaildResponseDto {
   startTime: string,
   endTime: string,
   date: Date,
-  bookedById: number | null ,
+  bookedById: number | null,
   bookedBy: UserReponseDto | null,
   status: string,
   bookedAt: Date | null,
-  players : GameSlotPlayerResponseDto[]
+  players: GameSlotPlayerResponseDto[]
 }
 
 export interface BookingSlotResponseDto {
@@ -328,10 +329,10 @@ export interface GameSlotOffereResponseDto {
 export interface GameSlotWaitingResponseDto {
   id: number,
   gameSlotId: number,
-  requestedById   : number,
+  requestedById: number,
   requestedBy: UserMinimalDto,
   requestedAt: Date,
-  waitingPlayers : GameSlotWaitingPlayerResponseDto[]
+  waitingPlayers: GameSlotWaitingPlayerResponseDto[]
 }
 
 export interface GameSlotWaitingPlayerResponseDto {
@@ -371,7 +372,7 @@ export interface PostDetailedResponseDto {
   likeCount: number,
   commentCount: number,
   isinappropriate: boolean,
-  tags : TagResponseDto[],
+  tags: TagResponseDto[],
 }
 
 export interface TagResponseDto {
@@ -383,7 +384,7 @@ export interface CommentResponseDto {
   id: number,
   comment: string,
   commentBy: UserMinimalDto,
-  createdAt : Date
+  createdAt: Date
 }
 
 export interface PostUpdateDto {
@@ -401,10 +402,10 @@ export interface UserMinimalDto {
 
 export interface DailyCelebrationResponseDto {
   id: number,
-  userId : number,
-  user : UserReponseDto,
-  eventType : string,
-  eventDate : Date,
+  userId: number,
+  user: UserReponseDto,
+  eventType: string,
+  eventDate: Date,
   type: string,
   description: string,
   celebrationDate: Date

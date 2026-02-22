@@ -1,4 +1,4 @@
-import type { PagedResponse, TravelCreateRequest, TravelDocumentDto, Traveler, TravelerResponse, TravelResponse, TravelResponseWithTraveler } from "../type/Types";
+import type { PagedRequestDto, PagedResponse, TravelCreateRequest, TravelDocumentDto, Traveler, TravelerExpenseDto, TravelerResponse, TravelResponse, TravelResponseWithTraveler } from "../type/Types";
 import api from "./Api";
 
 export const GetHrTravel = async ({ pageNumber = 1, pageSize = 10 }): Promise<PagedResponse<TravelResponse>> => {
@@ -36,5 +36,32 @@ export const AddTraveler = async ({ travelId, travelerId }: any): Promise<Travel
 
 export const GetTravelTravelerDocuments = async ({ travelId, travelerId }: any): Promise<TravelDocumentDto[]> => {
     const response = await api.get<TravelDocumentDto[]>(`/travel/${travelId}/traveler/${travelerId}/document`)
+    return response.data
+}
+
+export const GetTravelerTravel = async (travelerId: number,paged : PagedRequestDto): Promise<PagedResponse<TravelResponse>> => {
+    const response = await api.get<PagedResponse<TravelResponse>>(`/travel/traveler/${travelerId}?PageSize=${paged.pageSize}&PageNumber=${paged.pageNumber}`)
+    return response.data
+}
+
+export const GetTravelerTravelExpenses = async ({travelId, travelerId,paged} : {travelId: number, travelerId: number, paged: PagedRequestDto}): Promise<PagedResponse<TravelerExpenseDto>> => {
+    const response = await api.get<PagedResponse<TravelerExpenseDto>>(`/travel/${travelId}/traveler/${travelerId}/expense?pageNumber=${paged.pageNumber}&pageSize=${paged.pageSize}`)
+    return response.data
+}
+
+export const GetTravelerTravelDocuments = async ({travelId, travelerId,paged} : {travelId: number, travelerId: number, paged: PagedRequestDto}): Promise<PagedResponse<TravelDocumentDto>> => {
+    const response = await api.get<PagedResponse<TravelDocumentDto>>(`/travel/${travelId}/traveler/${travelerId}/document?pageNumber=${paged.pageNumber}&pageSize=${paged.pageSize}`)
+    return response.data
+} 
+
+export const GetTravelById = async (travelId: number): Promise<TravelResponse> => {
+    const response = await api.get<TravelResponse>(`/travel/${travelId}`)
+    return response.data
+}
+
+export const AddTravelDocument = async ({ travelId, travelerId, formData }: { travelId: number, travelerId: number, formData: FormData }): Promise<TravelDocumentDto> => {
+    const response = await api.post<TravelDocumentDto>(`/travel/${travelId}/traveler/${travelerId}/document`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    })
     return response.data
 }

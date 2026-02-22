@@ -22,7 +22,7 @@ function HrJobDetail() {
 
     useEffect(() => {
         if (data) {
-            console.log(data);
+            // console.log(data);
             setJob(data)
         }
     }, [data])

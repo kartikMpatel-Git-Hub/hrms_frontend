@@ -34,7 +34,7 @@ function ManagerJob() {
       toast.success("Reference Added Successfully!")
     },
     onError: (err: any) => {
-      console.log(err)
+      // console.log(err)
       toast.error("Something went wrong while adding job reference!")
     }
   })

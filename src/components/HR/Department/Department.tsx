@@ -18,7 +18,7 @@ function Department() {
 
     useEffect(() => {
         if (data) {
-            console.log(data);
+            // console.log(data);
             setDepartments(data)
         }
     }, [data])

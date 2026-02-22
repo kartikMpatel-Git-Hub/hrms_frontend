@@ -104,7 +104,7 @@ function HrPosts() {
             // Remove the post from the list
             setPosts(posts.filter(p => p.id !== postId))
         } catch (error) {
-            console.error("Error marking post as inappropriate:", error)
+            // console.error("Error marking post as inappropriate:", error)
         }
         finally {
             setLoading(false)

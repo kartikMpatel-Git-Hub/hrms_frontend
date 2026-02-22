@@ -111,7 +111,7 @@ function MyPosts() {
                         <ArrowLeft size={18} /> Back
                     </Button>
                 </div>
-                <Button onClick={() => navigate("/post/create")}><Plus /> Add Post</Button>
+                {/* <Button onClick={() => navigate("/post/create")}><Plus /> Add Post</Button> */}
             </div>
             <div className="flex justify-center font-bold text-3xl gap-2 mb-8"><Images size={30} /><span>My Posts</span></div>
             

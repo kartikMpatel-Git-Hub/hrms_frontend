@@ -16,7 +16,7 @@ function ExpenseCategory() {
     useEffect(() => {
         if (data) {
             setCategories(data)
-            console.log(data);
+            // console.log(data);
         }
     }, [data])
 

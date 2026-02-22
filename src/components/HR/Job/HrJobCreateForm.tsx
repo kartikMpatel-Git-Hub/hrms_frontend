@@ -22,6 +22,7 @@ function HrJobCreateForm() {
         Requirements: "",
     })
     const [Jd, setJd] = useState<File | null>(null)
+    const [fileError, setFileError] = useState<string>("")
     const [reviewers, setReviewers] = useState<UserReponseDto[]>([])
     const [allReviewers, setAllReviewers] = useState<UserReponseDto[]>([])
     const [contactTo, setContactTo] = useState<UserReponseDto | null>()
@@ -65,6 +66,10 @@ function HrJobCreateForm() {
         setReviewers((prev) => prev.filter((r) => r.id !== user.id))
     }
 
+    const isValidPdfFile = (file: File): boolean => {
+        return file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')
+    }
+
     const HandleSubmitForm = () => {
         setErrors([])
         if (!isValidForm()) {
@@ -102,7 +107,10 @@ function HrJobCreateForm() {
         }
         if (!Jd) {
             flag = false;
-            setErrors((prev) => [...prev, "Job Description is Required !"])
+            setErrors((prev) => [...prev, "Job Description PDF is required!"])
+        } else if (!isValidPdfFile(Jd)) {
+            flag = false;
+            setErrors((prev) => [...prev, "Job Description must be a PDF file!"])
         }
         if (!contactTo) {
             flag = false;
@@ -125,7 +133,7 @@ function HrJobCreateForm() {
             navigator("../")
         },
         onError: (err) => {
-            console.log(err);
+            // console.log(err);
             toast.error("Failed to add JOB")
         }
     })
@@ -158,13 +166,24 @@ function HrJobCreateForm() {
                                 <Input
                                     name="Jd"
                                     type="file"
+                                    accept=".pdf,application/pdf"
                                     onChange={(event) => {
+                                        setFileError("")
                                         if (event.target.files && event.target.files[0]) {
-                                            setJd(event.target.files[0]);
+                                            const file = event.target.files[0]
+                                            if (!isValidPdfFile(file)) {
+                                                setFileError("Only PDF files are allowed!")
+                                                event.target.value = ""
+                                                setJd(null)
+                                                return
+                                            }
+                                            setJd(file)
                                         }
                                     }}
                                     required
                                 />
+                                {fileError && <p className="mt-1 text-sm text-red-500">{fileError}</p>}
+                                {Jd && <p className="mt-1 text-sm text-green-600">✓ {Jd.name}</p>}
                             </Field>
                             <Button
                                 disabled={isPending}

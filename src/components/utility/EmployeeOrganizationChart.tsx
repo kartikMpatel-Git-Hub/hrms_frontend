@@ -27,7 +27,7 @@ function EmployeeOrganizationChart() {
 
     useEffect(() => {
         if (fetchedUsers != null) {
-            console.log(fetchedUsers);
+            // // console.log(fetchedUsers);
             
             setUsers(fetchedUsers)
         }
@@ -38,7 +38,7 @@ function EmployeeOrganizationChart() {
     }, [search])
 
     const handleOpenOrganizationChart = (id : number) => {
-        console.log(id);
+        // console.log(id);
         navigator(`./${id}`)
     }
 

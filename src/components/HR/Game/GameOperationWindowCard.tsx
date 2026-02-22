@@ -11,7 +11,7 @@ interface GameOperationWindowCardProps {
 }
 
 function GameOperationWindowCard({ operationWindow, id, handleDeleteSlot, isDeletingSlot }: GameOperationWindowCardProps) {
-    console.log(operationWindow);
+    // console.log(operationWindow);
     return (
         <TableRow>
             <TableCell>{id + 1}</TableCell>

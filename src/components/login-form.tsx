@@ -29,10 +29,29 @@ export function LoginForm({
   const [formErrors, setFormErrors] = useState<string[]>([]);
   const navigate = useNavigate();
 
+  const isValidEmail = (email: string): boolean => {
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!pattern.test(email)) {
+      return false;
+    }
+    const parts = email.split('@');
+    if (parts.length !== 2) return false;
+    const [localPart, domain] = parts;
+    if (localPart.length > 64 || localPart.length === 0) return false;
+    if (domain.length > 255 || domain.length === 0) return false;
+    if (domain.startsWith('.') || domain.endsWith('.')) return false;
+    if (domain.includes('..')) return false;
+    if (localPart.startsWith('.') || localPart.endsWith('.')) return false;
+    if (localPart.includes('..')) return false;
+    return true;
+  };
+
   const isValidCredentials = () => {
     const errs: string[] = [];
     if (!credentials.email.trim() || !credentials.password.trim()) {
       errs.push('Email and password are required.');
+    } else if (!isValidEmail(credentials.email.trim())) {
+      errs.push('Please enter a valid email address.');
     }
     setFormErrors(errs);
     return errs.length === 0;
@@ -52,7 +71,7 @@ export function LoginForm({
         default: navigate("./")
       }
     } catch (error) {
-      console.error("Login error:", error);
+      // console.error("Login error:", error);
     }
   };
 

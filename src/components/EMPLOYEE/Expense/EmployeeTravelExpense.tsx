@@ -29,7 +29,7 @@ function EmployeeTravelExpense() {
 
     useEffect(() => {
         if (data) {
-            console.log(data);
+            // console.log(data);
             setExpenses(data)
         }
     }, [data])

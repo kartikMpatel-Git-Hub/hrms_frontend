@@ -29,7 +29,7 @@ function HrJobReferrals() {
 
     const handleStatusChange = (id: number,status: string) => {
         // Call API to update status
-        console.log("Updating referral with id:", id, "to status:", status)
+        // console.log("Updating referral with id:", id, "to status:", status)
     }
 
     useEffect(() => {

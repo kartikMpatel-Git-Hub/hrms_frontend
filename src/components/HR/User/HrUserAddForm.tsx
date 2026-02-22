@@ -71,13 +71,30 @@ function HrUserAddForm() {
         },
     })
 
+    const isValidEmail = (email: string): boolean => {
+        const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!pattern.test(email)) {
+            return false;
+        }
+        const parts = email.split('@');
+        if (parts.length !== 2) return false;
+        const [localPart, domain] = parts;
+        if (localPart.length > 64 || localPart.length === 0) return false;
+        if (domain.length > 255 || domain.length === 0) return false;
+        if (domain.startsWith('.') || domain.endsWith('.')) return false;
+        if (domain.includes('..')) return false;
+        if (localPart.startsWith('.') || localPart.endsWith('.')) return false;
+        if (localPart.includes('..')) return false;
+        return true;
+    };
+
     const validateForm = (): boolean => {
         const errors: FormErrors = {}
 
         if (!formData.fullName.trim()) errors.fullName = "Full Name is required"
         if (!formData.email.trim()) errors.email = "Email is required"
-        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
-            errors.email = "Invalid email format"
+        else if (!isValidEmail(formData.email.trim()))
+            errors.email = "Please enter a valid email address"
         if (!formData.password.trim()) errors.password = "Password is required"
         if (!formData.designation.trim()) errors.designation = "Designation is required"
         if (!formData.role) errors.role = "Role is required"
