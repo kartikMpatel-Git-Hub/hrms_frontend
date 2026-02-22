@@ -29,11 +29,25 @@ import EmployeeChart from '@/components/utility/EmployeeChart'
 import HrGames from '@/components/HR/Game/HrGames'
 import HrGameDetail from '@/components/HR/Game/HrGameDetail'
 import EmployeeGames from '@/components/EMPLOYEE/game/EmployeeGames'
-import EmployeeGameDetail from '@/components/EMPLOYEE/game/EmployeeGameDetail'
 import GameSlotOfferes from '@/components/EMPLOYEE/game/GameSlotOfferes'
 import ManagerLayout from '@/components/Manager/ManagerLayout'
 import ManagerDashboard from '@/components/Manager/ManagerDashboard'
+import ManagerJob from '@/components/Manager/Job/ManagerJob'
+import ManagerGames from '@/components/Manager/Game/ManagerGames'
 import HrJobShared from '@/components/HR/Job/HrJobShared'
+import Posts from '@/components/POST/Posts'
+import PostDetails from '@/components/POST/PostDetails'
+import MyPosts from '@/components/POST/MyPosts'
+import PostCreateForm from '@/components/POST/PostCreateForm'
+import HrPosts from '@/components/HR/Post/HrPosts'
+import InappropriatePosts from '@/components/HR/Post/InappropriatePosts'
+import GameSlotDetail from '@/components/Game/GameSlotDetail'
+import GameWaitlist from '@/components/Game/GameWaitlist'
+import GameDetail from '@/components/Game/GameDetail'
+import HrUsers from '@/components/HR/User/HrUsers'
+import HrUserAddForm from '@/components/HR/User/HrUserAddForm'
+import MyTeams from '@/components/Manager/Team/MyTeams'
+import MemberTravels from '@/components/Manager/Team/MemberTravels'
 
 const router = createBrowserRouter([
     {
@@ -71,6 +85,17 @@ const router = createBrowserRouter([
                         ]
                     },
                     {
+                        path: "post",
+                        children: [
+                            { index: true, element: <HrPosts /> },
+                            { path: "create", element: <PostCreateForm /> },
+                            { path: "inappropriate", element: <InappropriatePosts /> },
+                            { path: ":id", element: <PostDetails /> },
+                            { path : "mypost", element: <MyPosts /> },
+                            { path : "mypost/:id", element: <PostDetails /> },
+                        ]
+                    },
+                    {
                         path: "job",
                         children: [
                             { index: true, element: <HrJobs /> },
@@ -85,9 +110,11 @@ const router = createBrowserRouter([
                         children: [
                             { index: true, element: <HrGames /> },
                             { path: ":id", element: <HrGameDetail /> },
-                            { path : ":id/offere" , element: <GameSlotOfferes /> },
-                            // { path: "add", element: <HrJobCreateForm /> },
-                            // { path: ":id/referrals", element: <HrJobReferrals /> },
+                            { path: ":id/slots", element: <GameDetail /> },
+                            { path: ":id/slots/:slotId/waitlist", element: <GameWaitlist /> },
+                            { path: ":id/slots/:slotId/details", element: <GameSlotDetail /> },
+                            { path: "add", element: <HrJobCreateForm /> },
+                            { path: ":id/referrals", element: <HrJobReferrals /> },
                         ]
                     },
                     {
@@ -101,6 +128,13 @@ const router = createBrowserRouter([
                                     { path: "add", element: <ExpenseCategoryForm /> }
                                 ]
                             },
+                        ]
+                    },
+                    {
+                        path: "user",
+                        children: [
+                            { index: true, element: <HrUsers /> },
+                            { path: "add", element: <HrUserAddForm /> }
                         ]
                     },
                     {
@@ -144,8 +178,21 @@ const router = createBrowserRouter([
                         errorElement: <NotFound />,
                         children: [
                             { index: true, element: <EmployeeGames /> },
-                            { path : ":id" , element: <EmployeeGameDetail /> },
-                            { path : ":id/offere" , element: <GameSlotOfferes /> },
+                            { path: ":id/slots", element: <GameDetail /> },
+                            { path: ":id/slots/:slotId/waitlist", element: <GameWaitlist /> },
+                            { path: ":id/slots/:slotId/details", element: <GameSlotDetail /> },
+                            { path: ":id/offers", element: <GameSlotOfferes /> },
+                        ]
+                    },
+                    {
+                        path : "post",
+                        errorElement: <NotFound />,
+                        children : [
+                            { index : true, element : <Posts /> },
+                            { path : "mypost", element : <MyPosts /> },
+                            { path : "mypost/:id", element : <PostDetails /> },
+                            { path : "create", element : <PostCreateForm /> },
+                            { path : ":id", element : <PostDetails /> },
                         ]
                     },
                     {
@@ -166,6 +213,25 @@ const router = createBrowserRouter([
                 children: [
                     { index: true, path: "dashboard", element: <ManagerDashboard /> },
                     { path: "notification", element: <Notifications /> },
+                    { path: "job", element: <ManagerJob /> },
+                    {
+                        path: "game",
+                        errorElement: <NotFound />,
+                        children: [
+                            { index: true, element: <ManagerGames /> },
+                            { path: ":id/slots", element: <GameDetail /> },
+                            { path: ":id/slots/:slotId/waitlist", element: <GameWaitlist /> },
+                            { path: ":id/slots/:slotId/details", element: <GameSlotDetail /> },
+                        ]
+                    },
+                    {
+                        path: "my-team",
+                        errorElement: <NotFound />,
+                        children: [
+                            { index: true, element: <MyTeams /> },
+                            { path: ":id/travels", element: <MemberTravels /> }
+                        ]
+                    },
                     { path: "*", element: <NotFound /> }
                 ]
             }

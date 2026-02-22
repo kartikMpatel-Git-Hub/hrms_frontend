@@ -114,8 +114,8 @@ export interface ExpenseProofDto {
 export interface TravelerExpenseDto {
   id: number,
   amount: number,
-  travelId : number,
-  travelerId : number,
+  travelId: number,
+  travelerId: number,
   category: ExpenseCategoryResponseDto,
   status: string,
   remarks: string,
@@ -208,7 +208,7 @@ export interface ShareResponseDto {
   id: number,
   sharedTo: string,
   sharedBy: number,
-  shared : string,
+  shared: string,
   jobId: number,
   sharedAt: Date
 }
@@ -227,12 +227,12 @@ export interface ReferredResponseDto {
   referedBy: number,
   referer: string,
   jobId: number,
-  status : string,
+  status: string,
   referedAt: Date
 }
 
 export interface JobSharedResponseDto {
-  
+
 }
 
 export interface GameResponseDto {
@@ -240,29 +240,33 @@ export interface GameResponseDto {
   name: string,
   maxPlayer: number,
   minPlayer: number,
+  duration : number,
+  SlotAssignedBeforeMinutes : number,
+  SlotCreateForNextXDays : number
 }
 
 export interface GameCreateDto {
   Name: string,
   MaxPlayer: number,
   MinPlayer: number,
+  SlotAssignedBeforeMinutes : number,
+  SlotCreateForNextXDays : number
 }
 
-export interface SlotCreateDto {
-  StartTime: string,
-  EndTime: string,
+export interface GameOperatingHourCreateDto {
+  OperationalStartTime: string,
+  OperationalEndTime: string,
 }
 
-export interface GameSlotCreateDto {
-  id : number,
-  dto : SlotCreateDto
+export interface GameOperatingHourCreateRequestDto {
+  id: number,
+  dto: GameOperatingHourCreateDto
 }
-
-export interface GameSlotResponseDto {
+export interface GameOperatingHourResponseDto {
   id: number,
   GameId: number,
-  startTime: string,
-  endTime: string,
+  operationalStartTime: string,
+  operationalEndTime: string,
 }
 
 export interface GameResponseWithSlotDto {
@@ -270,26 +274,127 @@ export interface GameResponseWithSlotDto {
   name: string,
   maxPlayer: number,
   minPlayer: number,
-  slots: GameSlotResponseDto[]
+  duration : number,
+  gameOperationWindows: GameOperatingHourResponseDto[]
 }
 
-export interface BookingSlotResponseDto{
-  id : number,
-  gameId : number,
-  bookedBy : number,
-  startTime : string,
-  endTime : string,
-  date : Date,
-  status : string
+export interface GameSlotResponseDto {
+  id: number,
+  gameId: number,
+  startTime: string,
+  endTime: string,
+  date: Date,
+  bookedAt: Date | null,
+  status: string,
 }
 
-export interface GameSlotOffereResponseDto{
+export interface GameSlotPlayerResponseDto {
   id : number,
-  slot : BookingSlotResponseDto,
-  status : string,
-  createdAt : Date
+  slotId : number,
+  playerId : number,
+  player : UserMinimalDto
+}
+
+export interface GameSlotDetaildResponseDto {
+  id: number,
+  gameId: number,
+  startTime: string,
+  endTime: string,
+  date: Date,
+  bookedById: number | null ,
+  bookedBy: UserReponseDto | null,
+  status: string,
+  bookedAt: Date | null,
+  players : GameSlotPlayerResponseDto[]
+}
+
+export interface BookingSlotResponseDto {
+  id: number,
+  gameId: number,
+  bookedBy: number,
+  startTime: string,
+  endTime: string,
+  date: Date,
+  status: string
+}
+
+export interface GameSlotOffereResponseDto {
+  id: number,
+  slot: BookingSlotResponseDto,
+  status: string,
+  createdAt: Date
+}
+
+export interface GameSlotWaitingResponseDto {
+  id: number,
+  gameSlotId: number,
+  requestedById   : number,
+  requestedBy: UserMinimalDto,
+  requestedAt: Date,
+  waitingPlayers : GameSlotWaitingPlayerResponseDto[]
+}
+
+export interface GameSlotWaitingPlayerResponseDto {
+  id: number,
+  gameSlotWaitingId: number,
+  playerId: number,
+  player: UserMinimalDto,
 }
 
 export interface SimpleResponseDto {
   message: string
+}
+
+export interface PostResponseDto {
+  id: number,
+  title: string,
+  description: string,
+  postUrl: string,
+  postByUser: UserMinimalDto,
+  isPublic: boolean,
+  // createdBy : number,
+  createdAt: Date,
+  isLiked: boolean,
+  likeCount: number,
+  commentCount: number
+}
+
+export interface PostDetailedResponseDto {
+  id: number,
+  title: string,
+  description: string,
+  postUrl: string,
+  postByUser: UserMinimalDto,
+  isPublic: boolean,
+  createdAt: Date,
+  isLiked: boolean,
+  likeCount: number,
+  commentCount: number,
+  isinappropriate: boolean,
+  tags : TagResponseDto[],
+}
+
+export interface TagResponseDto {
+  id: number,
+  tagName: string
+}
+
+export interface CommentResponseDto {
+  id: number,
+  comment: string,
+  commentBy: UserMinimalDto,
+  createdAt : Date
+}
+
+export interface PostUpdateDto {
+  Title: string,
+  Description: string,
+  IsPublic: boolean,
+}
+
+export interface UserMinimalDto {
+  id: number,
+  fullName: string,
+  email: string,
+  image: string
 }

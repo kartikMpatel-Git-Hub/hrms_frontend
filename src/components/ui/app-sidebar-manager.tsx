@@ -7,10 +7,19 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Bell, Briefcase, Building2, ChartArea, ChartNetwork, ChessPawn, ChessQueen, Gamepad, Gamepad2, GamepadDirectional, HomeIcon, IndianRupeeIcon, LogOut, LucideGamepad, TicketsPlane, User2 } from "lucide-react"
-import { NavLink } from "react-router"
+import { Bell, Briefcase, Building2, ChartArea, ChartNetwork, ChessPawn, ChessQueen, Gamepad, Gamepad2, GamepadDirectional, HomeIcon, IndianRupeeIcon, LogOut, LucideGamepad, TicketsPlane, User2, Users } from "lucide-react"
+import { NavLink, useNavigate } from "react-router"
+import { useAuth } from "@/context/AuthContext"
 
 export function AppSidebarManager() {
+    const navigate = useNavigate()
+    const { logout } = useAuth()
+
+    const handleLogout = async () => {
+        await logout()
+        navigate('/', { replace: true })
+    }
+
     return (
         <Sidebar className="">
             <SidebarHeader>
@@ -31,25 +40,9 @@ export function AppSidebarManager() {
                         <SidebarMenuButton className="my-2">
                             <NavLink
                                 className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
-                                to={"./travel"}
+                                to={"./my-team"}
                             >
-                                <TicketsPlane className="w-4 h-4" /> Travel
-                            </NavLink>
-                        </SidebarMenuButton>
-                        <SidebarMenuButton className="my-2">
-                            <NavLink
-                                className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
-                                to={"./department"}
-                            >
-                                <Building2 className="w-4 h-4" /> Department
-                            </NavLink>
-                        </SidebarMenuButton>
-                        <SidebarMenuButton className="my-2">
-                            <NavLink
-                                className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
-                                to={"./expense"}
-                            >
-                                <IndianRupeeIcon className="w-4 h-4" /> Expense
+                                <Users className="w-4 h-4" /> My Team
                             </NavLink>
                         </SidebarMenuButton>
                         <SidebarMenuButton className="my-2">
@@ -93,13 +86,8 @@ export function AppSidebarManager() {
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                        <SidebarMenuButton className="text-red-400">
-                            <NavLink
-                                className={`flex gap-2 w-full rounded-md`}
-                                to={"/"}
-                            >
-                                <LogOut className="w-4 h-4" /> Logout
-                            </NavLink>
+                        <SidebarMenuButton className="text-red-400" onClick={handleLogout}>
+                            <LogOut className="w-4 h-4" /> Logout
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>

@@ -1,4 +1,4 @@
-import type { BookingSlotResponseDto, GameCreateDto, GameResponseDto, GameResponseWithSlotDto, GameSlotCreateDto, GameSlotOffereResponseDto, GameSlotResponseDto, PagedResponse, UserReponseDto } from "@/type/Types";
+import type { GameCreateDto, GameOperatingHourCreateDto, GameOperatingHourResponseDto, GameResponseDto, GameResponseWithSlotDto, GameSlotDetaildResponseDto, GameSlotResponseDto, GameSlotWaitingResponseDto, PagedResponse, UserReponseDto } from "@/type/Types";
 import api from "./Api";
 
 export const GetAllGames = async (): Promise<PagedResponse<GameResponseDto>> => {
@@ -13,23 +13,43 @@ export const CreateGame = async (dto: GameCreateDto): Promise<GameResponseDto> =
     const response = await api.post<GameResponseDto>(`/game`, dto)
     return response.data
 }
-export const CreateGameSlot = async ({ id, dto }: GameSlotCreateDto): Promise<GameSlotResponseDto> => {
-    const response = await api.post<GameSlotResponseDto>(`/game/${id}/slot`, dto)
-    return response.data
-}
-
-export const DeleteGameSlot = async (gameId: number, slotId: number): Promise<any> => {
-    const response = await api.delete(`/game/${gameId}/slot/${slotId}`)
-    return response.data
-}
 
 export const DeleteGame = async (id: number): Promise<any> => {
     const response = await api.delete(`/game/${id}`)
     return response.data
 }
 
-export const GetGameSlots = async (id: number): Promise<BookingSlotResponseDto[]> => {
-    const response = await api.get<BookingSlotResponseDto[]>(`/game/${id}/booking`)
+export const CreateGameOperationSlot = async (gameId: number, dto: GameOperatingHourCreateDto): Promise<GameOperatingHourResponseDto> => {
+    const response = await api.post<GameOperatingHourResponseDto>(`/game/${gameId}/operation-window`, dto)
+    return response.data
+}
+
+export const GetGameOperationSlot = async (id: number): Promise<GameOperatingHourResponseDto[]> => {
+    const response = await api.get<GameOperatingHourResponseDto[]>(`/game/${id}/operation-window`)
+    return response.data
+}
+
+export const DeleteGameOperationSlot = async (gameId: number, slotId: number): Promise<any> => {
+    const response = await api.delete(`/game/${gameId}/operation-window/${slotId}`)
+    return response.data
+}
+
+export const GetGameSlots = async (id: number): Promise<GameSlotResponseDto[]> => {
+    const response = await api.get<GameSlotResponseDto[]>(`/game/${id}/slots`)
+    return response.data
+}
+
+export const GetGameSlot = async (gameId: number, slotId: number): Promise<GameSlotDetaildResponseDto> => {
+    const response = await api.get<GameSlotDetaildResponseDto>(`/game/${gameId}/slots/${slotId}/details`)
+    return response.data
+}
+
+export const GetGameSlotWaitlist = async (gameId: number, slotId: number): Promise<GameSlotWaitingResponseDto[]> => {
+    const response = await api.get<GameSlotWaitingResponseDto[]>(`/game/${gameId}/slots/${slotId}/waitlist`)
+    return response.data
+}
+export const GetGameSlotDetail = async (gameId: number, slotId: number): Promise<GameSlotDetaildResponseDto> => {
+    const response = await api.get<GameSlotDetaildResponseDto>(`/game/${gameId}/slots/${slotId}/details`)
     return response.data
 }
 
@@ -38,19 +58,13 @@ export const GetAvailablePlayers = async (gameId: number, pageSize: number, page
     return response.data.data
 }
 
-
-export const GetActiveOfferes = async (id : number): Promise<GameSlotOffereResponseDto[]> => {
-    const response = await api.get<GameSlotOffereResponseDto[]>(`/game/${id}/offere`)
-    return response.data
-}
-
-export const BookGameSlot = async (gameId: number, slotId: number, playerIds: number[]): Promise<any> => {
-    const response = await api.post(`/game/${gameId}/slot/${slotId}/book`, { Players : playerIds })
+export const BookGameSlot = async (gameId: number, slotId: number, playerIds: number[]): Promise<GameSlotResponseDto> => {
+    const response = await api.post<GameSlotResponseDto>(`/game/${gameId}/slots/${slotId}`, { Players : playerIds })
     return response.data
 }
 
 export const IsUserInterestedInGame = async (gameId: number): Promise<{isInterested: boolean}> => {
-    const response = await api.get(`/game/${gameId}/is-interested`)
+    const response = await api.get(`/game/${gameId}/toggle-interest`)
     return response.data
 }
 

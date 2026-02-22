@@ -1,13 +1,12 @@
-import { CreateGame, DeleteGame, GetAllGames } from "@/api/GameService"
-import { Button } from "@/components/ui/button"
+import { GetAllGames } from "@/api/GameService"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
-import type { GameCreateDto, GameResponseDto } from "@/type/Types"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import type { GameResponseDto } from "@/type/Types"
+import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import GameRow from "./GameRow"
-import { Gamepad2, Plus, Search, Timer } from "lucide-react"
+import { Gamepad2, Search } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 
@@ -18,47 +17,24 @@ function EmployeeGames() {
         queryKey: ["games"],
         queryFn: GetAllGames
     })
-    const queryClient = useQueryClient()
-    const { mutate, isPending } = useMutation({
-        mutationKey: ["create-game"],
-        mutationFn: (game: GameCreateDto) => CreateGame(game),
-        onSuccess: (res) => {
-            queryClient.invalidateQueries({ queryKey: ["games"] })
-            setDialogOpen(false)
-        }
-    })
-    const { mutate: deleteGame, isPending: isDeletePending } = useMutation({
-        mutationKey: ["delete-game"],
-        mutationFn: (id: number) => DeleteGame(id),
-        onSuccess: (res) => {
-            queryClient.invalidateQueries({ queryKey: ["games"] })
-            setDialogOpen(false)
-        }
-    })
-
     const [games, setGames] = useState<GameResponseDto[] | null>(null)
-    const [filteredTravels, setFilteredTravels] = useState<GameResponseDto[] | null>(null)
-    const [error, setError] = useState<string[]>([])
-    const [dialogOpen, setDialogOpen] = useState(false)
+    const [filteredGames, setFilteredGames] = useState<GameResponseDto[] | null>(null)
     const [search, setSearch] = useState<string>("")
     const [loading, setLoading] = useState<boolean>(false)
-    const [newGame, setNewGame] = useState<GameCreateDto>({
-        Name: "",
-        MaxPlayer: 1,
-        MinPlayer: 1
-    })
 
     useEffect(() => {
         setLoading(true)
         if (data) {
+            console.log(data);
+            
             if (search.trim() === "") {
                 setGames(data.data)
-                setFilteredTravels(data.data)
+                setFilteredGames(data.data)
             } else {
                 const filtered = data.data?.filter(
                     t =>
                         t.name.toLowerCase().includes(search.toLowerCase()))
-                setGames(filtered)
+                setFilteredGames(filtered)
             }
         }
         setTimeout(() => {
@@ -68,37 +44,7 @@ function EmployeeGames() {
     const navigator = useNavigate()
 
     const handleOpenGameDetail = (id: number) => {
-        navigator(`./${id}`)
-    }
-
-    const handleSubmit = () => {
-        setError([])
-        if (!isValidForm()) {
-            return
-        }
-        mutate(newGame)
-    }
-
-    const handleDeleteGame = (id: number) => {
-        deleteGame(id)
-    }
-
-    const isValidForm = (): boolean => {
-        const errors: string[] = []
-        if (!newGame.Name || newGame.Name.trim().length < 2 || newGame.Name.trim().length > 50) {
-            errors.push("Game name must be between 2 and 50 characters.")
-        }
-        if (newGame.MaxPlayer <= 0) {
-            errors.push("Max player must be greater than 0.")
-        }
-        if (newGame.MinPlayer <= 0) {
-            errors.push("Min player must be greater than 0.")
-        }
-        if (newGame.MinPlayer > newGame.MaxPlayer) {
-            errors.push("Min player cannot be greater than max player.")
-        }
-        setError(errors)
-        return errors.length === 0
+        navigator(`./${id}/slots`)
     }
 
     return (
@@ -120,6 +66,7 @@ function EmployeeGames() {
                                 <TableCell>Name</TableCell>
                                 <TableCell>Max Player</TableCell>
                                 <TableCell>Min Player</TableCell>
+                                <TableCell>Duration</TableCell>
                                 <TableCell>Action</TableCell>
                             </TableRow>
                         </TableHeader>
@@ -127,15 +74,14 @@ function EmployeeGames() {
                             {
                                 !(isLoading || loading)
                                     ? (
-                                        games && games.length > 0
+                                        filteredGames && filteredGames.length > 0
                                             ? (
-                                                games.map((g, idx) => (
+                                                filteredGames.map((g, idx) => (
                                                     <GameRow
                                                         key={g.id}
                                                         game={g}
                                                         idx={idx}
                                                         handleOpenGameDetail={handleOpenGameDetail}
-                                                        handleDeleteGame={handleDeleteGame}
                                                     />
                                                 ))
                                             )

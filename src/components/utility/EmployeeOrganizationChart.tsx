@@ -77,7 +77,7 @@ function EmployeeOrganizationChart() {
                             : users?.length > 0
                                 ?
                                 users.map((u) => (
-                                    <TableRow className="font-semibold hover:cursor-pointer" onClick={() => handleOpenOrganizationChart(u.id)}>
+                                    <TableRow className="font-semibold hover:cursor-pointer" onClick={() => handleOpenOrganizationChart(u.id)} key={u.id}>
                                         <TableCell>
                                             <ItemMedia>
                                                 <Avatar>

@@ -1,9 +1,10 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { LoginService } from '../api/AuthenticationService';
 import type { LoginRequest } from '../type/Types';
 
 export interface User {
+  id: number;
   email: string;
   role: string;
 }
@@ -12,6 +13,7 @@ export interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isAuthenticating: boolean;
+  isInitializing: boolean;
   authError: string | null;
   login: (credentials: LoginRequest) => Promise<User>; 
   logout: () => Promise<void>;
@@ -28,6 +30,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [isInitializing, setIsInitializing] = useState(true);
   const queryClient = useQueryClient();
 
   const {
@@ -37,8 +40,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     mutationFn: LoginService, 
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['login'] });
-      localStorage.setItem("token",res.token)
-      setUser({ email: res.email, role: res.role });
+      localStorage.setItem("token", res.token);
+      const userData = { id: res.id, email: res.email, role: res.role };
+      localStorage.setItem("user", JSON.stringify(userData));
+      setUser(userData);
       setAuthError(null);
     },
     onError: (err: any) => {
@@ -51,15 +56,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     },
   });
 
+  // Check for existing token on component mount
+  useEffect(() => {
+    const checkExistingToken = () => {
+      const token = localStorage.getItem("token");
+      const userJson = localStorage.getItem("user");
+      
+      if (token && userJson) {
+        try {
+          const userData = JSON.parse(userJson);
+          setUser(userData);
+        } catch (error) {
+          console.error("Failed to parse user data from localStorage:", error);
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+        }
+      }
+      setIsInitializing(false);
+    };
+
+    checkExistingToken();
+  }, []);
+
   const login = async (credentials: LoginRequest) => {
     setAuthError(null);
     const res = await loginMutateAsync(credentials);
-    return { email: res.email, role: res.role } as User;
+    return { id: res.id, email: res.email, role: res.role } as User;
   };
 
   const logout = async () => {
     try {
-      localStorage.removeItem("token")
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
       console.log("logout...");
     } catch {
     }
@@ -71,6 +99,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     user,
     isAuthenticated: !!user,
     isAuthenticating,
+    isInitializing,
     authError,
     login,
     logout,
