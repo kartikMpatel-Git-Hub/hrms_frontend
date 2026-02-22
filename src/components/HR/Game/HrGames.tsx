@@ -50,6 +50,7 @@ function HrGames() {
         Name: "",
         MaxPlayer: 1,
         MinPlayer: 1,
+        Duration: 30,
         SlotAssignedBeforeMinutes : 60,
         SlotCreateForNextXDays : 7
     })
@@ -107,6 +108,9 @@ function HrGames() {
         if (newGame.MinPlayer > newGame.MaxPlayer) {
             errors.push("Min player cannot be greater than max player.")
         }
+        if (newGame.Duration <= 0) {
+            errors.push("Duration must be greater than 0.")
+        }
         if (newGame.SlotAssignedBeforeMinutes <= 0) {
             errors.push("Slot Assigned Before Minutes must be greater than 0.")
         }
@@ -125,7 +129,7 @@ function HrGames() {
                         <Button title="create slot" className=""><Plus />Add Game</Button>
                     </div>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-sm">
+                <DialogContent className="sm:max-w-md">
                     <DialogHeader>
                         <DialogTitle className="flex"><Gamepad2 /> <div className="m-1">Create New Game</div></DialogTitle>
                         <DialogDescription>
@@ -137,18 +141,26 @@ function HrGames() {
                             <Label>Name</Label>
                             <Input type="text" placeholder="Enter Game Name" value={newGame.Name} onChange={(e) => setNewGame({ ...newGame, Name: e.target.value })} />
                         </Field>
-                        <Field>
-                            <Label>Max Player</Label>
-                            <Input type="number" min={1} value={newGame.MaxPlayer} onChange={(e) => setNewGame({ ...newGame, MaxPlayer: parseInt(e.target.value) || 0 })} />
-                        </Field>
-                        <Field>
-                            <Label>Min Player</Label>
-                            <Input type="number" min={1} value={newGame.MinPlayer} onChange={(e) => setNewGame({ ...newGame, MinPlayer: parseInt(e.target.value) || 0 })} />
-                        </Field>
-                        <Field>
-                            <Label>Slot Assigned Before (Minutes)</Label>
-                            <Input type="number" min={1} value={newGame.SlotAssignedBeforeMinutes} onChange={(e) => setNewGame({ ...newGame, SlotAssignedBeforeMinutes: parseInt(e.target.value) || 0 })} />
-                        </Field>
+                        <div className="grid grid-cols-2 gap-4">
+                            <Field>
+                                <Label>Max Player</Label>
+                                <Input type="number" min={1} value={newGame.MaxPlayer} onChange={(e) => setNewGame({ ...newGame, MaxPlayer: parseInt(e.target.value) || 0 })} />
+                            </Field>
+                            <Field>
+                                <Label>Min Player</Label>
+                                <Input type="number" min={1} value={newGame.MinPlayer} onChange={(e) => setNewGame({ ...newGame, MinPlayer: parseInt(e.target.value) || 0 })} />
+                            </Field>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <Field>
+                                <Label>Duration (Minutes)</Label>
+                                <Input type="number" min={1} value={newGame.Duration} onChange={(e) => setNewGame({ ...newGame, Duration: parseInt(e.target.value) || 0 })} />
+                            </Field>
+                            <Field>
+                                <Label>Slot Assigned (Min)</Label>
+                                <Input type="number" min={1} value={newGame.SlotAssignedBeforeMinutes} onChange={(e) => setNewGame({ ...newGame, SlotAssignedBeforeMinutes: parseInt(e.target.value) || 0 })} />
+                            </Field>
+                        </div>
                         <Field>
                             <Label>Slot Create For Next (Days)</Label>
                             <Input type="number" min={1} value={newGame.SlotCreateForNextXDays} onChange={(e) => setNewGame({ ...newGame, SlotCreateForNextXDays: parseInt(e.target.value) || 0 })} />
@@ -175,6 +187,7 @@ function HrGames() {
                                 <TableCell ><div className="flex justify-center">Name</div></TableCell>
                                 <TableCell ><div className="flex justify-center">Max Player</div></TableCell>
                                 <TableCell ><div className="flex justify-center">Min Player</div></TableCell>
+                                <TableCell ><div className="flex justify-center">Duration (min)</div></TableCell>
                                 <TableCell><div className="flex justify-center">Action</div></TableCell>
                             </TableRow>
                         </TableHeader>
@@ -197,7 +210,7 @@ function HrGames() {
                                             )
                                             : (
                                                 <TableRow>
-                                                    <TableCell colSpan={5}>
+                                                    <TableCell colSpan={6}>
                                                         <div className="flex justify-center p-2 font-bold">
                                                             No Game Found
                                                         </div>
@@ -209,6 +222,7 @@ function HrGames() {
                                         Array.from({ length: 5 }).map((_, i) => (
                                             <TableRow key={i}>
                                                 <TableCell><Skeleton className="h-4 w-4" /></TableCell>
+                                                <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                                 <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                                 <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                                 <TableCell><Skeleton className="h-4 w-24" /></TableCell>

@@ -55,7 +55,7 @@ function EmployeeGameDetail() {
 
     useEffect(() => {
         if (data) {
-            console.log(data);
+            // console.log(data);
             setGame(data);
 
             if (data.length > 0) {
@@ -109,7 +109,7 @@ function EmployeeGameDetail() {
             toast.success("Slot booked successfully!");
         },
         onError: (error: any) => {
-            console.log(error);
+            // console.log(error);
             toast.error(error?.error?.details || "Failed to book slot");
         }
     });

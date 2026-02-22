@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useEffect, useState, type ChangeEvent } from 'react'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { toast, ToastContainer } from 'react-toastify'
 import { Textarea } from '@/components/ui/textarea'
 import { TableCell, TableRow } from '@/components/ui/table'
 
@@ -27,6 +28,7 @@ function ManagerJobCard({ job, idx, isPending, handleReferred, handleShare, isCo
   })
   const [cv, setCv] = useState<File | null>(null)
   const [errors, setErrors] = useState<string[]>([])
+  const [actionType, setActionType] = useState<'share' | 'refer' | null>(null)
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -36,6 +38,11 @@ function ManagerJobCard({ job, idx, isPending, handleReferred, handleShare, isCo
 
   useEffect(() => {
     if (isCompleted == true) {
+      if (actionType === 'share') {
+        toast.success('Job shared successfully!')
+      } else if (actionType === 'refer') {
+        toast.success('Job referred successfully!')
+      }
       setReferrenceRequest({
         ReferedPersonName: "",
         ReferedPersonEmail: "",
@@ -45,8 +52,9 @@ function ManagerJobCard({ job, idx, isPending, handleReferred, handleShare, isCo
       setErrors([])
       setCv(null)
       setShareEmail("")
+      setActionType(null)
     }
-  }, [isCompleted])
+  }, [isCompleted, actionType])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const { name, value } = e.target
@@ -84,8 +92,10 @@ function ManagerJobCard({ job, idx, isPending, handleReferred, handleShare, isCo
     if (!isValidForm()) {
       return
     }
-    if (cv)
+    if (cv) {
+      setActionType('refer')
       handleReferred(job.id, referenceRequest, cv)
+    }
   }
 
   const handleShareSubmit = () => {
@@ -97,16 +107,30 @@ function ManagerJobCard({ job, idx, isPending, handleReferred, handleShare, isCo
       setError("Please enter a valid email!")
       return
     }
+    setActionType('share')
     handleShare(job.id, shareEmail)
   }
 
   function validateEmail(email: string): boolean {
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return pattern.test(email)
+    if (!pattern.test(email)) {
+      return false
+    }
+    const parts = email.split('@')
+    if (parts.length !== 2) return false
+    const [localPart, domain] = parts
+    if (localPart.length > 64 || localPart.length === 0) return false
+    if (domain.length > 255 || domain.length === 0) return false
+    if (domain.startsWith('.') || domain.endsWith('.')) return false
+    if (domain.includes('..')) return false
+    if (localPart.startsWith('.') || localPart.endsWith('.')) return false
+    if (localPart.includes('..')) return false
+    return true
   }
 
   return (
     <TableRow>
+      <ToastContainer />
       <TableCell>{idx + 1}</TableCell>
       <TableCell>{job.title}</TableCell>
       <TableCell>{job.jobRole}</TableCell>

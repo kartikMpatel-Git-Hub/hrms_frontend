@@ -25,7 +25,7 @@ function EmployeeGames() {
     useEffect(() => {
         setLoading(true)
         if (data) {
-            console.log(data);
+            // console.log(data);
             
             if (search.trim() === "") {
                 setGames(data.data)

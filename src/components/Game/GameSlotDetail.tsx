@@ -1,21 +1,61 @@
-import { GetGameSlot } from "@/api/GameService";
+import { GetGameSlot, CancelGameBooking } from "@/api/GameService";
 import type { GameSlotDetaildResponseDto } from "@/type/Types";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ClockIcon, CalendarIcon, UsersIcon, ArrowLeftIcon, CheckCircleIcon } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ClockIcon, CalendarIcon, UsersIcon, ArrowLeftIcon, CheckCircleIcon, XCircleIcon, AlertTriangleIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/context/AuthContext";
+import { toast, ToastContainer } from "react-toastify";
+import { useState } from "react";
 
 function GameSlotDetail() {
     const { id, slotId } = useParams();
     const navigate = useNavigate();
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
+    const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
 
     const { data: slotDetail, isLoading, isError } = useQuery<GameSlotDetaildResponseDto>({
         queryKey: ["game-slot-detail", id, slotId],
         queryFn: () => GetGameSlot(Number(id), Number(slotId))
     });
+
+    const { mutate: cancelBooking, isPending: isCancelling } = useMutation({
+        mutationFn: () => CancelGameBooking(Number(id), Number(slotId)),
+        onSuccess: () => {
+            toast.success("Booking cancelled successfully!")
+            queryClient.invalidateQueries({ queryKey: ["game-slot-detail", id, slotId] })
+            setCancelDialogOpen(false)
+            navigate(-1)
+        },
+        onError: (error: any) => {
+            const errorMessage = error?.response?.data?.message || error?.message || "Failed to cancel booking"
+            toast.error(errorMessage)
+        }
+    });
+
+    const canCancelBooking = (): boolean => {
+        if (!slotDetail || !user) return false;
+        if (slotDetail.bookedById !== user.id) return false;
+        
+        const slotDateTime = new Date(`${slotDetail.date.toString().split('T')[0]}T${slotDetail.startTime}`);
+        const now = new Date();
+        const timeDiffMinutes = (slotDateTime.getTime() - now.getTime()) / (1000 * 60);
+        
+        return timeDiffMinutes > 15;
+    };
+
+    const handleCancelClick = () => {
+        setCancelDialogOpen(true);
+    };
+
+    const confirmCancellation = () => {
+        cancelBooking();
+    };
 
     if (isError) {
         return (
@@ -71,6 +111,54 @@ function GameSlotDetail() {
 
     return (
         <div className="container mx-auto p-6 space-y-6">
+            <ToastContainer />
+            
+            {/* Cancellation Confirmation Dialog */}
+            <Dialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2">
+                            <AlertTriangleIcon className="w-5 h-5 text-orange-600" />
+                            Cancel Booking
+                        </DialogTitle>
+                        <DialogDescription>
+                            Are you sure you want to cancel this booking? This action cannot be undone.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                            <div className="flex items-start gap-3">
+                                <AlertTriangleIcon className="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" />
+                                <div className="space-y-1">
+                                    <p className="text-sm font-medium text-orange-900">Important</p>
+                                    <p className="text-sm text-orange-700">
+                                        Once cancelled, this slot will become available for other players to book.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <DialogFooter className="gap-2">
+                        <Button 
+                            variant="outline" 
+                            onClick={() => setCancelDialogOpen(false)}
+                            disabled={isCancelling}
+                        >
+                            Keep Booking
+                        </Button>
+                        <Button 
+                            variant="destructive" 
+                            onClick={confirmCancellation}
+                            disabled={isCancelling}
+                            className="gap-2"
+                        >
+                            <XCircleIcon className="w-4 h-4" />
+                            {isCancelling ? "Cancelling..." : "Cancel Booking"}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
             <div className="flex items-center gap-4">
                 <Button
                     variant="ghost"
@@ -127,10 +215,23 @@ function GameSlotDetail() {
 
                             {slotDetail.bookedBy && slotDetail.status.toUpperCase() === "BOOKED" && (
                                 <div className="border-t pt-6">
-                                    <h3 className="font-semibold mb-4 flex items-center gap-2">
-                                        <CheckCircleIcon className="w-5 h-5" />
-                                        Booking Information
-                                    </h3>
+                                    <div className="flex items-center justify-between mb-4">
+                                        <h3 className="font-semibold flex items-center gap-2">
+                                            <CheckCircleIcon className="w-5 h-5" />
+                                            Booking Information
+                                        </h3>
+                                        {canCancelBooking() && (
+                                            <Button 
+                                                variant="destructive" 
+                                                size="sm" 
+                                                className="gap-2"
+                                                onClick={handleCancelClick}
+                                            >
+                                                <XCircleIcon className="w-4 h-4" />
+                                                Cancel Booking
+                                            </Button>
+                                        )}
+                                    </div>
                                     <div className="flex items-center gap-4 p-4 bg-muted rounded-lg">
                                         {slotDetail.bookedBy.image && (
                                             <img

@@ -23,7 +23,7 @@ function Notifications() {
 
     useEffect(() => {
         if (data) {
-            console.log(data);
+            // console.log(data);
             setNotifications(data.data)
         }
     }, [data])

@@ -72,3 +72,13 @@ export const ChangeUserInterest = async (gameId: number): Promise<any> => {
     const response = await api.patch(`/game/${gameId}/toggle-interest`, {})
     return response.data
 }
+
+export const CancelGameBooking = async (gameId: number, slotId: number): Promise<any> => {
+    const response = await api.delete(`/game/${gameId}/slots/${slotId}`)
+    return response.data
+}
+
+export const CancelGameWaitlist = async (gameId: number, slotId: number,waitlistId: number): Promise<any> => {
+    const response = await api.delete(`/game/${gameId}/slots/${slotId}/waitlist/${waitlistId}`)
+    return response.data
+}

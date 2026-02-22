@@ -107,7 +107,7 @@ function GameDetail() {
             toast.success("Slot booked successfully!");
         },
         onError: (error: any) => {
-            console.log(error);
+            // console.log(error);
             toast.error(error?.error?.details || "Failed to book slot");
         }
     });

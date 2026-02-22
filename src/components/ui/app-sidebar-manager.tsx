@@ -7,7 +7,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Bell, Briefcase, Building2, ChartArea, ChartNetwork, ChessPawn, ChessQueen, Gamepad, Gamepad2, GamepadDirectional, HomeIcon, IndianRupeeIcon, LogOut, LucideGamepad, TicketsPlane, User2, Users } from "lucide-react"
+import { Bell, Briefcase, Building2, ChartArea, ChartNetwork, ChessPawn, ChessQueen, Gamepad, Gamepad2, GamepadDirectional, HomeIcon, Images, IndianRupeeIcon, LogOut, LucideGamepad, TicketsPlane, User2, Users } from "lucide-react"
 import { NavLink, useNavigate } from "react-router"
 import { useAuth } from "@/context/AuthContext"
 
@@ -59,6 +59,14 @@ export function AppSidebarManager() {
                                 to={"./game"}
                             >
                                 <Gamepad2 className="w-4 h-4" /> Game
+                            </NavLink>
+                        </SidebarMenuButton>
+                        <SidebarMenuButton className="my-2">
+                            <NavLink
+                                className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
+                                to={"./post"}
+                            >
+                                <Images className="w-4 h-4" /> Post
                             </NavLink>
                         </SidebarMenuButton>
                         

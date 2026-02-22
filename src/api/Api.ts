@@ -27,7 +27,7 @@ api.interceptors.response.use((response: AxiosResponse): AxiosResponse => {
         if(error.response && error.response.status === 401){
             localStorage.removeItem("token")
             localStorage.removeItem("user")
-            console.log("Unauthorized request. Redirecting to login...");
+            // console.log("Unauthorized request. Redirecting to login...");
             window.location.href = "/"
         }
         return Promise.reject(error.response?.data)

@@ -19,6 +19,9 @@ function Login() {
         case "MANAGER":
           navigate("/manager/dashboard");
           break;
+        case "ADMIN":
+          navigate("/Welcome");
+          break;
         default:
           navigate("/");
       }

@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setAuthError(null);
     },
     onError: (err: any) => {
-      console.log(err);
+      // console.log(err);
       const msg =
         err?.error?.details ||
         'Login failed. Please try again.';
@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const userData = JSON.parse(userJson);
           setUser(userData);
         } catch (error) {
-          console.error("Failed to parse user data from localStorage:", error);
+          // console.error("Failed to parse user data from localStorage:", error);
           localStorage.removeItem("token");
           localStorage.removeItem("user");
         }
@@ -88,7 +88,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      console.log("logout...");
+      // console.log("logout...");
     } catch {
     }
     setUser(null);

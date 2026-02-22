@@ -1,24 +1,47 @@
-import { GetGameSlotWaitlist } from "@/api/GameService";
+import { CancelGameWaitlist, GetGameSlotWaitlist } from "@/api/GameService";
 import type { GameSlotWaitingResponseDto } from "@/type/Types";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { HourglassIcon, UsersIcon, ArrowLeftIcon } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { HourglassIcon, UsersIcon, ArrowLeftIcon, XCircleIcon, AlertTriangleIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/context/AuthContext";
+import { toast, ToastContainer } from "react-toastify";
 
 function GameWaitlist() {
     const { id, slotId } = useParams();
     const [waitlists, setWaitlists] = useState<GameSlotWaitingResponseDto[] | null>(null);
+    const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+    const [selectedWaitlistId, setSelectedWaitlistId] = useState<number | null>(null);
     const navigate = useNavigate();
+    const {user} = useAuth();
 
     const { data: waitlistData, isLoading, isError } = useQuery<GameSlotWaitingResponseDto[]>({
         queryKey: ["game-all-waitlists", id, slotId],
         queryFn: () => GetGameSlotWaitlist(Number(id), Number(slotId))
     });
+
+    const queryClient = useQueryClient();
+
+    const { mutate: cancelWaitlistMutation, isPending: isCancelling } = useMutation({
+        mutationKey: ["cancel-waitlist"],
+        mutationFn: (waitlistId: number) => CancelGameWaitlist(Number(id), Number(slotId), waitlistId),
+        onSuccess: () => {
+            toast.success("Waitlist request cancelled successfully!")
+            queryClient.invalidateQueries({queryKey: ["game-all-waitlists", id, slotId]})
+            setCancelDialogOpen(false)
+            setSelectedWaitlistId(null)
+        },
+        onError: (error: any) => {
+            const errorMessage = error?.response?.data?.message || error?.message || "Failed to cancel waitlist"
+            toast.error(errorMessage)
+        }
+    })
 
     useEffect(() => {
         if (waitlistData) {
@@ -42,8 +65,67 @@ function GameWaitlist() {
         )
     }
 
+    async function handleCancelWaitlist(waitlistId: number): Promise<void> {
+        setSelectedWaitlistId(waitlistId)
+        setCancelDialogOpen(true)
+    }
+
+    function confirmCancellation(): void {
+        if (selectedWaitlistId) {
+            cancelWaitlistMutation(selectedWaitlistId)
+        }
+    }
+
     return (
         <div className="container mx-auto p-6 space-y-6">
+            <ToastContainer />
+            
+            {/* Cancellation Confirmation Dialog */}
+            <Dialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2">
+                            <AlertTriangleIcon className="w-5 h-5 text-orange-600" />
+                            Cancel Waitlist Request
+                        </DialogTitle>
+                        <DialogDescription>
+                            Are you sure you want to cancel your waitlist request? This action cannot be undone.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                            <div className="flex items-start gap-3">
+                                <AlertTriangleIcon className="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" />
+                                <div className="space-y-1">
+                                    <p className="text-sm font-medium text-orange-900">Important</p>
+                                    <p className="text-sm text-orange-700">
+                                        Once cancelled, you'll need to rejoin the waitlist if you change your mind. Your position in the queue will be lost.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <DialogFooter className="gap-2">
+                        <Button 
+                            variant="outline" 
+                            onClick={() => setCancelDialogOpen(false)}
+                            disabled={isCancelling}
+                        >
+                            Keep Request
+                        </Button>
+                        <Button 
+                            variant="destructive" 
+                            onClick={confirmCancellation}
+                            disabled={isCancelling}
+                            className="gap-2"
+                        >
+                            <XCircleIcon className="w-4 h-4" />
+                            {isCancelling ? "Cancelling..." : "Cancel Request"}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
             <div className="flex items-center gap-4">
                 <Button
                     variant="ghost"
@@ -89,6 +171,19 @@ function GameWaitlist() {
                                                 Requested At: {new Date(waitlist.requestedAt).toLocaleString()}
                                             </p>
                                         </div>
+                                        {
+                                            waitlist.requestedById === user?.id && (
+                                                <Button 
+                                                    variant="destructive" 
+                                                    size="sm" 
+                                                    className="mt-2 gap-2" 
+                                                    onClick={() => handleCancelWaitlist(waitlist.id)}
+                                                >
+                                                    <XCircleIcon className="w-4 h-4" />
+                                                    Cancel My Request
+                                                </Button>
+                                            )
+                                        }
                                     </CardHeader>
 
                                     <CardContent className="pt-6 space-y-6">

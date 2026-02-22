@@ -36,7 +36,7 @@ function HrGameDetail() {
         mutationFn: (payload: { gameId: number; dto: GameOperatingHourCreateDto }) => CreateGameOperationSlot(payload.gameId, payload.dto),
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ["game-detail"] })
-            console.log(res);
+            // console.log(res);
             setGame((prev) => (prev ? { ...prev, gameOperationWindows: [...prev.gameOperationWindows, res] } : prev))
             setDialogOpen(false)
         },
@@ -63,7 +63,7 @@ function HrGameDetail() {
 
     useEffect(() => {
         if (data) {
-            console.log(data);
+            // console.log(data);
             setGame(data)
         }
     }, [data])

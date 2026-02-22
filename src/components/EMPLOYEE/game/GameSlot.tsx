@@ -30,7 +30,7 @@ function GameSlot({ slot, handleBooking, isPending }: GameSlotProps) {
     useEffect(() => {
         if (fetchedPlayers) {
             setPlayers(fetchedPlayers)
-            console.log(fetchedPlayers);
+            // console.log(fetchedPlayers);
 
         }
         setLoading(false)

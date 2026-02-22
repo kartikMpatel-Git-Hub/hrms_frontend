@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useEffect, useState, type ChangeEvent } from 'react'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { ToastContainer } from 'react-toastify'
+import { ToastContainer, toast } from 'react-toastify'
 import { Textarea } from '@/components/ui/textarea'
 import { TableCell, TableRow } from '@/components/ui/table'
 
@@ -30,16 +30,35 @@ function EmployeeJobCard({ job, idx, isPending, handleReferred, handleShare, isC
         Note: ""
     })
     const [cv, setCv] = useState<File | null>(null)
+    const [fileError, setFileError] = useState<string>("")
     const [errors, setErrors] = useState<string[]>([])
+    const [actionType, setActionType] = useState<'share' | 'refer' | null>(null)
+
+    const isValidPdfFile = (file: File): boolean => {
+        return file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')
+    }
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setFileError("")
         if (e.target.files) {
-            setCv(e.target.files[0]);
+            const file = e.target.files[0]
+            if (!isValidPdfFile(file)) {
+                setFileError("Only PDF files are allowed!")
+                e.target.value = ""
+                setCv(null)
+                return
+            }
+            setCv(file)
         }
     };
 
     useEffect(() => {
         if (isCompleted == true) {
+            if (actionType === 'share') {
+                toast.success('Job shared successfully!')
+            } else if (actionType === 'refer') {
+                toast.success('Job referred successfully!')
+            }
             setReferrenceRequest({
                 ReferedPersonName: "",
                 ReferedPersonEmail: "",
@@ -49,8 +68,9 @@ function EmployeeJobCard({ job, idx, isPending, handleReferred, handleShare, isC
             setErrors([])
             setCv(null)
             setShareEmail("")
+            setActionType(null)
         }
-    }, [isCompleted])
+    }, [isCompleted, actionType])
 
 
     const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -78,7 +98,10 @@ function EmployeeJobCard({ job, idx, isPending, handleReferred, handleShare, isC
             flag = false
         }
         if (!cv) {
-            setErrors((p) => [...p, "Person cv is Required !"])
+            setErrors((p) => [...p, "CV is required!"])
+            flag = false
+        } else if (!isValidPdfFile(cv)) {
+            setErrors((p) => [...p, "CV must be a PDF file!"])
             flag = false
         }
         return flag;
@@ -89,8 +112,10 @@ function EmployeeJobCard({ job, idx, isPending, handleReferred, handleShare, isC
         if (!isValidForm()) {
             return
         }
-        if (cv)
+        if (cv) {
+            setActionType('refer')
             handleReferred(job.id, referenceRequest, cv)
+        }
     }
 
     const handleShareSubmit = () => {
@@ -102,16 +127,30 @@ function EmployeeJobCard({ job, idx, isPending, handleReferred, handleShare, isC
             setError("Please Enter Valid email !")
             return;
         }
+        setActionType('share')
         handleShare(job.id, shareEmail)
     }
 
     function validateEmail(email: string): boolean {
         const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return pattern.test(email);
+        if (!pattern.test(email)) {
+            return false;
+        }
+        const parts = email.split('@');
+        if (parts.length !== 2) return false;
+        const [localPart, domain] = parts;
+        if (localPart.length > 64 || localPart.length === 0) return false;
+        if (domain.length > 255 || domain.length === 0) return false;
+        if (domain.startsWith('.') || domain.endsWith('.')) return false;
+        if (domain.includes('..')) return false;
+        if (localPart.startsWith('.') || localPart.endsWith('.')) return false;
+        if (localPart.includes('..')) return false;
+        return true;
     }
 
     return (
         <TableRow>
+            <ToastContainer />
             <TableCell>{idx + 1}</TableCell>
             <TableCell>{job.title}</TableCell>
             <TableCell>{job.jobRole}</TableCell>
@@ -236,9 +275,11 @@ function EmployeeJobCard({ job, idx, isPending, handleReferred, handleShare, isC
                                 </FieldLabel>
                                 <Input
                                     type='file'
+                                    accept=".pdf,application/pdf"
                                     onChange={handleFileChange}
                                 />
-                                {/* <File */}
+                                {fileError && <p className="mt-1 text-sm text-red-500">{fileError}</p>}
+                                {cv && <p className="mt-1 text-sm text-green-600">✓ {cv.name}</p>}
                             </Field>
                             <DialogFooter>
                                 <div className='mt-2 '>

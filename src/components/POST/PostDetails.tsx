@@ -4,9 +4,10 @@ import { GetPostById, GetPostComments, CreateComment, ToggleLikePost, DeletePost
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import { Avatar } from "../ui/avatar"
 import { Button } from "../ui/button"
+import { Badge } from "../ui/badge"
 import { Textarea } from "../ui/textarea"
 import { Skeleton } from "../ui/skeleton"
-import { Heart, Globe, Lock, Calendar, Trash2, Edit, X, Check } from "lucide-react"
+import { Heart, Globe, Lock, Calendar, Trash2, Edit, X, Check, Zap } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useAuth } from "@/context/AuthContext"
 import type { CommentResponseDto, PostDetailedResponseDto } from "@/type/Types"
@@ -70,7 +71,7 @@ function PostDetails() {
       setLikeCount(isLiked ? likeCount - 1 : likeCount + 1)
     },
     onError: (error: any) => {
-      console.error("Error toggling like:", error)
+      // console.error("Error toggling like:", error)
     }
   })
 
@@ -94,7 +95,7 @@ function PostDetails() {
       queryClient.invalidateQueries({ queryKey: ["postComments", postId, 1] })
     },
     onError: (error: any) => {
-      console.error("Error deleting comment:", error)
+      // console.error("Error deleting comment:", error)
     }
   })
 
@@ -108,7 +109,7 @@ function PostDetails() {
       queryClient.invalidateQueries({ queryKey: ["postComments", postId, 1] })
     },
     onError: (error: any) => {
-      console.error("Error editing comment:", error)
+      // console.error("Error editing comment:", error)
     }
   })
 
@@ -166,7 +167,15 @@ function PostDetails() {
                 )}
               </Avatar>
               <div className="flex-1">
-                <CardTitle className="text-base">{post.postByUser.fullName}</CardTitle>
+                <div className="flex items-center gap-2">
+                  <CardTitle className="text-base">{post.postByUser.fullName}</CardTitle>
+                  {post.postByUser.email === 'system@gmail.com' && (
+                    <Badge className="bg-amber-100 text-amber-800 flex gap-1">
+                      <Zap className="h-3 w-3" />
+                      System
+                    </Badge>
+                  )}
+                </div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
                   <Calendar className="h-3 w-3" />
                   <span>{formatDate(post.createdAt)}</span>

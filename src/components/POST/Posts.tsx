@@ -24,7 +24,7 @@ function Posts() {
 
     useEffect(() => {
         if (data) {
-            console.log(data)
+            // console.log(data)
             setPosts(data.data)
         }
     }, [data])

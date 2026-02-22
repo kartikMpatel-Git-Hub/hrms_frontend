@@ -19,6 +19,7 @@ function GameRow({ idx, game, handleOpenGameDetail, handleDeleteGame, handleOpen
             <TableCell ><div className="flex justify-center">{game.name || "N/A"}</div></TableCell>
             <TableCell ><div className="flex justify-center">{game.maxPlayer}</div></TableCell>
             <TableCell ><div className="flex justify-center">{game.minPlayer}</div></TableCell>
+            <TableCell ><div className="flex justify-center">{game.duration}</div></TableCell>
             <TableCell className='flex gap-2 justify-center'>
                 <Button onClick={() => handleOpenSlots(game.id)}><CalendarCheck2 /> </Button>
                 <Button onClick={() => handleOpenGameDetail(game.id)}><Edit /> </Button>

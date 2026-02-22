@@ -5,7 +5,7 @@ import type { JobResponseDto, PagedRequestDto } from "../../../type/Types"
 import { Briefcase, Loader, Search } from "lucide-react"
 import EmployeeJobCard from "./EmployeeJobCard"
 import { useNavigate } from "react-router-dom"
-import { toast } from "react-toastify"
+import { toast, ToastContainer } from "react-toastify"
 import { Card } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
 import { isPending } from "@reduxjs/toolkit"
@@ -36,7 +36,7 @@ function EmployeeJob() {
             toast.success("Referrence Added Successfully !")
         },
         onError: (err: any) => {
-            console.log(err);
+            // console.log(err);
             toast.error("something went wrong while adding job referrence !")
         }
     })

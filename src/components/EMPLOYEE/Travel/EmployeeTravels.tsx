@@ -2,13 +2,10 @@ import { useQuery } from "@tanstack/react-query"
 import { GetEmployeeTravel } from "../../../api/TravelService"
 import { useEffect, useState } from "react"
 import { type TravelResponse, type PagedRequestDto } from "../../../type/Types"
-import TravelCard from "../../HR/Travel/TravelCard"
 import { CircleAlert, Loader, PlaneTakeoff, Search } from "lucide-react"
 import EmployeeTravelCard from "./EmployeeTravelCard"
-import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
 import { Card } from "@/components/ui/card"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
-import { Skeleton } from "@/components/ui/skeleton"
 
 function EmployeeTravels() {
 
@@ -52,62 +49,39 @@ function EmployeeTravels() {
     }, [data, search])
 
     return (
-        <div >
+        <div>
             <Card className="m-2 p-5">
-                <div className="flex justify-center font-bold text-2xl gap-1 mx-10"><PlaneTakeoff className="h-8 mr-1" /><span>My Travels</span></div>
-                <InputGroup className="">
-                    <InputGroupInput placeholder="Search Game..." onChange={(e) => setSearch(e.target.value)} value={search} />
+                <div className="flex justify-center font-bold text-2xl gap-1 mx-10 mb-4"><PlaneTakeoff className="h-8 mr-1" /><span>My Travels</span></div>
+                <InputGroup className="mb-6">
+                    <InputGroupInput placeholder="Search Travel..." onChange={(e) => setSearch(e.target.value)} value={search} />
                     <InputGroupAddon>
                         <Search />
                     </InputGroupAddon>
                     <InputGroupAddon align="inline-end">{travels?.length || 0} Results</InputGroupAddon>
                 </InputGroup>
-                <Table>
-                    <TableHeader>
-                        <TableRow className="font-bold">
-                            <TableCell>Sr. No</TableCell>
-                            <TableCell>Title</TableCell>
-                            <TableCell>Start Date</TableCell>
-                            <TableCell>Location</TableCell>
-                            <TableCell>Action</TableCell>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {
-                            !loading
+                {
+                    !loading
+                        ? (
+                            filteredTravels && filteredTravels.length > 0
                                 ? (
-                                    filteredTravels && filteredTravels.length > 0
-                                        ? (
-                                            filteredTravels.map((t, idx) => (
-                                                <EmployeeTravelCard travel={t} idx={idx} key={t.id} />
-                                            ))
-                                        )
-                                        : (
-                                            <TableRow>
-                                                <TableCell colSpan={5}>
-                                                    <div className="flex justify-center font-bold">
-                                                        No Travel Found !
-                                                    </div>
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                ) :
-                                (
-                                    Array.from({ length: 5 }).map((_, i) => (
-                                        <TableRow key={i}>
-                                            <TableCell><Skeleton className="h-8 w-8" /></TableCell>
-                                            <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                                            <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                                            <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                                            <TableCell className="flex gap-2">
-                                                <Skeleton className="h-8 w-8" />
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                        {filteredTravels.map((t, idx) => (
+                                            <EmployeeTravelCard travel={t} idx={idx} key={t.id} />
+                                        ))}
+                                    </div>
                                 )
-                        }
-                    </TableBody>
-                </Table>
+                                : (
+                                    <div className="flex justify-center font-bold text-lg py-12">
+                                        No Travel Found !
+                                    </div>
+                                )
+                        ) :
+                        (
+                            <div className="flex justify-center py-12">
+                                <Loader className="animate-spin" />
+                            </div>
+                        )
+                }
             </Card>
         </div>
     )

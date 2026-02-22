@@ -2,7 +2,8 @@ import type { PostResponseDto } from "@/type/Types"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import { Avatar } from "../ui/avatar"
 import { Button } from "../ui/button"
-import { Heart, MessageCircle, Globe, Lock, Calendar } from "lucide-react"
+import { Badge } from "../ui/badge"
+import { Heart, MessageCircle, Globe, Lock, Calendar, Zap } from "lucide-react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ToggleLikePost } from "@/api/PostService"
@@ -21,7 +22,7 @@ function PostCard({ post }: PostCardProps) {
             setIsLiked(!isLiked)
             setLikeCount(isLiked ? likeCount - 1 : likeCount + 1)
         } catch (error) {
-            console.error("Error toggling like:", error)
+            // console.error("Error toggling like:", error)
         }
     }
 
@@ -50,7 +51,15 @@ function PostCard({ post }: PostCardProps) {
                             }
                         </Avatar>
                         <div>
-                            <CardTitle className="text-base">{post.postByUser.fullName}</CardTitle>
+                            <div className="flex items-center gap-2">
+                                <CardTitle className="text-base">{post.postByUser.fullName}</CardTitle>
+                                {post.postByUser.email === 'system@gmail.com' && (
+                                    <Badge className="bg-amber-100 text-amber-800 flex gap-1">
+                                        <Zap className="h-3 w-3" />
+                                        System
+                                    </Badge>
+                                )}
+                            </div>
                             <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
                                 <Calendar className="h-3 w-3" />
                                 <span>{formatDate(post.createdAt)}</span>

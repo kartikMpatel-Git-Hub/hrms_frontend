@@ -16,7 +16,15 @@ function ExpenseCreateForm() {
         ExpenseDate: null
     })
     const [proofs, setProofs] = useState<FileList | null>(null)
+    const [fileError, setFileError] = useState<string>("")  
     const [ExpenseCategories, setExpenseCategories] = useState<ExpenseCategoryResponseDto[]>([])
+
+    const ALLOWED_FILE_TYPES = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+    const ALLOWED_EXTENSIONS = ['.pdf', '.jpg', '.jpeg', '.png', '.gif', '.webp']
+
+    const isValidFileType = (file: File): boolean => {
+        return ALLOWED_FILE_TYPES.includes(file.type) || ALLOWED_EXTENSIONS.some(ext => file.name.toLowerCase().endsWith(ext))
+    }
 
     const { isLoading, data } = useQuery({
         queryKey: ["expense-categories"],
@@ -37,7 +45,7 @@ function ExpenseCreateForm() {
             setProofs(null)
         },
         onError: (err : any) => {
-            console.log(err);
+            // console.log(err);
             toast.error(err.error.details || "something went wrong while adding expense")
         }
     })
@@ -67,15 +75,22 @@ function ExpenseCreateForm() {
             flag = false
         }
         if (!proofs || proofs.length == 0) {
-            setError((prev) => [...prev, "Proof Is Mendatory !"])
+            setError((prev) => [...prev, "Proof is required!"])
             flag = false
+        } else {
+            for (let i = 0; i < proofs.length; i++) {
+                if (!isValidFileType(proofs[i])) {
+                    setError((prev) => [...prev, `File "${proofs[i].name}" is not allowed. Only PDF and image files (JPG, PNG, GIF, WebP) are allowed.`])
+                    flag = false
+                }
+            }
         }
         if (newExpense.Details.length <= 0 || newExpense.Details.length >= 200) {
-            setError((prev) => [...prev, "Details can not be empty or more than 200 Latters !"])
+            setError((prev) => [...prev, "Details can not be empty or more than 200 characters!"])
             flag = false
         }
         if (newExpense.ExpenseDate == null) {
-            setError((prev) => [...prev, "Expense Date Is Required !"])
+            setError((prev) => [...prev, "Expense Date is required!"])
             flag = false
         }
         return flag
@@ -176,10 +191,28 @@ function ExpenseCreateForm() {
                             disabled={isPending}
                             type="file"
                             multiple
-                            onChange={e => setProofs(e.target.files)}
+                            accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,application/pdf,image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                            onChange={(e) => {
+                                setFileError("")
+                                if (e.target.files) {
+                                    let invalidFiles = false
+                                    for (let i = 0; i < e.target.files.length; i++) {
+                                        if (!isValidFileType(e.target.files[i])) {
+                                            invalidFiles = true
+                                            setFileError(`File "${e.target.files[i].name}" is not allowed. Only PDF and image files are accepted.`)
+                                            e.target.value = ""
+                                            return
+                                        }
+                                    }
+                                    if (!invalidFiles) {
+                                        setProofs(e.target.files)
+                                    }
+                                }
+                            }}
                             className="w-full rounded-lg border border-dashed border-slate-300 bg-slate-50 px-3 py-2 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-slate-800 file:px-3 file:py-1.5 file:text-sm file:text-white"
                         />
-                        <p className="mt-1 text-xs text-slate-500">Upload one or more receipts.</p>
+                        <p className="mt-1 text-xs text-slate-500">Upload receipts as PDF or image (JPG, PNG, GIF, WebP)</p>
+                        {fileError && <p className="mt-1 text-xs text-red-500">{fileError}</p>}
                     </div>
                     <div className="pt-2">
                         <button

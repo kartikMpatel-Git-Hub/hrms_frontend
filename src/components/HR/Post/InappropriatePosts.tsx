@@ -104,7 +104,7 @@ function InappropriatePosts() {
             // Remove the post from the list
             setPosts(posts.filter(p => p.id !== postId))
         } catch (error) {
-            console.error("Error toggling post appropriate status:", error)
+            // console.error("Error toggling post appropriate status:", error)
         }
         finally {
             setLoading(false)
