@@ -9,11 +9,18 @@ import {
     useSidebar,
 } from "@/components/ui/sidebar"
 import { Bell, Briefcase, Building2, ChartArea, ChartNetwork, ChessPawn, ChessQueen, Gamepad, Gamepad2, GamepadDirectional, HomeIcon, Image, IndianRupeeIcon, LogOut, LucideGamepad, TicketsPlane, User2 } from "lucide-react"
-import { NavLink } from "react-router"
+import { NavLink, useNavigate } from "react-router"
+import { useAuth } from "@/context/AuthContext"
 
 export function AppSidebarHr() {
-
+    const navigate = useNavigate()
+    const { logout } = useAuth()
     const { open } = useSidebar()
+
+    const handleLogout = async () => {
+        await logout()
+        navigate('/', { replace: true })
+    }
 
     return (
         <Sidebar className="data-[collapsed=true]:w-16 transition-all duration-300">
@@ -84,6 +91,15 @@ export function AppSidebarHr() {
                         <SidebarMenuButton className="my-2">
                             <NavLink
                                 className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
+                                to={"./user"}
+                            >
+                                <User2 className="w-4 h-4" /> {open && <span>Users</span>}
+                            </NavLink>
+                        </SidebarMenuButton>
+
+                        <SidebarMenuButton className="my-2">
+                            <NavLink
+                                className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
                                 to={"./notification"}
                             >
                                 <Bell className="w-4 h-4" /> {open && <span>Notification</span>}
@@ -105,13 +121,8 @@ export function AppSidebarHr() {
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                        <SidebarMenuButton className="text-red-400">
-                            <NavLink
-                                className={`flex gap-2 w-full rounded-md`}
-                                to={"/"}
-                            >
-                                <LogOut className="w-4 h-4" /> Logout
-                            </NavLink>
+                        <SidebarMenuButton className="text-red-400" onClick={handleLogout}>
+                            <LogOut className="w-4 h-4" /> {open && <span>Logout</span>}
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>

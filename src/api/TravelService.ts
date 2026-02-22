@@ -27,7 +27,6 @@ export const CreateTravel = async (travel: TravelCreateRequest): Promise<TravelR
 export const GetTravelersByName = async (key: string): Promise<Traveler[]> => {
     const response = await api.get<Traveler[]>(`/user/search/employee?key=${key}`)
     return response.data
-
 }
 
 export const AddTraveler = async ({ travelId, travelerId }: any): Promise<TravelerResponse[]> => {

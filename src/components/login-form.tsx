@@ -14,11 +14,10 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useAuth } from "@/context/AuthContext"
-import { useEffect, useState, type ChangeEvent } from "react"
+import { useState, type ChangeEvent } from "react"
 import { useNavigate } from "react-router-dom"
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert"
 import { InfoIcon } from "lucide-react"
-import { logout } from "@/slice/AuthSlice"
 
 export function LoginForm({
   className,
@@ -56,10 +55,6 @@ export function LoginForm({
       console.error("Login error:", error);
     }
   };
-
-  useEffect(() => {
-    logout()
-  }, [])
 
   const handleChangeEvent = (e: ChangeEvent<HTMLInputElement>) => {
     setCredentials((prev) => ({ ...prev, [e.target.name]: e.target.value }));

@@ -49,7 +49,9 @@ function HrGames() {
     const [newGame, setNewGame] = useState<GameCreateDto>({
         Name: "",
         MaxPlayer: 1,
-        MinPlayer: 1
+        MinPlayer: 1,
+        SlotAssignedBeforeMinutes : 60,
+        SlotCreateForNextXDays : 7
     })
 
     useEffect(() => {
@@ -73,6 +75,10 @@ function HrGames() {
 
     const handleOpenGameDetail = (id: number) => {
         navigator(`./${id}`)
+    }
+
+    const handleOpenSlots = (id: number) => {
+        navigator(`./${id}/slots`)  
     }
 
     const handleSubmit = () => {
@@ -101,6 +107,12 @@ function HrGames() {
         if (newGame.MinPlayer > newGame.MaxPlayer) {
             errors.push("Min player cannot be greater than max player.")
         }
+        if (newGame.SlotAssignedBeforeMinutes <= 0) {
+            errors.push("Slot Assigned Before Minutes must be greater than 0.")
+        }
+        if (newGame.SlotCreateForNextXDays <= 0) {
+            errors.push("Slot Create For Next X Days must be greater than 0.")
+        }
         setError(errors)
         return errors.length === 0
     }
@@ -120,7 +132,7 @@ function HrGames() {
                             Create new Game by providing minimum required information.
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="flex flex-col gap-4 py-4">
+                    <div className="flex flex-col gap-4">
                         <Field>
                             <Label>Name</Label>
                             <Input type="text" placeholder="Enter Game Name" value={newGame.Name} onChange={(e) => setNewGame({ ...newGame, Name: e.target.value })} />
@@ -132,6 +144,14 @@ function HrGames() {
                         <Field>
                             <Label>Min Player</Label>
                             <Input type="number" min={1} value={newGame.MinPlayer} onChange={(e) => setNewGame({ ...newGame, MinPlayer: parseInt(e.target.value) || 0 })} />
+                        </Field>
+                        <Field>
+                            <Label>Slot Assigned Before (Minutes)</Label>
+                            <Input type="number" min={1} value={newGame.SlotAssignedBeforeMinutes} onChange={(e) => setNewGame({ ...newGame, SlotAssignedBeforeMinutes: parseInt(e.target.value) || 0 })} />
+                        </Field>
+                        <Field>
+                            <Label>Slot Create For Next (Days)</Label>
+                            <Input type="number" min={1} value={newGame.SlotCreateForNextXDays} onChange={(e) => setNewGame({ ...newGame, SlotCreateForNextXDays: parseInt(e.target.value) || 0 })} />
                         </Field>
                         {error && <div className="text-red-600">{error}</div>}
                         <Button disabled={isPending} className="self-end" onClick={handleSubmit}>Create Slot</Button>
@@ -171,6 +191,7 @@ function HrGames() {
                                                         idx={idx}
                                                         handleOpenGameDetail={handleOpenGameDetail}
                                                         handleDeleteGame={handleDeleteGame}
+                                                        handleOpenSlots={handleOpenSlots}
                                                     />
                                                 ))
                                             )
@@ -192,7 +213,6 @@ function HrGames() {
                                                 <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                                 <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                                 <TableCell className="flex gap-2">
-                                                    <Skeleton className="h-8 w-8" />
                                                     <Skeleton className="h-8 w-8" />
                                                     <Skeleton className="h-8 w-8" />
                                                     <Skeleton className="h-8 w-8" />

@@ -2,18 +2,16 @@ import { Button } from '@/components/ui/button'
 import { TableCell, TableRow } from '@/components/ui/table'
 import type { GameResponseDto } from '@/type/Types'
 import { Book, BookMarked, CalendarCheck2, Edit, Eye, LucideListStart, Trash2 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
 
 interface GameRowProps {
     idx: number,
     game: GameResponseDto
     handleOpenGameDetail: (id: number) => void,
-    handleDeleteGame: (id: number) => void
+    handleDeleteGame: (id: number) => void,
+    handleOpenSlots: (id: number) => void,
 }
 
-function GameRow({ idx, game, handleOpenGameDetail, handleDeleteGame }: GameRowProps) {
-
-    const navigator = useNavigate()
+function GameRow({ idx, game, handleOpenGameDetail, handleDeleteGame, handleOpenSlots }: GameRowProps) {
 
     return (
         <TableRow key={game.id}>
@@ -22,10 +20,9 @@ function GameRow({ idx, game, handleOpenGameDetail, handleDeleteGame }: GameRowP
             <TableCell ><div className="flex justify-center">{game.maxPlayer}</div></TableCell>
             <TableCell ><div className="flex justify-center">{game.minPlayer}</div></TableCell>
             <TableCell className='flex gap-2 justify-center'>
-                <Button disabled={true}><CalendarCheck2 /> </Button>
+                <Button onClick={() => handleOpenSlots(game.id)}><CalendarCheck2 /> </Button>
                 <Button onClick={() => handleOpenGameDetail(game.id)}><Edit /> </Button>
                 <Button onClick={() => handleDeleteGame(game.id)}><Trash2 /> </Button>
-                <Button onClick={() => navigator(`./${game.id}/offere`)}><LucideListStart /> </Button>
             </TableCell>
         </TableRow>
     )

@@ -3,17 +3,17 @@ import type { GameSlotResponseDto, UserReponseDto } from "@/type/Types";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { CalendarIcon, ClockIcon, HeartIcon } from "lucide-react";
+import { ClockIcon, CalendarIcon, UsersIcon, CheckCircle2Icon, XCircleIcon, HourglassIcon, HeartIcon } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { toast, ToastContainer } from "react-toastify";
-import GameSlotCard from "../../Game/GameSlotCard";
+import GameSlotCard from "./GameSlotCard";
 
-function EmployeeGameDetail() {
+function GameDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
@@ -55,9 +55,7 @@ function EmployeeGameDetail() {
 
     useEffect(() => {
         if (data) {
-            console.log(data);
             setGame(data);
-
             if (data.length > 0) {
                 const today = new Date().toISOString().split('T')[0];
                 const dates = [...new Set(data.map(slot => slot.date.toString().split('T')[0]))];
@@ -81,7 +79,7 @@ function EmployeeGameDetail() {
                 const getPriority = (status: string) => {
                     const s = status.toLowerCase();
                     if (s === 'available') return 1;
-                    if (s === 'waiting') return 2;
+                    if (s === 'waiting') return 1;
                     if (s === 'booked') return 3;
                     return 4;
                 };
@@ -130,10 +128,10 @@ function EmployeeGameDetail() {
     };
 
     const handleViewWaitlist = (slotId: number) => {
-        navigate(`./game/${id}/slots/${slotId}/waitlist`);
+        navigate(`./${slotId}/waitlist`);
     };
     const handleViewDetails = (slotId: number) => {
-        navigate(`./game/${id}/slots/${slotId}/details`);
+        navigate(`./${slotId}/details`);
     };
 
     const formatTime = (time: string) => {
@@ -312,4 +310,4 @@ function EmployeeGameDetail() {
     );
 }
 
-export default EmployeeGameDetail;
+export default GameDetail;

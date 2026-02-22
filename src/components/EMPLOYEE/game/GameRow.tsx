@@ -1,19 +1,15 @@
 import { Button } from '@/components/ui/button'
 import { TableCell, TableRow } from '@/components/ui/table'
 import type { GameResponseDto } from '@/type/Types'
-import { Eye, LucideListStart, Trash2 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { Eye } from 'lucide-react'
 
 interface GameRowProps {
     idx : number,
     game : GameResponseDto
     handleOpenGameDetail: (id : number) => void,
-    handleDeleteGame: (id : number) => void
 }
 
-function GameRow({ idx, game, handleOpenGameDetail, handleDeleteGame }: GameRowProps) {
-
-    const navigator = useNavigate()
+function GameRow({ idx, game, handleOpenGameDetail }: GameRowProps) {
 
     return (
         <TableRow key={game.id}>
@@ -21,9 +17,9 @@ function GameRow({ idx, game, handleOpenGameDetail, handleDeleteGame }: GameRowP
             <TableCell className="">{game.name || "N/A"}</TableCell>
             <TableCell className="">{game.maxPlayer}</TableCell>
             <TableCell className="">{game.minPlayer}</TableCell>
+            <TableCell className="">{game.duration} Minutes</TableCell>
             <TableCell className='flex gap-2'>
                 <Button onClick={() => handleOpenGameDetail(game.id)}><Eye /> </Button>
-                <Button onClick={() => navigator(`./${game.id}/offere`)}><LucideListStart /> </Button>
             </TableCell>
         </TableRow>
     )

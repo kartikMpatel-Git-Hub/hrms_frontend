@@ -74,7 +74,7 @@ function GameSlot({ slot, handleBooking, isPending }: GameSlotProps) {
                         ? (
                             <Dialog open={open} onOpenChange={setOpen}>
                                 <DialogTrigger asChild>
-                                    <Button className="w-full p-1" disabled={isPending || slot.startTime <= new Date().toTimeString().substring(0, 5)}>
+                                    <Button className="w-full p-1" disabled={isPending}>
                                         <CalendarCheck2 /> Book
                                     </Button>
                                 </DialogTrigger>

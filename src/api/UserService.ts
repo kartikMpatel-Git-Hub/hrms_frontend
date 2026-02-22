@@ -1,7 +1,35 @@
-import type { UserReponseDto } from "@/type/Types";
+import type { PagedRequestDto, PagedResponse, UserReponseDto } from "@/type/Types";
 import api from "./Api";
 
 export const GetUserChart = async (id:number): Promise<UserReponseDto[]> => {
     const response = await api.get<UserReponseDto[]>(`/user/${id}/organization-chart`)
+    return response.data
+}
+
+export const GetAllUsers = async (): Promise<UserReponseDto[]> => {
+    const response = await api.get<UserReponseDto[]>(`/user`)
+    return response.data
+}
+
+export const GetUserForHr = async (): Promise<PagedResponse<UserReponseDto>> => {
+    const response = await api.get<PagedResponse<UserReponseDto>>(`/user/user-hr`)
+    return response.data
+}
+
+export const CreateUser = async (userData: FormData): Promise<void> => {
+    await api.post("/authentication/register", userData, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    })
+}
+
+export const GetManagers = async (): Promise<PagedResponse<UserReponseDto>> => {
+    const response = await api.get<PagedResponse<UserReponseDto>>(`/user/managers`)
+    return response.data
+}
+
+export const GetMyTeamMembers = async ({ pageNumber = 1, pageSize = 10 }: PagedRequestDto): Promise<PagedResponse<UserReponseDto>> => {
+    const response = await api.get<PagedResponse<UserReponseDto>>(`/user/my-team?PageSize=${pageSize}&PageNumber=${pageNumber}`)
     return response.data
 }

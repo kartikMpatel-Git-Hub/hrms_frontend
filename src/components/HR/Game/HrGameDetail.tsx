@@ -1,7 +1,7 @@
-import { CreateGameSlot, DeleteGameSlot, GetGameById } from "@/api/GameService"
+import { CreateGameOperationSlot, DeleteGameOperationSlot, GetGameById } from "@/api/GameService"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
-import type { GameResponseWithSlotDto, SlotCreateDto } from "@/type/Types"
+import type { GameOperatingHourCreateDto, GameResponseWithSlotDto } from "@/type/Types"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Gamepad2, Plus, Timer, Users } from "lucide-react"
 import { useEffect, useState } from "react"
@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Field } from "@/components/ui/field"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import GameOperationWindowCard from "./GameOperationWindowCard"
 
 function HrGameDetail() {
 
@@ -21,9 +22,9 @@ function HrGameDetail() {
         queryFn: () => GetGameById(Number(id))
     })
     const [game, setGame] = useState<GameResponseWithSlotDto>()
-    const [newSlot, setNewSlot] = useState<SlotCreateDto>({
-        StartTime: "",
-        EndTime: ""
+    const [newSlot, setNewSlot] = useState<GameOperatingHourCreateDto>({
+        OperationalStartTime: "",
+        OperationalEndTime: "",
     })
     const [dialogOpen, setDialogOpen] = useState(false)
 
@@ -32,11 +33,11 @@ function HrGameDetail() {
 
     const { mutate, isPending } = useMutation({
         mutationKey: ["create-game-slot"],
-        mutationFn: CreateGameSlot,
+        mutationFn: (payload: { gameId: number; dto: GameOperatingHourCreateDto }) => CreateGameOperationSlot(payload.gameId, payload.dto),
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ["game-detail"] })
             console.log(res);
-            setGame((prev) => (prev ? { ...prev, slots: [...prev.slots, res] } : prev))
+            setGame((prev) => (prev ? { ...prev, gameOperationWindows: [...prev.gameOperationWindows, res] } : prev))
             setDialogOpen(false)
         },
         onError: (err: any) => {
@@ -44,15 +45,15 @@ function HrGameDetail() {
         }
     })
 
-    const { mutate: deleteSlot, isPending: isDeletePending } = useMutation({
-        mutationKey: ["delete-game-slot"],
-        mutationFn: (slotId: number) => DeleteGameSlot(Number(id), slotId),
+    const { mutate: deleteOperatingHour, isPending: isDeletePending } = useMutation({
+        mutationKey: ["delete-game-operation-slot"],
+        mutationFn: (slotId: number) => DeleteGameOperationSlot(Number(id), slotId),
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ["game-detail"] })
             setDialogOpen(false)
         },
         onError: (err: any) => {
-            setError(err?.error?.details || "Failed to delete game slot. Please try again.")
+            setError(err?.error?.details || "Failed to delete game operation slot. Please try again.")
         }
     })
 
@@ -69,19 +70,19 @@ function HrGameDetail() {
 
     const handleSubmit = () => {
         setError("")
-        if (!newSlot.StartTime || !newSlot.EndTime) {
+        if (!newSlot.OperationalStartTime || !newSlot.OperationalEndTime) {
             setError("Start time and End time is required !")
             return
         }
-        if (newSlot.EndTime <= newSlot.StartTime) {
+        if (newSlot.OperationalEndTime <= newSlot.OperationalStartTime) {
             setError("End time must be greater than start time !")
             return
         }
-        mutate({ id: Number(id), dto: newSlot })
+        mutate({ gameId: Number(id), dto: newSlot })
     }
 
     const handleDeleteSlot = (slotId: number) => {
-        deleteSlot(slotId)
+        deleteOperatingHour(slotId)
     }
 
     return (
@@ -106,12 +107,12 @@ function HrGameDetail() {
                                     </DialogHeader>
                                     <div className="flex flex-col gap-4 py-4">
                                         <Field>
-                                            <Label>Start Time</Label>
-                                            <Input type="time" value={newSlot.StartTime} onChange={(e) => setNewSlot({ ...newSlot, StartTime: e.target.value })} />
+                                            <Label>Operating Hour Start Time</Label>
+                                            <Input type="time" value={newSlot.OperationalStartTime} onChange={(e) => setNewSlot({ ...newSlot, OperationalStartTime: e.target.value })} />
                                         </Field>
                                         <Field>
-                                            <Label>End Time</Label>
-                                            <Input type="time" value={newSlot.EndTime} onChange={(e) => setNewSlot({ ...newSlot, EndTime: e.target.value })} />
+                                            <Label>Operating Hour End Time</Label>
+                                            <Input type="time" value={newSlot.OperationalEndTime} onChange={(e) => setNewSlot({ ...newSlot, OperationalEndTime: e.target.value })} />
                                         </Field>
                                         {error && <div className="text-red-600">{error}</div>}
                                         <Button disabled={isPending} className="self-end" onClick={handleSubmit}>Create Slot</Button>
@@ -151,10 +152,10 @@ function HrGameDetail() {
                                 </TableHeader>
                                 <TableBody>
                                     {
-                                        game && game?.slots.length > 0 ?
+                                        game && game?.gameOperationWindows.length > 0 ?
                                             (
-                                                game?.slots.map((s, idx) => (
-                                                    <GameSlot key={s.id} slot={s} id={idx} handleDeleteSlot={handleDeleteSlot} isDeletingSlot={isDeletePending}/>
+                                                game?.gameOperationWindows.map((s, idx) => (
+                                                    <GameOperationWindowCard key={s.id} operationWindow={s} id={idx} handleDeleteSlot={handleDeleteSlot} isDeletingSlot={isDeletePending} />
                                                 ))
                                             )
                                             :

@@ -13,8 +13,6 @@ function EmployeeLayout() {
       navigator("/")
   }, [])
 
-
-
   return (
     <SidebarProvider>
       <AppSidebarEmployee />
