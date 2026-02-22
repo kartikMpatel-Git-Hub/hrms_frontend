@@ -2,7 +2,7 @@ import { Table, TableCell, TableRow } from '@/components/ui/table';
 import type { TravelerExpenseDto } from '../../../type/Types';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { CircleAlert, Eye } from 'lucide-react';
+import { CircleAlert, Eye, IndianRupee } from 'lucide-react';
 
 function EmployeeExpenseCard({ expense, idx }: {
     expense: TravelerExpenseDto,
@@ -15,6 +15,7 @@ function EmployeeExpenseCard({ expense, idx }: {
             <TableCell>{idx + 1}</TableCell>
             <TableCell>{expense.details}</TableCell>
             <TableCell>{expense.category.category}</TableCell>
+            <TableCell className='flex'><IndianRupee className="h-4 w-4 mr-1" /> {expense.amount}</TableCell>
             <TableCell>{expense.status}</TableCell>
             <TableCell>{expense.expenseDate.toString().substring(0, 10)}</TableCell>
             <TableCell>

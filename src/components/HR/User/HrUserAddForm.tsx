@@ -333,7 +333,7 @@ function HrUserAddForm() {
 
                         <div className="space-y-2">
                             <Label htmlFor="managerId">
-                                Manager <span className="text-red-500">*</span>
+                                Report To <span className="text-red-500">*</span>
                             </Label>
                             <Select
                                 value={formData.managerId}
@@ -341,7 +341,7 @@ function HrUserAddForm() {
                                 disabled={managersLoading}
                             >
                                 <SelectTrigger className={formErrors.managerId ? "border-red-500" : ""}>
-                                    <SelectValue placeholder={managersLoading ? "Loading managers..." : "Select a manager"} />
+                                    <SelectValue placeholder={managersLoading ? "Loading users..." : "Select a Report to"} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {managers?.map((manager) => (
