@@ -37,7 +37,7 @@ export const AddTraveler = async ({ travelId, travelerId }: any): Promise<Travel
 export const GetTravelTravelerDocuments = async ({ travelId, travelerId }: any): Promise<TravelDocumentDto[]> => {
     const response = await api.get<TravelDocumentDto[]>(`/travel/${travelId}/traveler/${travelerId}/document`)
     return response.data
-}
+}//
 
 export const GetTravelerTravel = async (travelerId: number,paged : PagedRequestDto): Promise<PagedResponse<TravelResponse>> => {
     const response = await api.get<PagedResponse<TravelResponse>>(`/travel/traveler/${travelerId}?PageSize=${paged.pageSize}&PageNumber=${paged.pageNumber}`)
@@ -50,6 +50,7 @@ export const GetTravelerTravelExpenses = async ({travelId, travelerId,paged} : {
 }
 
 export const GetTravelerTravelDocuments = async ({travelId, travelerId,paged} : {travelId: number, travelerId: number, paged: PagedRequestDto}): Promise<PagedResponse<TravelDocumentDto>> => {
+    console.log(travelId, travelerId, paged);
     const response = await api.get<PagedResponse<TravelDocumentDto>>(`/travel/${travelId}/traveler/${travelerId}/document?pageNumber=${paged.pageNumber}&pageSize=${paged.pageSize}`)
     return response.data
 } 

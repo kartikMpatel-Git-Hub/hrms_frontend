@@ -124,7 +124,7 @@ function HrTravelDocuments() {
 
     return (
         <>
-            <ToastContainer />
+            <ToastContainer position="top-right"/>
             <Card className="m-10 p-5">
                 <div className="flex justify-between items-center mb-4">
                     <div className="flex justify-center font-bold text-2xl gap-1"><File className="h-8 mr-1" /><span>Travel Documents</span></div>
@@ -188,6 +188,7 @@ function HrTravelDocuments() {
                         <TableRow>
                             <TableCell className="font-bold">Document Name</TableCell>
                             <TableCell className="font-bold">Document Type</TableCell>
+                            <TableCell className="font-bold">Uploaded By</TableCell>
                             <TableCell className="font-bold">Uploaded At</TableCell>
                             <TableCell className="font-bold" colSpan={2}>Action</TableCell>
                         </TableRow>
@@ -202,6 +203,7 @@ function HrTravelDocuments() {
                                 Array.from({ length: 5 }).map((_, i) => (
                                     <TableRow key={i}>
                                         <TableCell><Skeleton className="h-4 w-40" /></TableCell>
+                                        <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                         <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                         <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                         <TableCell className="flex gap-2">

@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
 import type { ReferredResponseDto } from "@/type/Types"
 import { useQuery } from "@tanstack/react-query"
-import { Search, UserPlus } from "lucide-react"
+import { CircleAlert, Search, UserPlus } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import JobReferralCard from "./JobReferralCard"
@@ -83,7 +83,7 @@ function HrJobReferrals() {
                                                     <JobReferralCard referral={r} idx={idx} key={idx} handleStatusChange={handleStatusChange} />
                                                 )
                                             )
-                                            : (<TableRow><TableCell colSpan={5} className="flex justify-center font-bold">No Referrals Found</TableCell></TableRow>)
+                                            : (<TableRow><TableCell colSpan={5} ><div className="flex justify-center m-10"><CircleAlert className="h-7" /><div className="font-bold m-1">No Referrals Found</div></div></TableCell></TableRow>)
                                     ) :
                                     (
                                         Array.from({ length: 5 }, (_, i) => i + 1).map((_, idx) => (

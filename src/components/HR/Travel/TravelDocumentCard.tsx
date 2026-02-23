@@ -8,6 +8,7 @@ function TravelDocumentCard({ document }: { document: TravelDocumentDto }) {
     <TableRow>
       <TableCell className="font-semibold">{document.documentName.toUpperCase()}</TableCell>
       <TableCell className="font-semibold">{document.documentType}</TableCell>
+      <TableCell className="font-semibold">{document.uploader.email}</TableCell>
       <TableCell className="font-semibold">{document.uploadedAt.toString().substring(0, 10).toUpperCase()}</TableCell>
       <TableCell className="flex gap-3">
         <Button onClick={() => window.open(document?.documentUrl, "_blank")}><Eye /></Button>

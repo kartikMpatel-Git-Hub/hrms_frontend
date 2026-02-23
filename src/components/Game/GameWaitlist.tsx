@@ -80,7 +80,6 @@ function GameWaitlist() {
         <div className="container mx-auto p-6 space-y-6">
             <ToastContainer />
             
-            {/* Cancellation Confirmation Dialog */}
             <Dialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
                 <DialogContent className="sm:max-w-md">
                     <DialogHeader>

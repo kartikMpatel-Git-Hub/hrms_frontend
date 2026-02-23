@@ -1,4 +1,4 @@
-import type { JobCreateDto, JobResponseDto, JobResponseWithReviewerDto, PagedRequestDto, PagedResponse, ReferredJobRequestDto, ReferredResponseDto, ShareJobRequestDto, ShareResponseDto, SimpleResponseDto, UserReponseDto } from "../type/Types"
+import type { JobCreateDto, JobResponseDto, JobResponseWithReviewerDto, JobUpdateDto, PagedRequestDto, PagedResponse, ReferredJobRequestDto, ReferredResponseDto, ShareJobRequestDto, ShareResponseDto, SimpleResponseDto, UserReponseDto } from "../type/Types"
 import api from "./Api"
 
 export const AddJob = async ({ dto }: any): Promise<JobResponseDto> => {
@@ -60,5 +60,10 @@ export const GetSharedJobs = async ({jobid, paged}: {jobid: number, paged: Paged
 
 export const GetJobReferrals = async ({jobid, paged }: {jobid: number , paged : PagedRequestDto}): Promise<PagedResponse<ReferredResponseDto>> => {
     const response = await api.get<PagedResponse<ReferredResponseDto>>(`/job/${jobid}/referred?pageNumber=${paged.pageNumber}&pageSize=${paged.pageSize}`)
+    return response.data
+}
+
+export const UpdateJob = async ({id, dto} : {id: number, dto: JobUpdateDto}): Promise<JobResponseDto> => {
+    const response = await api.put<JobResponseDto>(`/job/${id}`, dto)
     return response.data
 }

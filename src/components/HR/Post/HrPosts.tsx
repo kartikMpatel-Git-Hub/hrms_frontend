@@ -130,14 +130,14 @@ function HrPosts() {
                 </div>
                 <div className="flex gap-2">
                     <Button
-                        onClick={() => navigate("./create")}
+                        onClick={() => navigate("./feed/create")}
                         className="flex items-center gap-2"
                     >
                         <Plus className="h-4 w-4" />
                         Create Post
                     </Button>
                     <Button
-                        onClick={() => navigate("./mypost")}
+                        onClick={() => navigate("./feed/mypost")}
                         variant="outline"
                         className="flex items-center gap-2"
                     >
@@ -150,6 +150,13 @@ function HrPosts() {
                         <Flag className="h-4 w-4" />
                         View Inappropriate Posts
                     </Button>
+                    <Button
+                        onClick={() => navigate("./feed")}
+                        variant="outline"
+                        className="flex items-center gap-2"
+                    >
+                        View Feed
+                    </Button>
                 </div>
             </div>
 
@@ -161,7 +168,6 @@ function HrPosts() {
                 </Alert>
             )}
 
-            {/* Search Bar */}
             <div className="bg-white rounded-lg shadow p-4 mb-4">
                 <InputGroup>
                     <InputGroupInput
@@ -176,8 +182,7 @@ function HrPosts() {
                 </InputGroup>
             </div>
 
-            {/* Filters */}
-            <div className="bg-white rounded-lg shadow p-4 mb-4">
+            {/* <div className="bg-white rounded-lg shadow p-4 mb-4">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div>
                         <Combobox
@@ -228,9 +233,8 @@ function HrPosts() {
                         </Combobox>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
-            {/* Table */}
             <div className="bg-white rounded-lg shadow overflow-x-auto">
                 <Table>
                     <TableHeader>

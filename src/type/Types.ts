@@ -171,6 +171,14 @@ export interface JobCreateDto {
   Requirements: string,
 }
 
+export interface JobUpdateDto {
+  Title: string,
+  JobRole: string,
+  Place: string,
+  Requirements: string,
+  IsActive: boolean
+}
+
 export interface JobResponseWithReviewerDto {
   id: number,
   title: string,
@@ -409,4 +417,16 @@ export interface DailyCelebrationResponseDto {
   type: string,
   description: string,
   celebrationDate: Date
+}
+
+export interface UpcomingBookingResponseDto {
+  id: number,
+  startTime: string,
+  endTime: string,
+  date: Date,
+  game : GameResponseDto,
+  bookedBy : UserMinimalDto,
+  bookedAt: Date,
+  status : string,
+  playerCount: number
 }
