@@ -144,6 +144,7 @@ function EmployeeTravelDocuments() {
                                 <FieldLabel>Document Name</FieldLabel>
                                 <Input
                                     placeholder="Enter document name"
+                                    maxLength={25}
                                     value={documentName}
                                     onChange={(e) => setDocumentName(e.target.value)}
                                 />
@@ -152,6 +153,7 @@ function EmployeeTravelDocuments() {
                                 <FieldLabel>Document Type</FieldLabel>
                                 <Input
                                     placeholder="e.g., Ticket, Invoice, Receipt"
+                                    maxLength={40}
                                     value={documentType}
                                     onChange={(e) => setDocumentType(e.target.value)}
                                 />

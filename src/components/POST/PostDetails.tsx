@@ -254,6 +254,7 @@ function PostDetails() {
           <div className="space-y-2">
             <Textarea
               placeholder="Write a comment..."
+              maxLength={200}
               value={commentText}
               onChange={(e) => {
                 setCommentText(e.target.value)

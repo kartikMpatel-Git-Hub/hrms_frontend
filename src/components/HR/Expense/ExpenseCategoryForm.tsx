@@ -76,6 +76,7 @@ function ExpenseCategoryForm() {
                                 <Input
                                     placeholder="Enter Category Name"
                                     required
+                                    maxLength={40}
                                     name="category"
                                     value={newCategory.category}
                                     onChange={handleInputChange}

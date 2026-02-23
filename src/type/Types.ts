@@ -35,7 +35,7 @@ export interface PagedResponse<T> {
   pageNumber: number,
   pageSize: number,
   totalRecords: number,
-  totalPage: number,
+  totalPages: number,
   data: T[]
 }
 
@@ -284,6 +284,8 @@ export interface GameResponseWithSlotDto {
   maxPlayer: number,
   minPlayer: number,
   duration: number,
+  slotAssignedBeforeMinutes  : number,
+  slotCreateForNextXDays : number,
   gameOperationWindows: GameOperatingHourResponseDto[]
 }
 

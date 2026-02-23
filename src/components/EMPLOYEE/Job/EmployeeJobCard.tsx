@@ -150,7 +150,6 @@ function EmployeeJobCard({ job, idx, isPending, handleReferred, handleShare, isC
 
     return (
         <TableRow>
-            <ToastContainer />
             <TableCell>{idx + 1}</TableCell>
             <TableCell>{job.title}</TableCell>
             <TableCell>{job.jobRole}</TableCell>

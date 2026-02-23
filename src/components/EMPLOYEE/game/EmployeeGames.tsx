@@ -1,7 +1,7 @@
 import { GetAllGames } from "@/api/GameService"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
-import type { GameResponseDto } from "@/type/Types"
+import type { GameResponseDto, PagedRequestDto } from "@/type/Types"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -9,13 +9,14 @@ import GameRow from "./GameRow"
 import { Gamepad2, Search } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 
 
 function EmployeeGames() {
 
     const { data, isLoading } = useQuery({
         queryKey: ["games"],
-        queryFn: GetAllGames
+        queryFn: () => GetAllGames()
     })
     const [games, setGames] = useState<GameResponseDto[] | null>(null)
     const [filteredGames, setFilteredGames] = useState<GameResponseDto[] | null>(null)
@@ -25,8 +26,6 @@ function EmployeeGames() {
     useEffect(() => {
         setLoading(true)
         if (data) {
-            // console.log(data);
-            
             if (search.trim() === "") {
                 setGames(data.data)
                 setFilteredGames(data.data)

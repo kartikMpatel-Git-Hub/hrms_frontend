@@ -127,6 +127,7 @@ function ExpenseCreateForm() {
                         </label>
                         <input
                             type="text"
+                            maxLength={90}
                             name="Details"
                             placeholder="Enter expense detail"
                             value={newExpense.Details}

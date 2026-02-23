@@ -116,6 +116,7 @@ function TravelForm() {
                                 <Input
                                     placeholder="Enter Travel Title"
                                     required
+                                    maxLength={45}
                                     name="Title"
                                     value={newTravel.Title}
                                     onChange={handleInputChange}
@@ -128,6 +129,7 @@ function TravelForm() {
                                 <Textarea
                                     placeholder="Enter Travel Description"
                                     required
+                                    maxLength={290}
                                     name="Description"
                                     value={newTravel.Description}
                                     onChange={handleInputChange}
@@ -141,6 +143,7 @@ function TravelForm() {
                                     placeholder="Enter Travel Location"
                                     required
                                     name="Location"
+                                    maxLength={45}
                                     value={newTravel.Location}
                                     onChange={handleInputChange}
                                 />

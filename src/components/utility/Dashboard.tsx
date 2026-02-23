@@ -28,14 +28,14 @@ function Dashboard() {
         return eventType === 'Birthday' ? (
             <Cake className="h-5 w-5 text-primary" />
         ) : (
-            <Gift className="h-5 w-5 text-accent" />
+            <Gift className="h-5 w-5 text-primary" />
         )
     }
 
     const getEventAccent = (eventType: string) => {
         return eventType === 'Birthday'
             ? 'border-l-primary'
-            : 'border-l-accent'
+            : 'border-l-primary'
     }
 
     const getEventLabel = (eventType: string) => {

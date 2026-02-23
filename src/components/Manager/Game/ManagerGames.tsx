@@ -1,7 +1,7 @@
 import { GetAllGames } from "@/api/GameService"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
-import type { GameResponseDto } from "@/type/Types"
+import type { PagedRequestDto } from "@/type/Types"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -10,34 +10,19 @@ import { Gamepad2, Search, ArrowLeft } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { Button } from "@/components/ui/button"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 
 function ManagerGames() {
+
   const { data, isLoading } = useQuery({
     queryKey: ["manager-games"],
-    queryFn: GetAllGames
+    queryFn: () => GetAllGames()
   })
-  const [games, setGames] = useState<GameResponseDto[] | null>(null)
-  const [filteredGames, setFilteredGames] = useState<GameResponseDto[] | null>(null)
   const [search, setSearch] = useState<string>("")
-  const [loading, setLoading] = useState<boolean>(false)
 
-  useEffect(() => {
-    setLoading(true)
-    if (data) {
-      if (search.trim() === "") {
-        setGames(data.data)
-        setFilteredGames(data.data)
-      } else {
-        const filtered = data.data?.filter(
-          t => t.name.toLowerCase().includes(search.toLowerCase())
-        )
-        setFilteredGames(filtered)
-      }
-    }
-    setTimeout(() => {
-      setLoading(false)
-    }, 500)
-  }, [data, search])
+  const filteredGames = data?.data.filter(game =>
+    search === "" || game.name.toLowerCase().includes(search.toLowerCase())
+  )
 
   const navigator = useNavigate()
 
@@ -48,8 +33,8 @@ function ManagerGames() {
   return (
     <div>
       <div className="mb-4">
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           size="sm"
           onClick={() => navigator(-1)}
         >
@@ -65,7 +50,7 @@ function ManagerGames() {
             <InputGroupAddon>
               <Search />
             </InputGroupAddon>
-            <InputGroupAddon align="inline-end">{games?.length || 0} Results</InputGroupAddon>
+            <InputGroupAddon align="inline-end">{data?.totalRecords || 0} Total</InputGroupAddon>
           </InputGroup>
           <Table>
             <TableHeader>
@@ -80,7 +65,7 @@ function ManagerGames() {
             </TableHeader>
             <TableBody>
               {
-                !(isLoading || loading)
+                !isLoading
                   ? (
                     filteredGames && filteredGames.length > 0
                       ? (

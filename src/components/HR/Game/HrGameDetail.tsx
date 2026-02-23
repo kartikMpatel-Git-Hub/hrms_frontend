@@ -1,18 +1,18 @@
-import { CreateGameOperationSlot, DeleteGameOperationSlot, GetGameById } from "@/api/GameService"
+import { CreateGameOperationSlot, DeleteGameOperationSlot, GetGameById, UpdateGameDetail } from "@/api/GameService"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
-import type { GameOperatingHourCreateDto, GameResponseWithSlotDto } from "@/type/Types"
+import type { GameCreateDto, GameOperatingHourCreateDto, GameResponseWithSlotDto } from "@/type/Types"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { Gamepad2, Plus, Timer, Users } from "lucide-react"
-import { useEffect, useState } from "react"
+import { Gamepad2, Plus, Timer, Users, Edit, CalendarCheck2Icon, LucideCalendarRange } from "lucide-react"
+import { useEffect, useMemo, useState } from "react"
 import { useParams } from "react-router-dom"
-import GameSlot from "./GameSlot"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Field } from "@/components/ui/field"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import GameOperationWindowCard from "./GameOperationWindowCard"
+import { toast, ToastContainer } from "react-toastify"
 
 function HrGameDetail() {
 
@@ -27,8 +27,27 @@ function HrGameDetail() {
         OperationalEndTime: "",
     })
     const [dialogOpen, setDialogOpen] = useState(false)
+    const [editDialogOpen, setEditDialogOpen] = useState(false)
+
+    const initialGameForm = useMemo<GameCreateDto>(() => ({
+        Name: game?.name || "",
+        MaxPlayer: game?.maxPlayer || 1,
+        MinPlayer: game?.minPlayer || 1,
+        Duration: game?.duration || 30,
+        SlotAssignedBeforeMinutes: game?.slotAssignedBeforeMinutes || 30,
+        SlotCreateForNextXDays: game?.slotCreateForNextXDays || 2
+    }), [game])
+
+    const [editForm, setEditForm] = useState<GameCreateDto>(initialGameForm)
 
     const queryClient = useQueryClient()
+
+    useEffect(() => {
+        if (editDialogOpen) {
+            setEditForm(initialGameForm)
+            setError("")
+        }
+    }, [editDialogOpen, initialGameForm])
 
 
     const { mutate, isPending } = useMutation({
@@ -36,9 +55,9 @@ function HrGameDetail() {
         mutationFn: (payload: { gameId: number; dto: GameOperatingHourCreateDto }) => CreateGameOperationSlot(payload.gameId, payload.dto),
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ["game-detail"] })
-            // console.log(res);
             setGame((prev) => (prev ? { ...prev, gameOperationWindows: [...prev.gameOperationWindows, res] } : prev))
             setDialogOpen(false)
+            toast.success("Slot created successfully")
         },
         onError: (err: any) => {
             setError(err?.error?.details || "Failed to create game slot. Please try again.")
@@ -48,12 +67,27 @@ function HrGameDetail() {
     const { mutate: deleteOperatingHour, isPending: isDeletePending } = useMutation({
         mutationKey: ["delete-game-operation-slot"],
         mutationFn: (slotId: number) => DeleteGameOperationSlot(Number(id), slotId),
-        onSuccess: (res) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["game-detail"] })
             setDialogOpen(false)
+            toast.success("Slot deleted successfully")
         },
         onError: (err: any) => {
             setError(err?.error?.details || "Failed to delete game operation slot. Please try again.")
+        }
+    })
+
+    const { mutate: updateGame, isPending: isUpdatePending } = useMutation({
+        mutationKey: ["update-game-detail"],
+        mutationFn: (dto: GameCreateDto) => UpdateGameDetail(Number(id), dto),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["game-detail"] })
+            setEditDialogOpen(false)
+            toast.success("Game updated successfully")
+        },
+        onError: (err: any) => {
+            setError(err?.error?.details || "Failed to update game. Please try again.")
+            toast.error("Failed to update game")
         }
     })
 
@@ -63,7 +97,6 @@ function HrGameDetail() {
 
     useEffect(() => {
         if (data) {
-            // console.log(data);
             setGame(data)
         }
     }, [data])
@@ -85,15 +118,78 @@ function HrGameDetail() {
         deleteOperatingHour(slotId)
     }
 
+    const handleEditSubmit = () => {
+        setError("")
+        if (!editForm.Name.trim()) {
+            setError("Game name is required")
+            return
+        }
+        if (editForm.MaxPlayer < 1 || editForm.MinPlayer < 1) {
+            setError("Player counts must be at least 1")
+            return
+        }
+        if (editForm.MinPlayer > editForm.MaxPlayer) {
+            setError("Minimum players cannot exceed maximum players")
+            return
+        }
+        if (editForm.Duration < 1) {
+            setError("Duration must be at least 1 minute")
+            return
+        }
+        updateGame(editForm)
+    }
+
     return (
         <div className="m-10">
+            <ToastContainer position="top-right" />
             <Card>
                 <CardHeader>
                     <CardTitle className="flex justify-between">
                         <div className="flex font-bold text-2xl gap-2">
                             <Gamepad2 className="w-8 h-8" /> {game?.name.toUpperCase()}
                         </div>
-                        <div>
+                        <div className="flex gap-2">
+                            <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+                                <DialogTrigger asChild>
+                                    <Button title="edit game"><Edit /> Edit Game</Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-md">
+                                    <DialogHeader>
+                                        <DialogTitle className="flex gap-2"><Edit /> <div>Edit Game Details</div></DialogTitle>
+                                        <DialogDescription>
+                                            Update game information and configuration.
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <div className="flex flex-col gap-4 py-4">
+                                        <Field>
+                                            <Label>Game Name</Label>
+                                            <Input value={editForm.Name} maxLength={20} onChange={(e) => setEditForm({ ...editForm, Name: e.target.value })} />
+                                        </Field>
+                                        <Field>
+                                            <Label>Maximum Players</Label>
+                                            <Input type="number" min="1" value={editForm.MaxPlayer} onChange={(e) => setEditForm({ ...editForm, MaxPlayer: parseInt(e.target.value) || 1 })} />
+                                        </Field>
+                                        <Field>
+                                            <Label>Minimum Players</Label>
+                                            <Input type="number" min="1" value={editForm.MinPlayer} onChange={(e) => setEditForm({ ...editForm, MinPlayer: parseInt(e.target.value) || 1 })} />
+                                        </Field>
+                                        <Field>
+                                            <Label>Duration (minutes)</Label>
+                                            <Input type="number" min="1" max={100} value={editForm.Duration} onChange={(e) => setEditForm({ ...editForm, Duration: parseInt(e.target.value) || 30 })} />
+                                        </Field>
+                                        <Field>
+                                            <Label>Slot Assigned Before (minutes)</Label>
+                                            <Input type="number" min="1" max={100} value={editForm.SlotAssignedBeforeMinutes} onChange={(e) => setEditForm({ ...editForm, SlotAssignedBeforeMinutes: parseInt(e.target.value) || 60 })} />
+                                        </Field>
+                                        <Field>
+                                            <Label>Create Slots For Next (days)</Label>
+                                            <Input type="number" min="1" max={7} value={editForm.SlotCreateForNextXDays} onChange={(e) => setEditForm({ ...editForm, SlotCreateForNextXDays: parseInt(e.target.value) || 7 })} />
+                                        </Field>
+                                        {error && <div className="text-red-600 text-sm">{error}</div>}
+                                        <Button disabled={isUpdatePending} className="self-end" onClick={handleEditSubmit}>Save Changes</Button>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
                             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                                 <DialogTrigger asChild>
                                     <Button title="create slot"><Plus />create slot</Button>
@@ -134,13 +230,30 @@ function HrGameDetail() {
                                 Minimum Player : <div className="font-bold px-1">{game?.minPlayer}</div>
                             </div>
                         </div>
+                        <div className="flex ">
+                            <Timer className="w-4" />
+                            <div className="m-1 flex">
+                                Duration : <div className="font-bold px-1">{game?.duration} Min</div>
+                            </div>
+                        </div>
+                        <div className="flex ">
+                            <CalendarCheck2Icon className="w-4" />
+                            <div className="m-1 flex">
+                                Slot Assigned Before : <div className="font-bold px-1">{game?.slotAssignedBeforeMinutes} Min</div>
+                            </div>
+                        </div>
+                        <div className="flex ">
+                            <LucideCalendarRange className="w-4" />
+                            <div className="m-1 flex">
+                                Slot Create For Next : <div className="font-bold px-1">{game?.slotCreateForNextXDays} Days</div>
+                            </div>
+                        </div>
                     </CardDescription>
                     <CardContent>
                         <div>
                             <div className="flex justify-center font-bold text-2xl">
                                 SLOTS
                             </div>
-                            {/* <hr /> */}
                             <Table>
                                 <TableHeader>
                                     <TableRow className="font-bold">

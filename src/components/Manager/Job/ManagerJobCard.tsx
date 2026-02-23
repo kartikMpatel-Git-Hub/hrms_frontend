@@ -130,7 +130,6 @@ function ManagerJobCard({ job, idx, isPending, handleReferred, handleShare, isCo
 
   return (
     <TableRow>
-      <ToastContainer />
       <TableCell>{idx + 1}</TableCell>
       <TableCell>{job.title}</TableCell>
       <TableCell>{job.jobRole}</TableCell>
@@ -179,6 +178,7 @@ function ManagerJobCard({ job, idx, isPending, handleReferred, handleShare, isCo
                 </FieldLabel>
                 <Input
                   id="share-email"
+                  maxLength={20}
                   placeholder="Enter email to share"
                   required
                   value={shareEmail}
@@ -219,6 +219,7 @@ function ManagerJobCard({ job, idx, isPending, handleReferred, handleShare, isCo
                 <Input
                   id="refer-name"
                   placeholder="Enter name"
+                  maxLength={40}
                   required
                   name="ReferedPersonName"
                   value={referenceRequest.ReferedPersonName}
@@ -232,6 +233,7 @@ function ManagerJobCard({ job, idx, isPending, handleReferred, handleShare, isCo
                 </FieldLabel>
                 <Input
                   id="refer-email"
+                  maxLength={30}
                   placeholder="Enter email"
                   required
                   name="ReferedPersonEmail"
@@ -247,6 +249,7 @@ function ManagerJobCard({ job, idx, isPending, handleReferred, handleShare, isCo
                 <Textarea
                   id="refer-note"
                   placeholder="Enter details about this person"
+                  maxLength={400}
                   required
                   name="Note"
                   value={referenceRequest.Note}
