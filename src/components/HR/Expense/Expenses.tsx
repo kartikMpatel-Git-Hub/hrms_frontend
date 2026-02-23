@@ -111,7 +111,7 @@ function Expenses() {
                     </InputGroupAddon>
                     <InputGroupAddon align="inline-end">{filteredExpense?.length || 0} Results</InputGroupAddon>
                 </InputGroup>
-                <Card className="grid grid-cols-4 gap-5 p-2">
+                {/* <Card className="grid grid-cols-4 gap-5 p-2">
                     <div>
                         <Combobox onValueChange={(value) => handleFilterChange("status", String(value))}>
                             <ComboboxInput placeholder="Select a Status" />
@@ -168,7 +168,7 @@ function Expenses() {
                             </ComboboxContent>
                         </Combobox>
                     </div>
-                </Card>
+                </Card> */}
                 <Table>
                     <TableHeader>
                         <TableRow>

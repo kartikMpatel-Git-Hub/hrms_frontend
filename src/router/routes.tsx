@@ -95,10 +95,11 @@ const router = createBrowserRouter([
                         path: "post",
                         children: [
                             { index: true, element: <HrPosts /> },
-                            { path: "create", element: <PostCreateForm /> },
+                            { path: "feed/create", element: <PostCreateForm /> },
                             { path: "inappropriate", element: <InappropriatePosts /> },
                             { path: ":id", element: <PostDetails /> },
-                            { path: "mypost", element: <MyPosts /> },
+                            { path: "feed/mypost", element: <MyPosts /> },
+                            { path: "feed", element: <Posts /> },
                             { path: "mypost/:id", element: <PostDetails /> },
                         ]
                     },

@@ -17,7 +17,7 @@ function TravelCard({ travel, idx }: { travel: TravelResponse, idx: number }) {
             <TableCell>{new Date(travel.endDate).toLocaleDateString()}</TableCell>
             <TableCell className="flex gap-2">
                 <Button onClick={() => navigator(`./${travel.id}`)}><Eye /></Button>
-                <Button disabled={true}><Edit /></Button>
+                {/* <Button disabled={true}><Edit /></Button> */}
             </TableCell>
         </TableRow>
     )
