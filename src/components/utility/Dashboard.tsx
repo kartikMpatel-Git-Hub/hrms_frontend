@@ -50,10 +50,10 @@ function Dashboard() {
         })
     }
 
-    const formatTime = (dateString: string) => {
-        const date = new Date(dateString)
-        return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
-    }
+    // const formatTime = (dateString: string) => {
+    //     const date = new Date(dateString)
+    //     return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
+    // }
 
     const uniqueUpcomingBookings = useMemo<UpcomingBookingResponseDto[]>(() => {
         if (!Array.isArray(upcomingData)) {
@@ -156,7 +156,7 @@ function Dashboard() {
 
                 <div className="mt-12">
                     <div className="mb-6">
-                        <h2 className="text-2xl font-bold text-foreground">Upcoming Game Bookings</h2>
+                        <h2 className="text-2xl font-bold text-foreground">Current Game Bookings</h2>
                         <p className="mt-2 text-muted-foreground">
                             {uniqueUpcomingBookings.length === 0
                                 ? "No upcoming bookings"
@@ -174,7 +174,7 @@ function Dashboard() {
                         <Card className="border-destructive bg-destructive/10">
                             <CardContent className="pt-6">
                                 <p className="text-destructive">
-                                    Failed to load upcoming bookings. Please try again later.
+                                    Failed to load current bookings. Please try again later.
                                 </p>
                             </CardContent>
                         </Card>
@@ -214,7 +214,7 @@ function Dashboard() {
                     {!isUpcomingLoading && uniqueUpcomingBookings.length === 0 && !upcomingError && (
                         <Card>
                             <CardContent className="flex flex-col items-center justify-center py-10">
-                                <p className="text-muted-foreground">No upcoming bookings scheduled</p>
+                                <p className="text-muted-foreground">No current bookings scheduled</p>
                             </CardContent>
                         </Card>
                     )}

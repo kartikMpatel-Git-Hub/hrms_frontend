@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { type ExpenseCategoryResponseDto, type ExpenseCreateDto } from "../../../type/Types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AddExpense, GetExpensesCategories } from "../../../api/ExpenseService";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 
 function ExpenseCreateForm() {

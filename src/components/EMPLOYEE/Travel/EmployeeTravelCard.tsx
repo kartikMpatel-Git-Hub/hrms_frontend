@@ -1,9 +1,8 @@
-import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { TravelResponse } from '../../../type/Types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Eye, IndianRupee, MapPin, CalendarClock, Files } from 'lucide-react'
+import {  IndianRupee, MapPin, CalendarClock, Files } from 'lucide-react'
 
 function EmployeeTravelCard({ travel, idx }: { travel: TravelResponse, idx: number }) {
     const navigator = useNavigate()

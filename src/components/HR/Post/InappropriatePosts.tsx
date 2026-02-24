@@ -92,13 +92,13 @@ function InappropriatePosts() {
     }, [search, filters, posts])
 
     const handleViewPost = (postId: number) => {
-        navigate(`/hr/post/${postId}`)
+        navigate(`../feed/${postId}`)
     }
 
     const handleToggleAppropriate = async (postId: number) => {
         setLoading(true)
         try {
-            await MarkPostInappropriate(postId)
+            await MarkPostInappropriate(postId,"")
             setSuccessMessage("Post marked as appropriate")
             setTimeout(() => setSuccessMessage(null), 3000)
             // Remove the post from the list

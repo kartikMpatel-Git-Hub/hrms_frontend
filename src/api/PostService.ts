@@ -23,8 +23,8 @@ export const ToggleLikePost = async (postId: number): Promise<void> => {
     await api.patch(`/post/${postId}/like`)
 }
 
-export const MarkPostInappropriate = async (postId: number): Promise<void> => {
-    await api.patch(`/post/${postId}/inappropriate`)
+export const MarkPostInappropriate = async (postId: number,reason : string): Promise<void> => {
+    await api.patch(`/post/${postId}/inappropriate`,{Reason : reason})
 }
 
 export const GetInappropriatePosts = async ({ pageNumber = 1, pageSize = 10 }): Promise<PagedResponse<PostResponseDto>> => {

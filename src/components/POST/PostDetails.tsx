@@ -7,7 +7,7 @@ import { Button } from "../ui/button"
 import { Badge } from "../ui/badge"
 import { Textarea } from "../ui/textarea"
 import { Skeleton } from "../ui/skeleton"
-import { Heart, Globe, Lock, Calendar, Trash2, Edit, X, Check, Zap } from "lucide-react"
+import { Heart, Globe, Lock, Calendar, Trash2, Edit, X, Check, Zap, CircleAlert } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useAuth } from "@/context/AuthContext"
 import type { CommentResponseDto, PostDetailedResponseDto } from "@/type/Types"
@@ -176,6 +176,11 @@ function PostDetails() {
                     </Badge>
                   )}
                 </div>
+                <div className="text-red-700">
+                  {post.inAppropriate &&
+                    <div className="flex py-2"><CircleAlert />{post.inAppropriateReason}</div>
+                  }
+                </div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
                   <Calendar className="h-3 w-3" />
                   <span>{formatDate(post.createdAt)}</span>
@@ -187,7 +192,7 @@ function PostDetails() {
                 </div>
               </div>
             </div>
-            {user?.id === post.postByUser.id && (
+            {/* {user?.id === post.postByUser.id && (
               <Button
                 variant="ghost"
                 size="sm"
@@ -197,7 +202,7 @@ function PostDetails() {
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
-            )}
+            )} */}
           </div>
         </CardHeader>
 
@@ -319,7 +324,7 @@ function PostDetails() {
                     <p className="text-sm font-semibold">{comment.commentBy.fullName}</p>
                     <div className="flex items-center gap-2">
                       <p className="text-xs text-muted-foreground">{formatDate(comment.createdAt)}</p>
-                      {user?.id === comment.commentBy.id && (
+                      {user?.id === comment.commentBy.id ? (
                         <>
                           <Button
                             variant="ghost"
@@ -342,7 +347,29 @@ function PostDetails() {
                             <Trash2 className="h-3 w-3 text-red-500" />
                           </Button>
                         </>
-                      )}
+                      )
+                        :
+                        post.postByUser.id == user?.id ?
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => deleteCommentMutation.mutate(comment.id)}
+                            disabled={deleteCommentMutation.isPending}
+                            className="h-6 w-6 p-0 hover:bg-red-100"
+                          >
+                            <Trash2 className="h-3 w-3 text-red-500" />
+                          </Button>
+                          : user?.role == "HR" &&
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => deleteCommentMutation.mutate(comment.id)}
+                            disabled={deleteCommentMutation.isPending}
+                            className="h-6 w-6 p-0 hover:bg-red-100"
+                          >
+                            <Trash2 className="h-3 w-3 text-red-500" />
+                          </Button>
+                      }
                     </div>
                   </div>
                   {editingCommentId === comment.id ? (

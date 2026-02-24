@@ -1,4 +1,4 @@
-import type { GameCreateDto, GameOperatingHourCreateDto, GameOperatingHourResponseDto, GameResponseDto, GameResponseWithSlotDto, GameSlotDetaildResponseDto, GameSlotResponseDto, GameSlotWaitingResponseDto, PagedRequestDto, PagedResponse, UserReponseDto } from "@/type/Types";
+import type { GameCreateDto, GameOperatingHourCreateDto, GameOperatingHourResponseDto, GameResponseDto, GameResponseWithSlotDto, GameSlotDetaildResponseDto, GameSlotResponseDto, GameSlotWaitingResponseDto, PagedResponse, UserReponseDto } from "@/type/Types";
 import api from "./Api";
 
 export const GetAllGames = async (): Promise<PagedResponse<GameResponseDto>> => {

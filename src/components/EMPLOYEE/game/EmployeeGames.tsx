@@ -1,7 +1,7 @@
 import { GetAllGames } from "@/api/GameService"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
-import type { GameResponseDto, PagedRequestDto } from "@/type/Types"
+import type { GameResponseDto } from "@/type/Types"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -9,7 +9,6 @@ import GameRow from "./GameRow"
 import { Gamepad2, Search } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 
 
 function EmployeeGames() {
@@ -98,6 +97,7 @@ function EmployeeGames() {
                                         Array.from({ length: 5 }).map((_, i) => (
                                             <TableRow key={i}>
                                                 <TableCell><Skeleton className="h-4 w-4" /></TableCell>
+                                                <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                                 <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                                 <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                                 <TableCell><Skeleton className="h-4 w-24" /></TableCell>

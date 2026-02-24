@@ -2,12 +2,10 @@ import { createBrowserRouter } from 'react-router'
 import Login from '../components/Login'
 import NotFound from '../components/NotFound'
 import HrLayout from '../components/HR/HrLayout'
-import HrDashboard from '../components/HR/HrDashboard'
 import HrTravel from '../components/HR/HrTravel'
 import TravelDetail from '../components/HR/Travel/TravelDetail'
 import TravelForm from '../components/HR/Travel/TravelForm'
 import EmployeeLayout from '../components/EMPLOYEE/EmployeeLayout'
-import EmployeeDashboard from '../components/EMPLOYEE/EmployeeDashboard'
 import Department from '../components/HR/Department/Department'
 import DepartmentForm from '../components/HR/Department/DepartmentForm'
 import Expenses from '../components/HR/Expense/Expenses'
@@ -31,7 +29,6 @@ import HrGameDetail from '@/components/HR/Game/HrGameDetail'
 import EmployeeGames from '@/components/EMPLOYEE/game/EmployeeGames'
 import GameSlotOfferes from '@/components/EMPLOYEE/game/GameSlotOfferes'
 import ManagerLayout from '@/components/Manager/ManagerLayout'
-import ManagerDashboard from '@/components/Manager/ManagerDashboard'
 import ManagerJob from '@/components/Manager/Job/ManagerJob'
 import ManagerGames from '@/components/Manager/Game/ManagerGames'
 import HrJobShared from '@/components/HR/Job/HrJobShared'
@@ -54,6 +51,7 @@ import Welcome from '@/components/Welcome'
 import TravelExpense from '@/components/Manager/Team/TravelExpense'
 import TravelDocument from '@/components/Manager/Team/TravelDocument'
 import EmployeeTravelDocuments from '@/components/EMPLOYEE/Travel/EmployeeTravelDocuments'
+import UserProfile from '@/components/utility/UserProfile'
 
 const router = createBrowserRouter([
     {
@@ -69,6 +67,7 @@ const router = createBrowserRouter([
                 errorElement: <NotFound />,
                 children: [
                     { index: true, path: "dashboard", element: <Dashboard /> },
+                    { path: ":id", element: <UserProfile /> },
                     {
                         path: "travel",
                         children: [
@@ -142,6 +141,7 @@ const router = createBrowserRouter([
                         path: "user",
                         children: [
                             { index: true, element: <HrUsers /> },
+                            { path: ":id", element: <UserProfile /> },
                             { path: "add", element: <HrUserAddForm /> }
                         ]
                     },
@@ -150,7 +150,8 @@ const router = createBrowserRouter([
                         errorElement: <NotFound />,
                         children: [
                             { index: true, element: <EmployeeOrganizationChart /> },
-                            { path: ":id", element: <EmployeeChart /> }
+                            { path: ":id", element: <EmployeeChart /> },
+                            { path: ":id/profile", element: <UserProfile /> }
                         ]
                     },
                     { path: "notification", element: <Notifications /> },
@@ -163,6 +164,7 @@ const router = createBrowserRouter([
                 errorElement: <NotFound />,
                 children: [
                     { index: true, path: "dashboard", element: <Dashboard /> },
+                    { path: ":id", element: <UserProfile /> },
                     { path: "notification", element: <Notifications /> },
                     {
                         path: "travel",
@@ -209,7 +211,8 @@ const router = createBrowserRouter([
                         errorElement: <NotFound />,
                         children: [
                             { index: true, element: <EmployeeOrganizationChart /> },
-                            { path: ":id", element: <EmployeeChart /> }
+                            { path: ":id", element: <EmployeeChart /> },
+                            { path: ":id/profile", element: <UserProfile /> }
                         ]
                     },
                     { path: "*", element: <NotFound /> }
@@ -221,6 +224,7 @@ const router = createBrowserRouter([
                 errorElement: <NotFound />,
                 children: [
                     { index: true, path: "dashboard", element: <Dashboard /> },
+                    { path: ":id", element: <UserProfile /> },
                     { path: "notification", element: <Notifications /> },
                     { path: "job", element: <ManagerJob /> },
                     {
@@ -238,6 +242,7 @@ const router = createBrowserRouter([
                         errorElement: <NotFound />,
                         children: [
                             { index: true, element: <MyTeams /> },
+                            { path: ":id", element: <UserProfile /> },
                             { path: ":id/travels", element: <MemberTravels /> },
                             { path: ":id/travels/:travelId/expense", element: <TravelExpense /> },
                             { path: ":id/travels/:travelId/document", element: <TravelDocument /> }
@@ -259,7 +264,8 @@ const router = createBrowserRouter([
                         errorElement: <NotFound />,
                         children: [
                             { index: true, element: <EmployeeOrganizationChart /> },
-                            { path: ":id", element: <EmployeeChart /> }
+                            { path: ":id", element: <EmployeeChart /> },
+                            { path: ":id/profile", element: <UserProfile /> }
                         ]
                     },
                     { path: "*", element: <NotFound /> }

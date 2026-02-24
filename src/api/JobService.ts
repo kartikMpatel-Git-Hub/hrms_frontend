@@ -1,4 +1,4 @@
-import type { JobCreateDto, JobResponseDto, JobResponseWithReviewerDto, JobUpdateDto, PagedRequestDto, PagedResponse, ReferredJobRequestDto, ReferredResponseDto, ShareJobRequestDto, ShareResponseDto, SimpleResponseDto, UserReponseDto } from "../type/Types"
+import type { JobResponseDto, JobResponseWithReviewerDto, JobUpdateDto, PagedRequestDto, PagedResponse, ReferredJobRequestDto, ReferredResponseDto, ShareJobRequestDto, ShareResponseDto, SimpleResponseDto, UserReponseDto } from "../type/Types"
 import api from "./Api"
 
 export const AddJob = async ({ dto }: any): Promise<JobResponseDto> => {
