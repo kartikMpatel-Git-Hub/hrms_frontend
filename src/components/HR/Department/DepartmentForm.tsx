@@ -74,6 +74,7 @@ function DepartmentForm() {
                 <Input
                   placeholder="Enter Department Name"
                   required
+                  maxLength={25}
                   name="departmentName"
                   value={newDepartment.departmentName}
                   onChange={handleInputChange}

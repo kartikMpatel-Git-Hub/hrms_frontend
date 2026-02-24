@@ -96,6 +96,7 @@ function ExpenseCard({ expense, idx }: {
                                     <textarea
                                         className="border-2 w-full p-2 rounded"
                                         name="remarks"
+                                        maxLength={90}
                                         value={expenseStatus.remarks || ""}
                                         onChange={handleInputChange}
                                         placeholder="Enter reason for rejection..."

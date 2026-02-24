@@ -103,19 +103,19 @@ function HrJobCard({ job, idx, handleDelete }: { job: JobResponseDto, idx: numbe
                         <div className="grid gap-4">
                             <Field>
                                 <Label>Title</Label>
-                                <Input name="Title" value={form.Title} onChange={handleInputChange} />
+                                <Input name="Title" maxLength={40} value={form.Title} onChange={handleInputChange} />
                             </Field>
                             <Field>
                                 <Label>Job Role</Label>
-                                <Input name="JobRole" value={form.JobRole} onChange={handleInputChange} />
+                                <Input name="JobRole" maxLength={15} value={form.JobRole} onChange={handleInputChange} />
                             </Field>
                             <Field>
                                 <Label>Place</Label>
-                                <Input name="Place" value={form.Place} onChange={handleInputChange} />
+                                <Input name="Place" maxLength={25} value={form.Place} onChange={handleInputChange} />
                             </Field>
                             <Field>
                                 <Label>Requirements</Label>
-                                <Textarea name="Requirements" value={form.Requirements} onChange={handleInputChange} />
+                                <Textarea name="Requirements" maxLength={250} value={form.Requirements} onChange={handleInputChange} />
                             </Field>
                             <div className="flex items-center gap-2">
                                 <Checkbox

@@ -35,7 +35,7 @@ export interface PagedResponse<T> {
   pageNumber: number,
   pageSize: number,
   totalRecords: number,
-  totalPage: number,
+  totalPages: number,
   data: T[]
 }
 
@@ -284,6 +284,8 @@ export interface GameResponseWithSlotDto {
   maxPlayer: number,
   minPlayer: number,
   duration: number,
+  slotAssignedBeforeMinutes  : number,
+  slotCreateForNextXDays : number,
   gameOperationWindows: GameOperatingHourResponseDto[]
 }
 
@@ -362,6 +364,7 @@ export interface PostResponseDto {
   postByUser: UserMinimalDto,
   isPublic: boolean,
   // createdBy : number,
+  inAppropriate : boolean,
   createdAt: Date,
   isLiked: boolean,
   likeCount: number,
@@ -379,7 +382,8 @@ export interface PostDetailedResponseDto {
   isLiked: boolean,
   likeCount: number,
   commentCount: number,
-  isinappropriate: boolean,
+  inAppropriate: boolean,
+  inAppropriateReason : string,
   tags: TagResponseDto[],
 }
 
@@ -429,4 +433,24 @@ export interface UpcomingBookingResponseDto {
   bookedAt: Date,
   status : string,
   playerCount: number
+}
+
+export interface DepartmentDto {
+  id: number,
+  departmentName: string
+}
+
+export interface UserProfileResponseDto {
+  id: number,
+  fullName: string,
+  email: string,
+  image: string,
+  role: string,
+  dateOfBirth: Date,
+  dateOfJoin: Date,
+  reportTo: number | null,
+  reported: UserProfileResponseDto | null,
+  department: DepartmentDto | null,
+  designation: string,
+  team: UserProfileResponseDto[]
 }

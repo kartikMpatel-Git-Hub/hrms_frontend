@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Avatar } from "../ui/avatar"
 import { Button } from "../ui/button"
 import { Badge } from "../ui/badge"
-import { Heart, MessageCircle, Globe, Lock, Calendar, Zap } from "lucide-react"
+import { Heart, MessageCircle, Globe, Lock, Calendar, Zap, CircleAlert } from "lucide-react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { ToggleLikePost } from "@/api/PostService"
@@ -37,6 +37,10 @@ function PostCard({ post }: PostCardProps) {
     return (
         <Card className="hover:shadow-lg transition-shadow duration-300" >
             <CardHeader>
+                {
+                    post.inAppropriate &&
+                    <div className="text-red-600 flex gap-2"><CircleAlert /> Mark as Inappropriate</div>
+                }
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <Avatar className="h-10 w-10 bg-primary/10 flex items-center justify-center">

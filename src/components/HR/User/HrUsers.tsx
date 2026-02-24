@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query"
 import { GetUserForHr } from "@/api/UserService"
 import { useEffect, useState } from "react"
 import { type UserReponseDto } from "@/type/Types"
-import { Search, Plus } from "lucide-react"
+import { Search, Plus, UserSearch } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -70,6 +70,10 @@ function HrUsers() {
         )
     }
 
+    function handleOpenProfile(id: number): void {
+        navigate(`./${id}`)
+    }
+
     return (
         <div className="w-full p-4">
             <div className="mb-6">
@@ -102,6 +106,7 @@ function HrUsers() {
                             <TableHead>Designation</TableHead>
                             <TableHead>Role</TableHead>
                             <TableHead>Date of Join</TableHead>
+                            <TableHead>Action</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -131,6 +136,9 @@ function HrUsers() {
                                     </TableCell>
                                     <TableCell>
                                         <Skeleton className="h-4 w-24" />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Skeleton className="h-4 w-8" />
                                     </TableCell>
                                 </TableRow>
                             ))
@@ -169,6 +177,9 @@ function HrUsers() {
                                     </TableCell>
                                     <TableCell className="text-sm">
                                         {new Date(user.dateOfJoin).toLocaleDateString()}
+                                    </TableCell>
+                                    <TableCell className="text-sm">
+                                        <Button onClick={() => handleOpenProfile(user.id)}><UserSearch /></Button>
                                     </TableCell>
                                 </TableRow>
                             ))

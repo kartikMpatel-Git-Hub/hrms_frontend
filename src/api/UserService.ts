@@ -1,4 +1,4 @@
-import type { PagedRequestDto, PagedResponse, UserReponseDto } from "@/type/Types";
+import type { PagedRequestDto, PagedResponse, UserReponseDto, UserProfileResponseDto } from "@/type/Types";
 import api from "./Api";
 
 export const GetUserChart = async (id:number): Promise<UserReponseDto[]> => {
@@ -32,4 +32,11 @@ export const GetManagers = async (): Promise<PagedResponse<UserReponseDto>> => {
 export const GetMyTeamMembers = async ({ pageNumber = 1, pageSize = 10 }: PagedRequestDto): Promise<PagedResponse<UserReponseDto>> => {
     const response = await api.get<PagedResponse<UserReponseDto>>(`/user/my-team?PageSize=${pageSize}&PageNumber=${pageNumber}`)
     return response.data
+}
+
+export const UserService = {
+    getUserProfile: async (userId: number): Promise<UserProfileResponseDto> => {
+        const response = await api.get<UserProfileResponseDto>(`/user/${userId}`)
+        return response.data
+    }
 }

@@ -173,12 +173,12 @@ function PostCreateForm() {
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Title */}
                         <div className="space-y-2">
                             <Label htmlFor="title" className="font-semibold">Title *</Label>
                             <Input
                                 id="title"
                                 name="title"
+                                maxLength={80}
                                 type="text"
                                 placeholder="Enter post title"
                                 value={formData.title}
@@ -187,12 +187,12 @@ function PostCreateForm() {
                             />
                         </div>
 
-                        {/* Description */}
                         <div className="space-y-2">
                             <Label htmlFor="description" className="font-semibold">Description *</Label>
                             <Textarea
                                 id="description"
                                 name="description"
+                                maxLength={800}
                                 placeholder="Enter post description"
                                 value={formData.description}
                                 onChange={handleInputChange}
@@ -201,7 +201,6 @@ function PostCreateForm() {
                             />
                         </div>
 
-                        {/* Image Upload */}
                         <div className="space-y-2">
                             <Label htmlFor="post" className="font-semibold">Image *</Label>
                             <Input
@@ -218,13 +217,13 @@ function PostCreateForm() {
                             <p className="text-xs text-gray-500">Only image files are allowed (JPG, PNG, JPEG)</p>
                         </div>
 
-                        {/* Tags */}
                         <div className="space-y-2">
                             <Label htmlFor="tags" className="font-semibold">Tags (Optional)</Label>
                             <div className="flex gap-2">
                                 <Input
                                     id="tags"
                                     type="text"
+                                    maxLength={20}
                                     placeholder="Enter a tag and press Enter"
                                     value={tagInput}
                                     onChange={(e) => setTagInput(e.target.value)}
@@ -259,7 +258,6 @@ function PostCreateForm() {
                             )}
                         </div>
 
-                        {/* Visibility Toggle */}
                         <div className="flex items-center space-x-2">
                             <Checkbox
                                 id="isPublic"
@@ -276,7 +274,6 @@ function PostCreateForm() {
                             </Label>
                         </div>
 
-                        {/* Submit & Cancel */}
                         <div className="flex gap-3 justify-end">
                             <Button
                                 type="button"

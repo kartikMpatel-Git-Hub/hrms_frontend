@@ -10,13 +10,14 @@ import {
 } from "@/components/ui/table"
 import useDebounce from "@/hook/useDebounce"
 import type { UserReponseDto } from "@/type/Types"
-import { AtSign, Briefcase, Building2, Image, Search, User } from "lucide-react"
+import { AtSign, Briefcase, Building2, ChartNetwork, Image, Search, User, UserRoundSearchIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group"
 import { Skeleton } from "../ui/skeleton"
 import { ItemMedia } from "../ui/item"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { useNavigate } from "react-router-dom"
+import { Button } from "../ui/button"
 
 function EmployeeOrganizationChart() {
 
@@ -38,8 +39,11 @@ function EmployeeOrganizationChart() {
     }, [search])
 
     const handleOpenOrganizationChart = (id : number) => {
-        // console.log(id);
         navigator(`./${id}`)
+    }
+    
+    function handleOpenProfile(id: number): void {
+        navigator(`./${id}/profile`)
     }
 
     return (
@@ -60,12 +64,13 @@ function EmployeeOrganizationChart() {
                         <TableHead><div className="flex p-2 gap-1 text-sm"><AtSign className="w-3 h-3 mt-1" />Email</div></TableHead>
                         <TableHead><div className="flex p-2 gap-1 text-sm"><Building2 className="w-3 h-3 mt-1" />Department</div></TableHead>
                         <TableHead><div className="flex p-2 gap-1 text-sm"><Briefcase className="w-3 h-3 mt-1" />Designation</div></TableHead>
+                        <TableHead><div className="flex p-2 gap-1 text-sm"><Briefcase className="w-3 h-3 mt-1" />Action</div></TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {
                         !users ?
-                            Array.from({ length: 5 }).map((_, i) => (
+                            Array.from({ length: 5 }).map((_) => (
                                 <TableRow>
                                     <TableCell><div className="ml-5"><Skeleton className="h-8 w-8 rounded-full" /></div></TableCell>
                                     <TableCell><Skeleton className="h-4 w-24" /></TableCell>
@@ -77,7 +82,7 @@ function EmployeeOrganizationChart() {
                             : users?.length > 0
                                 ?
                                 users.map((u) => (
-                                    <TableRow className="font-semibold hover:cursor-pointer" onClick={() => handleOpenOrganizationChart(u.id)} key={u.id}>
+                                    <TableRow className="font-semibold"  key={u.id}>
                                         <TableCell>
                                             <ItemMedia>
                                                 <Avatar>
@@ -90,6 +95,10 @@ function EmployeeOrganizationChart() {
                                         <TableCell>{u.email}</TableCell>
                                         <TableCell>{u.department?.departmentName || "N/A"}</TableCell>
                                         <TableCell>{u.designation}</TableCell>
+                                        <TableCell className="flex gap-2">
+                                            <Button onClick={() => handleOpenOrganizationChart(u.id)}><ChartNetwork /> </Button>
+                                            <Button onClick={() => handleOpenProfile(u.id)}> <UserRoundSearchIcon /> </Button>
+                                        </TableCell>
                                     </TableRow>
                                 ))
                                 :

@@ -32,7 +32,7 @@ export function PostTableRow({ post, onView, onMarkInappropriate, formatDate ,lo
                 </div>
             </TableCell>
             <TableCell className="px-6 py-4">
-                <span className="text-sm text-gray-600">{formatDate(post.createdAt)}</span>
+                <span className="text-sm text-gray-600">{post.createdAt.toString().substring(0,10)}</span>
             </TableCell>
             <TableCell className="px-6 py-4">
                 <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
@@ -63,7 +63,7 @@ export function PostTableRow({ post, onView, onMarkInappropriate, formatDate ,lo
                         className="flex items-center gap-1"
                     >
                         <AlertCircle className="h-4 w-4" />
-                        Inappropriate
+                        Mark Inappropriate
                     </Button>
                 </div>
             </TableCell>

@@ -147,19 +147,19 @@ function HrJobCreateForm() {
                             <div className="font-bold text-black/90 text-3xl flex justify-center">Job Details</div>
                             <Field className="m-1">
                                 <Label><span className="flex"><ALargeSmall className="w-4 h-4 mr-2" /><span className="">Title</span></span></Label>
-                                <Input name="Title" placeholder="Enter Job Title" onChange={handleInputChange} value={newJob.Title} required />
+                                <Input name="Title" maxLength={40} placeholder="Enter Job Title" onChange={handleInputChange} value={newJob.Title} required />
                             </Field>
                             <Field className="m-1">
                                 <Label><span className="flex"><User2 className="w-4 h-4 mr-2" /><span className="">Job Role</span></span></Label>
-                                <Input name="JobRole" placeholder="Enter Job Role" onChange={handleInputChange} value={newJob.JobRole} required />
+                                <Input name="JobRole" max={15} placeholder="Enter Job Role" onChange={handleInputChange} value={newJob.JobRole} required />
                             </Field>
                             <Field className="m-1">
                                 <Label><span className="flex"><MapPin className="w-4 h-4 mr-2" /><span className="">Place</span></span></Label>
-                                <Input name="Place" placeholder="Enter Place" onChange={handleInputChange} value={newJob.Place} required />
+                                <Input name="Place" maxLength={25} placeholder="Enter Place" onChange={handleInputChange} value={newJob.Place} required />
                             </Field>
                             <Field className="m-1">
                                 <Label><span className="flex"><List className="w-4 h-4 mr-2" /><span className="">Requirements</span></span></Label>
-                                <Input name="Requirements" placeholder="Enter Requirements" onChange={handleInputChange} value={newJob.Requirements} required />
+                                <Input name="Requirements" maxLength={250} placeholder="Enter Requirements" onChange={handleInputChange} value={newJob.Requirements} required />
                             </Field>
                             <Field className="m-1">
                                 <Label><span className="flex"><Paperclip className="w-4 h-4 mr-2" /><span className="">JD PDF</span></span></Label>

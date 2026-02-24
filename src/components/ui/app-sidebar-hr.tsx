@@ -8,13 +8,13 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from "@/components/ui/sidebar"
-import { Bell, Briefcase, Building2, ChartArea, ChartNetwork, ChessPawn, ChessQueen, Gamepad, Gamepad2, GamepadDirectional, HomeIcon, Image, IndianRupeeIcon, LogOut, LucideGamepad, TicketsPlane, User2 } from "lucide-react"
+import { Bell, Briefcase, Building2, ChartNetwork,Gamepad2,  HomeIcon, Image, IndianRupeeIcon, LogOut, TicketsPlane, User2, UserCircle2Icon } from "lucide-react"
 import { NavLink, useNavigate } from "react-router"
 import { useAuth } from "@/context/AuthContext"
 
 export function AppSidebarHr() {
     const navigate = useNavigate()
-    const { logout } = useAuth()
+    const { logout,user } = useAuth()
     const { open } = useSidebar()
 
     const handleLogout = async () => {
@@ -117,6 +117,16 @@ export function AppSidebarHr() {
                                 to={"./organization-chart"}
                             >
                                 <ChartNetwork className="w-4 h-4" /> Organization Chart
+                            </NavLink>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton>
+                            <NavLink
+                                className={`flex gap-2 w-full rounded-md`}
+                                to={`./${user?.id}`}
+                            >
+                                <UserCircle2Icon className="w-4 h-4" /> Profile
                             </NavLink>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

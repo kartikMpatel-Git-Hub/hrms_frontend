@@ -207,6 +207,7 @@ function HrUserAddForm() {
                             <Input
                                 id="fullName"
                                 name="fullName"
+                                maxLength={100}
                                 placeholder="Enter full name"
                                 value={formData.fullName}
                                 onChange={handleInputChange}
@@ -224,6 +225,7 @@ function HrUserAddForm() {
                             <Input
                                 id="email"
                                 name="email"
+                                maxLength={40}
                                 type="email"
                                 placeholder="Enter email address"
                                 value={formData.email}
@@ -243,6 +245,8 @@ function HrUserAddForm() {
                                 id="password"
                                 name="password"
                                 type="password"
+                                maxLength={16}
+                                minLength={8}
                                 placeholder="Enter password"
                                 value={formData.password}
                                 onChange={handleInputChange}
@@ -260,6 +264,7 @@ function HrUserAddForm() {
                             <Input
                                 id="designation"
                                 name="designation"
+                                maxLength={20}
                                 placeholder="e.g., Technical Intern, Senior Developer"
                                 value={formData.designation}
                                 onChange={handleInputChange}

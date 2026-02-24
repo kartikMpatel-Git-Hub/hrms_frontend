@@ -10,6 +10,9 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/in
 import { Combobox, ComboboxContent, ComboboxInput, ComboboxItem, ComboboxList } from "@/components/ui/combobox"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { PostTableRow } from "./PostTableRow"
 
 function HrPosts() {
@@ -31,6 +34,9 @@ function HrPosts() {
         visibility: [] as string[],
         author: [] as string[]
     })
+    const [dialogOpen, setDialogOpen] = useState(false)
+    const [selectedPostId, setSelectedPostId] = useState<number | null>(null)
+    const [reason, setReason] = useState("")
 
     const { data, isLoading } = useQuery({
         queryKey: ["hr-posts", paged],
@@ -92,17 +98,33 @@ function HrPosts() {
     }, [search, filters, posts])
 
     const handleViewPost = (postId: number) => {
-        navigate(`/hr/post/${postId}`)
+        navigate(`./feed/${postId}`)
     }
 
-    const handleMarkInappropriate = async (postId: number) => {
+    const handleMarkInappropriate = (postId: number) => {
+        setSelectedPostId(postId)
+        setReason("")
+        setDialogOpen(true)
+    }
+
+    const handleSubmitReason = async () => {
+        if (!reason.trim()) {
+            alert("Please provide a reason for marking this post as inappropriate.")
+            return
+        }
+
+        if (!selectedPostId) return
+
         setLoading(true)
         try {
-            await MarkPostInappropriate(postId)
+            await MarkPostInappropriate(selectedPostId, reason)
             setSuccessMessage("Post marked as inappropriate")
             setTimeout(() => setSuccessMessage(null), 3000)
             // Remove the post from the list
-            setPosts(posts.filter(p => p.id !== postId))
+            setPosts(posts.filter(p => p.id !== selectedPostId))
+            setDialogOpen(false)
+            setReason("")
+            setSelectedPostId(null)
         } catch (error) {
             // console.error("Error marking post as inappropriate:", error)
         }
@@ -290,6 +312,42 @@ function HrPosts() {
                     )}
                 </Table>
             </div>
+
+            {/* Dialog for providing reason */}
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Mark Post as Inappropriate</DialogTitle>
+                        <DialogDescription>
+                            Please provide a reason for marking this post as inappropriate.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                            <Label htmlFor="reason">Reason *</Label>
+                            <Textarea
+                                id="reason"
+                                placeholder="Enter the reason why this post should be marked as inappropriate..."
+                                value={reason}
+                                onChange={(e) => setReason(e.target.value)}
+                                className="min-h-[100px]"
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setDialogOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button 
+                            onClick={handleSubmitReason}
+                            disabled={loading || !reason.trim()}
+                            variant="destructive"
+                        >
+                            {loading ? "Processing..." : "Mark as Inappropriate"}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }

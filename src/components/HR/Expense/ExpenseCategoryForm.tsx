@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 import { CreateExpenseCategory } from "../../../api/ExpenseService"
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet } from "@/components/ui/field"
-import { ALargeSmall, AlertCircleIcon, Building2, List } from "lucide-react"
+import { ALargeSmall, AlertCircleIcon, List } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -76,6 +76,7 @@ function ExpenseCategoryForm() {
                                 <Input
                                     placeholder="Enter Category Name"
                                     required
+                                    maxLength={40}
                                     name="category"
                                     value={newCategory.category}
                                     onChange={handleInputChange}

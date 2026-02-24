@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Eye } from 'lucide-react';
+import { Eye, UserRoundSearch } from 'lucide-react';
 import type { UserReponseDto } from '@/type/Types';
 
 interface MemberCardProps {
@@ -24,6 +24,10 @@ function MemberCard({ member }: MemberCardProps) {
   const handleViewTravels = () => {
     navigate(`/manager/my-team/${member.id}/travels`);
   };
+
+  function handleViewProfile(): void {
+    navigate(`./${member.id}`)
+  }
 
   return (
     <Card className="w-full hover:shadow-lg transition-shadow">
@@ -62,6 +66,14 @@ function MemberCard({ member }: MemberCardProps) {
         >
           <Eye className="mr-2 h-4 w-4" />
           View Travels
+        </Button>
+        <Button
+          onClick={handleViewProfile}
+          className="w-full mt-4"
+          variant="default"
+        >
+          <UserRoundSearch className="mr-2 h-4 w-4" />
+          View Profile
         </Button>
       </CardContent>
     </Card>

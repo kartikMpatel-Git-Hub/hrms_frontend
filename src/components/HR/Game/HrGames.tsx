@@ -2,25 +2,24 @@ import { CreateGame, DeleteGame, GetAllGames } from "@/api/GameService"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
-import type { GameCreateDto, GameResponseDto } from "@/type/Types"
+import type { GameCreateDto, GameResponseDto} from "@/type/Types"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import GameRow from "./GameRow"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Gamepad2, Plus, Search, Timer } from "lucide-react"
+import { Gamepad2, Plus, Search} from "lucide-react"
 import { Field } from "@/components/ui/field"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 
 
 function HrGames() {
-
     const { data, isLoading } = useQuery({
         queryKey: ["games"],
-        queryFn: GetAllGames
+        queryFn: () => GetAllGames()
     })
     const queryClient = useQueryClient()
     const { mutate, isPending } = useMutation({
@@ -139,7 +138,7 @@ function HrGames() {
                     <div className="flex flex-col gap-4">
                         <Field>
                             <Label>Name</Label>
-                            <Input type="text" placeholder="Enter Game Name" value={newGame.Name} onChange={(e) => setNewGame({ ...newGame, Name: e.target.value })} />
+                            <Input type="text" maxLength={20} placeholder="Enter Game Name" value={newGame.Name} onChange={(e) => setNewGame({ ...newGame, Name: e.target.value })} />
                         </Field>
                         <div className="grid grid-cols-2 gap-4">
                             <Field>
@@ -154,16 +153,16 @@ function HrGames() {
                         <div className="grid grid-cols-2 gap-4">
                             <Field>
                                 <Label>Duration (Minutes)</Label>
-                                <Input type="number" min={1} value={newGame.Duration} onChange={(e) => setNewGame({ ...newGame, Duration: parseInt(e.target.value) || 0 })} />
+                                <Input type="number" min={1} max={100} value={newGame.Duration} onChange={(e) => setNewGame({ ...newGame, Duration: parseInt(e.target.value) || 0 })} />
                             </Field>
                             <Field>
                                 <Label>Slot Assigned (Min)</Label>
-                                <Input type="number" min={1} value={newGame.SlotAssignedBeforeMinutes} onChange={(e) => setNewGame({ ...newGame, SlotAssignedBeforeMinutes: parseInt(e.target.value) || 0 })} />
+                                <Input type="number" min={1} max={100} value={newGame.SlotAssignedBeforeMinutes} onChange={(e) => setNewGame({ ...newGame, SlotAssignedBeforeMinutes: parseInt(e.target.value) || 0 })} />
                             </Field>
                         </div>
                         <Field>
                             <Label>Slot Create For Next (Days)</Label>
-                            <Input type="number" min={1} value={newGame.SlotCreateForNextXDays} onChange={(e) => setNewGame({ ...newGame, SlotCreateForNextXDays: parseInt(e.target.value) || 0 })} />
+                            <Input type="number" min={1} max={7} value={newGame.SlotCreateForNextXDays} onChange={(e) => setNewGame({ ...newGame, SlotCreateForNextXDays: parseInt(e.target.value) || 0 })} />
                         </Field>
                         {error && <div className="text-red-600">{error}</div>}
                         <Button disabled={isPending} className="self-end" onClick={handleSubmit}>Create Slot</Button>

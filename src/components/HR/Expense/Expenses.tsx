@@ -10,7 +10,6 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Skeleton } from "@/components/ui/skeleton"
 import ExpenseCard from "./ExpenseCard"
-import { Combobox, ComboboxContent, ComboboxInput, ComboboxItem, ComboboxList } from "@/components/ui/combobox"
 
 function Expenses() {
 
@@ -189,7 +188,7 @@ function Expenses() {
                                 filteredExpense && filteredExpense?.length > 0
                                     ? (
                                         filteredExpense.map((e, idx) => (
-                                            <ExpenseCard expense={e} idx={idx} />
+                                            <ExpenseCard expense={e} idx={idx} key={e.id} />
                                         ))
                                     )
                                     : (

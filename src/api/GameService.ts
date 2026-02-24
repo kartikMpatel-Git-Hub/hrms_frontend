@@ -82,3 +82,8 @@ export const CancelGameWaitlist = async (gameId: number, slotId: number,waitlist
     const response = await api.delete(`/game/${gameId}/slots/${slotId}/waitlist/${waitlistId}`)
     return response.data
 }
+
+export const UpdateGameDetail = async (gameId: number, dto: GameCreateDto): Promise<GameResponseDto> => {
+    const response = await api.put<GameResponseDto>(`/game/${gameId}`, dto)
+    return response.data
+}

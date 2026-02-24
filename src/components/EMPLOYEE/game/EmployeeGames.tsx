@@ -15,7 +15,7 @@ function EmployeeGames() {
 
     const { data, isLoading } = useQuery({
         queryKey: ["games"],
-        queryFn: GetAllGames
+        queryFn: () => GetAllGames()
     })
     const [games, setGames] = useState<GameResponseDto[] | null>(null)
     const [filteredGames, setFilteredGames] = useState<GameResponseDto[] | null>(null)
@@ -25,8 +25,6 @@ function EmployeeGames() {
     useEffect(() => {
         setLoading(true)
         if (data) {
-            // console.log(data);
-            
             if (search.trim() === "") {
                 setGames(data.data)
                 setFilteredGames(data.data)
@@ -99,6 +97,7 @@ function EmployeeGames() {
                                         Array.from({ length: 5 }).map((_, i) => (
                                             <TableRow key={i}>
                                                 <TableCell><Skeleton className="h-4 w-4" /></TableCell>
+                                                <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                                 <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                                 <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                                 <TableCell><Skeleton className="h-4 w-24" /></TableCell>

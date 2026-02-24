@@ -19,7 +19,7 @@ function EmployeeChart() {
 
     useEffect(() => {
         if (data) {
-            setChartData(data.reverse())
+            setChartData(data)
         }
     }, [data])
 
@@ -28,7 +28,7 @@ function EmployeeChart() {
 
             <div className="grid grid-cols-1 m-10 gap-4">
                 {
-                    data && data.reverse().map((u, idx) => (
+                    data && data.map((u, idx) => (
                         <div>
                             <UserCardForChart user={u} />
                             <div className="flex justify-center">
