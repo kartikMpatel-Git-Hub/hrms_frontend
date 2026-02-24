@@ -36,7 +36,7 @@ function PostCard({ post }: PostCardProps) {
 
     return (
         <Card className="hover:shadow-lg transition-shadow duration-300" >
-            <CardHeader>
+            <CardHeader className="hover:cursor-pointer" onClick={() => navigator(`../../${post.postByUser.id}`)}>
                 {
                     post.inAppropriate &&
                     <div className="text-red-600 flex gap-2"><CircleAlert /> Mark as Inappropriate</div>

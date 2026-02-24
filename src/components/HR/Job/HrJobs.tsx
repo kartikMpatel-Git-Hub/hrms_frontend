@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import type { JobResponseDto, PagedRequestDto } from "../../../type/Types"
-import { DeleteJob, GetHrJobs } from "../../../api/JobService"
+import { DeleteJob, GetHrJobs, ReferedJob, ShareJob } from "../../../api/JobService"
 import HrJobCard from "./HrJobCard"
 import { useNavigate } from "react-router-dom"
 import { Briefcase, CircleAlert, Plus, Search } from "lucide-react"
@@ -32,15 +32,15 @@ function HrJobs() {
         queryFn: () => GetHrJobs(pagedRequest)
     })
 
-    const {mutate : deleteMutation,error : deleteError,isPending : isDeletePending} = useMutation({
-        mutationKey : ["delete-job"],
-         mutationFn : (id: number) => DeleteJob(id),
-         onSuccess : () => {
+    const { mutate: deleteMutation, error: deleteError, isPending: isDeletePending } = useMutation({
+        mutationKey: ["delete-job"],
+        mutationFn: (id: number) => DeleteJob(id),
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["hr-jobs"] })
-         },
-         onError : (error) => {
+        },
+        onError: (error) => {
             toast.error("Failed to delete job. Please try again.")
-         }
+        }
     })
 
     const handleOpenAddForm = () => {
@@ -72,7 +72,39 @@ function HrJobs() {
         }
     }
 
+    const { isPending: loadingReference, mutate: referred, isSuccess: referreComplete } = useMutation({
+        mutationKey: ["referred-job"],
+        mutationFn: ReferedJob,
+        onSuccess: () => {
+            toast.success("Referrence Added Successfully !")
+        },
+        onError: (err: any) => {
+            // console.log(err);
+            toast.error("something went wrong while adding job referrence !")
+        }
+    })
+    const { isPending: loadingShare, mutate: shared, isSuccess: shareComplete, isError } = useMutation({
+        mutationKey: ["share-job"],
+        mutationFn: ShareJob,
+        onSuccess: () => {
+            toast.success("Job Shared Successfully !")
+        },
+        onError: () => {
+            toast.error("something went wrong while sharing job referrence !")
+        }
+    })
 
+    const handleReferred = (id: number, dto: any, cv: File) => {
+        var request = new FormData()
+        request.append("ReferedPersonName", dto.ReferedPersonName)
+        request.append("ReferedPersonEmail", dto.ReferedPersonEmail)
+        request.append("Cv", cv)
+        request.append("Note", dto.Note)
+        referred({ id, dto: request })
+    }
+    const handleShare = (id: number, email: string) => {
+        shared({ id, email })
+    }
 
     return (
         <div>
@@ -113,7 +145,16 @@ function HrJobs() {
                                         filteredJobs && filteredJobs?.length > 0
                                             ? (
                                                 filteredJobs.map((j, idx) => (
-                                                    <HrJobCard job={j} key={j.id} idx={idx} handleDelete={handleJobDelete} />
+                                                    <HrJobCard
+                                                        job={j}
+                                                        key={j.id}
+                                                        idx={idx}
+                                                        handleDelete={handleJobDelete}
+                                                        handleReferred={handleReferred}
+                                                        handleShare={handleShare}
+                                                        isCompleted={referreComplete || shareComplete}
+                                                        isPending={loadingShare || loadingReference}
+                                                    />
                                                 ))
                                             )
                                             : (
@@ -139,7 +180,9 @@ function HrJobs() {
                                                 <TableCell><Skeleton className="h-4 w-20" /></TableCell>
                                                 <TableCell><Skeleton className="h-4 w-20" /></TableCell>
                                                 <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                                                <TableCell className="flex gap-2">
+                                                <TableCell className="grid grid-cols-3 gap-2">
+                                                    <Skeleton className="h-8 w-8" />
+                                                    <Skeleton className="h-8 w-8" />
                                                     <Skeleton className="h-8 w-8" />
                                                     <Skeleton className="h-8 w-8" />
                                                     <Skeleton className="h-8 w-8" />

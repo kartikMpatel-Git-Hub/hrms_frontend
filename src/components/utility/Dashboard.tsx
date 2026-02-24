@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import { Cake, Gift } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import type { DailyCelebrationResponseDto, UpcomingBookingResponseDto } from "@/type/Types"
+import { useNavigate } from "react-router-dom"
 
 function Dashboard() {
 
@@ -12,6 +13,7 @@ function Dashboard() {
         queryKey: ["daily-celebrations"],
         queryFn: GetTodayCelebrations
     })
+    const navigator = useNavigate()
 
     const { data: upcomingData, isLoading: isUpcomingLoading, error: upcomingError } = useQuery({
         queryKey: ["upcoming-bookings"],
@@ -183,7 +185,7 @@ function Dashboard() {
                     {!isUpcomingLoading && uniqueUpcomingBookings.length > 0 && (
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                             {uniqueUpcomingBookings.map((booking) => (
-                                <Card key={booking.id} className="flex flex-col transition hover:shadow-lg">
+                                <Card key={booking.id} className="flex flex-col transition hover:shadow-lg hover:cursor-pointer" onClick={() => navigator(`../game/${booking.game.id}/slots/${booking.id}/details`)}>
                                     <CardHeader className="pb-3">
                                         <CardTitle className="text-base">
                                             {booking.game.name}

@@ -106,6 +106,7 @@ const router = createBrowserRouter([
                         path: "job",
                         children: [
                             { index: true, element: <HrJobs /> },
+                            { path : "opportunities", element: <HrJobs /> },
                             { path: ":id", element: <HrJobDetail /> },
                             { path: "add", element: <HrJobCreateForm /> },
                             { path: ":id/referrals", element: <HrJobReferrals /> },

@@ -78,7 +78,7 @@ function HrUsers() {
         <div className="w-full p-4">
             <div className="mb-6">
                 <div className="flex justify-between items-center mb-4">
-                    <h1 className="text-3xl font-bold">Users</h1>
+                    <h1 className="text-3xl font-bold">System Users</h1>
                     <Button onClick={() => navigate("./add")}>
                         <Plus className="w-4 h-4 mr-2" />
                         Add User

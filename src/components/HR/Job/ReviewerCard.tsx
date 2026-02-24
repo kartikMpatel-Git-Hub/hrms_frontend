@@ -1,9 +1,13 @@
+import { useNavigate } from 'react-router-dom'
 import type { UserReponseDto } from '../../../type/Types'
 import { TableCell, TableRow } from '@/components/ui/table'
 
 function ReviewerCard({ reviewer }: { reviewer: UserReponseDto }) {
+
+    const navigator = useNavigate()
+
     return (
-        <TableRow>
+        <TableRow className='hover:cursor-pointer' title='View Reviewer Profile' onClick={() => navigator(`/hr/${reviewer.id}`)}>
             <TableCell>
                 <img src={reviewer.image} className="h-10 w-10 rounded-full" />
             </TableCell>

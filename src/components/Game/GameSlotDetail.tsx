@@ -45,8 +45,9 @@ function GameSlotDetail() {
         const slotDateTime = new Date(`${slotDetail.date.toString().split('T')[0]}T${slotDetail.startTime}`);
         const now = new Date();
         const timeDiffMinutes = (slotDateTime.getTime() - now.getTime()) / (1000 * 60);
+        console.log(timeDiffMinutes);
         
-        return timeDiffMinutes > 15;
+        return timeDiffMinutes > 5;
     };
 
     const handleCancelClick = () => {
@@ -231,7 +232,7 @@ function GameSlotDetail() {
                                             </Button>
                                         )}
                                     </div>
-                                    <div className="flex items-center gap-4 p-4 bg-muted rounded-lg">
+                                    <div className="flex items-center gap-4 p-4 bg-muted rounded-lg hover:cursor-pointer" onClick={() =>navigate(`../../${slotDetail.bookedById}`)}>
                                         {slotDetail.bookedBy.image && (
                                             <img
                                                 src={slotDetail.bookedBy.image}
@@ -265,7 +266,7 @@ function GameSlotDetail() {
                             <CardContent className="pt-6">
                                 <div className="space-y-3">
                                     {slotDetail.players.map((playerSlot, index) => (
-                                        <div key={playerSlot.id} className="flex items-center gap-4 p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+                                        <div key={playerSlot.id} className="flex items-center gap-4 p-4 border rounded-lg hover:bg-muted/50 transition-colors hover:cursor-pointer" onClick={() =>navigate(`../../${playerSlot.playerId}`)}>
                                             <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground text-sm font-medium">
                                                 {index + 1}
                                             </div>

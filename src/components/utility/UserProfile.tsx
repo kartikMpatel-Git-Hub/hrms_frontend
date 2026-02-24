@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import type { UserProfileResponseDto } from "@/type/Types"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -12,6 +12,7 @@ function UserProfile() {
   const [user, setUser] = useState<UserProfileResponseDto | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const navigator = useNavigate()
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -66,8 +67,8 @@ function UserProfile() {
     return (
       <div className="p-6 max-w-6xl mx-auto">
         <Card className="border-red-200 bg-red-50">
-          <CardContent className="pt-6">
-            <p className="text-red-700">{error || "User not found"}</p>
+          <CardContent className="p-6">
+            <p className="text-red-700 flex justify-center">{error || "User not found"}</p>
           </CardContent>
         </Card>
       </div>
@@ -133,7 +134,7 @@ function UserProfile() {
       </Card>
 
       {user.reported && (
-        <Card>
+        <Card className="hover:cursor-pointer" title="View Manager Profile" onClick={() => navigator(`../${user.reportTo}`)}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Briefcase className="h-5 w-5" />
@@ -166,7 +167,7 @@ function UserProfile() {
       )}
 
       {user.team && user.team.length > 0 && (
-        <Card>
+        <Card >
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Users className="h-5 w-5" />
@@ -176,7 +177,7 @@ function UserProfile() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {user.team.map((member) => (
-                <div key={member.id} className="border rounded-lg p-4 hover:shadow-md transition">
+                <div key={member.id} className="border rounded-lg p-4 hover:shadow-md transition hover:cursor-pointer" title="View Team Member Profile" onClick={() => navigator(`../${member.id}`)}>
                   <div className="flex items-center gap-3 mb-3">
                     {member.image ? (
                       <img
