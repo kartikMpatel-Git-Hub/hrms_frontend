@@ -192,7 +192,7 @@ function GameWaitlist() {
                                                     <span className="w-1 h-1 bg-primary rounded-full"></span>
                                                     Requested By
                                                 </h4>
-                                                <div className="flex items-center gap-4 pl-5">
+                                                <div className="flex items-center gap-4 pl-5 hover:cursor-pointer" onClick={() =>navigate(`../../${waitlist.requestedById}`)}>
                                                     {waitlist.requestedBy.image && (
                                                         <img
                                                             src={waitlist.requestedBy.image}
@@ -219,7 +219,8 @@ function GameWaitlist() {
                                                     {waitlist.waitingPlayers.map((waitingPlayer, index) => (
                                                         <div
                                                             key={waitingPlayer.id}
-                                                            className="flex items-center gap-3 p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
+                                                            className="flex items-center gap-3 p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors hover:cursor-pointer" 
+                                                            onClick={() =>navigate(`../../${waitingPlayer.playerId}`)}
                                                         >
                                                             <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground text-sm font-medium shrink-0">
                                                                 {index + 1}

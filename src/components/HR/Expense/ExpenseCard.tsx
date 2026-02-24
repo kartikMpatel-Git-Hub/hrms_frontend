@@ -2,11 +2,12 @@ import { useState } from "react"
 import type { ExpenseStatusCreateDto, TravelerExpenseDto } from "../../../type/Types"
 import { ChangeExpenseStatus } from "../../../api/ExpenseService"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { CircleAlert, Edit, Eye, IndianRupee } from "lucide-react"
+import { CircleAlert, Edit, Eye, IndianRupee, PlaneTakeoff, UserSearchIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { toast } from "react-toastify"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Table, TableCell, TableRow } from "@/components/ui/table"
+import { useNavigate } from "react-router-dom"
 
 function ExpenseCard({ expense, idx }: {
     expense: TravelerExpenseDto,
@@ -16,6 +17,7 @@ function ExpenseCard({ expense, idx }: {
         status: expense.status.toUpperCase() || "REJECTED",
         remarks: expense.remarks || ""
     })
+    const navigator = useNavigate()
 
     const queryClient = useQueryClient()
     const [isEditOpen, setIsEditOpen] = useState<boolean>(false)
@@ -63,8 +65,8 @@ function ExpenseCard({ expense, idx }: {
             <TableCell className="flex"><IndianRupee className="w-4" /><span>{expense.amount}</span></TableCell>
             <TableCell>{expense.category.category}</TableCell>
             <TableCell><span className={`${expense.status === "Approved" ? "text-green-500" : expense.status === "Rejected" ? "text-red-500" : "text-yellow-500"}`}>{expense.status}</span></TableCell>
-            <TableCell className="px-6">{expense.travelId}</TableCell>
-            <TableCell className="px-6">{expense.travelerId}</TableCell>
+            <TableCell className="hover:cursor-pointer" title="view Travel Detail"  onClick={() => navigator(`../travel/${expense.travelId}`)}><Button variant={"outline"} className="w-fit" size={"sm"}><PlaneTakeoff className="w-4 h-4"/></Button></TableCell>
+            <TableCell className="hover:cursor-pointer" title="view Traveler Profile" onClick={() => navigator(`../${expense.travelerId}`)}><Button className="w-fit" variant={"outline"} size={"sm"}><UserSearchIcon className="w-4 h-4"/></Button></TableCell>
             <TableCell>{expense.expenseDate.toString().substring(0, 10)}</TableCell>
             <TableCell className="flex gap-2">
                 <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>

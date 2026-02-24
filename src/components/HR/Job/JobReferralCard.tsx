@@ -5,9 +5,11 @@ import { TableCell, TableRow } from "@/components/ui/table"
 import type { ReferredResponseDto } from "@/type/Types"
 import { Edit, Eye, File, UserPlus } from "lucide-react"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 function JobReferralCard({ referral, idx,handleStatusChange }: { referral?: ReferredResponseDto, idx: number, handleStatusChange: (id: number,status: string) => void }) {
     
+    const navigator = useNavigate()
     const [status, setStatus] = useState<string>(referral?.status || "Pending")
     
     return (
@@ -15,6 +17,7 @@ function JobReferralCard({ referral, idx,handleStatusChange }: { referral?: Refe
             <TableCell>{idx + 1}</TableCell>
             <TableCell>{referral?.referedPersonName}</TableCell>
             <TableCell>{referral?.referedPersonEmail}</TableCell>
+            <TableCell className="hover:cursor-pointer" title="View Referrer" onClick={ () => navigator(`/hr/${referral?.referedBy}`)} >{referral?.referer}</TableCell>
             <TableCell>{referral?.status}</TableCell>
             <TableCell className="flex gap-2">
                 <Dialog>

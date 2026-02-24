@@ -4,7 +4,6 @@ import { useEffect, useState } from "react"
 import type { JobResponseDto, PagedRequestDto } from "../../../type/Types"
 import { Briefcase, Search } from "lucide-react"
 import EmployeeJobCard from "./EmployeeJobCard"
-import { useNavigate } from "react-router-dom"
 import { toast} from "react-toastify"
 import { Card } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
@@ -17,13 +16,12 @@ function EmployeeJob() {
         pageNumber: 1,
         pageSize: 10
     })
-    const navigator = useNavigate()
     const [search, setSearch] = useState<string>("")
     const [loading, setLoading] = useState<boolean>(false)
     const [jobs, setJobs] = useState<JobResponseDto[]>()
     const [filteredJob, setFilteredJob] = useState<JobResponseDto[]>()
 
-    const { data, isLoading } = useQuery({
+    const { data } = useQuery({
         queryKey: ["jobs"],
         queryFn: () => GetAllJob(pagedRequest)
     })
@@ -34,12 +32,11 @@ function EmployeeJob() {
         onSuccess: () => {
             toast.success("Referrence Added Successfully !")
         },
-        onError: (err: any) => {
-            // console.log(err);
+        onError: () => {
             toast.error("something went wrong while adding job referrence !")
         }
     })
-    const { isPending: loadingShare, mutate: shared, isSuccess: shareComplete, isError } = useMutation({
+    const { isPending: loadingShare, mutate: shared, isSuccess: shareComplete } = useMutation({
         mutationKey: ["share-job"],
         mutationFn: ShareJob,
         onSuccess: () => {
@@ -78,7 +75,7 @@ function EmployeeJob() {
                     t => t.title.toLowerCase().includes(search.toLowerCase()) ||
                         t.jobRole.toLowerCase().includes(search.toLowerCase()) ||
                         t.place.toLowerCase().includes(search.toLowerCase()))
-                setJobs(filtered)
+                setFilteredJob(filtered)
             }
         }
         setTimeout(() => {
@@ -111,9 +108,9 @@ function EmployeeJob() {
                             {
                                 !loading ?
                                     (
-                                        jobs && jobs.length > 0 ?
+                                        filteredJob && filteredJob.length > 0 ?
                                             (
-                                                jobs.map((j, idx) => (
+                                                filteredJob.map((j, idx) => (
                                                     <EmployeeJobCard
                                                         job={j}
                                                         key={j.id}

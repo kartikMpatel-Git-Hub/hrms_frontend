@@ -1,9 +1,13 @@
 import { Card, CardAction, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import type { UserReponseDto } from '../../../type/Types'
+import { useNavigate } from 'react-router-dom'
 
 function ContactToCard({ contact }: { contact: UserReponseDto }) {
+    
+    const navigator = useNavigate()
+
     return (
-        <Card className="relative mx-auto w-full max-w-sm pt-0 ">
+        <Card className="relative mx-auto w-full max-w-sm pt-0 hover:cursor-pointer" title='View Contact to HR profile' onClick={() => navigator(`/hr/${contact.id}`)}>
             <img
                 src={contact.image}
                 alt="Event cover"

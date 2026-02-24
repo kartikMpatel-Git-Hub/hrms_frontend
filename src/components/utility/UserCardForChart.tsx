@@ -9,7 +9,7 @@ function UserCardForChart({ user }: { user: UserReponseDto }) {
     const navigate = useNavigate()
 
     return (
-        <Card className="hover:cursor-pointer">
+        <Card className="hover:cursor-pointer" onClick={() => navigate(`../../${user.id}`)}>
             <CardHeader>
                 <div className="flex justify-end">
                     <div className="bg-gray-900 w-fit text-white p-2 rounded-sm">{user.designation}</div>

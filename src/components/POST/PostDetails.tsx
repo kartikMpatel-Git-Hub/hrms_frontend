@@ -154,7 +154,7 @@ function PostDetails() {
   return (
     <div className="max-w-2xl mx-auto p-4 space-y-6">
       <Card>
-        <CardHeader>
+        <CardHeader className="hover:cursor-pointer" onClick={() =>navigate(`../../${post.postByUser.id}`)}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Avatar className="h-10 w-10 bg-primary/10 flex items-center justify-center shrink-0">
@@ -310,7 +310,7 @@ function PostDetails() {
           <CardContent className="space-y-4">
             {commentsData.data.map((comment: CommentResponseDto) => (
               <div key={comment.id} className="flex gap-3 pb-4 border-b last:border-b-0 last:pb-0">
-                <Avatar className="h-8 w-8 bg-primary/10 flex items-center justify-center shrink-0">
+                <Avatar className="h-8 w-8 bg-primary/10 flex items-center justify-center shrink-0 hover:cursor-pointer" onClick={() =>navigate(`../../${comment.commentBy.id}`)}>
                   {comment.commentBy.image ? (
                     <img src={comment.commentBy.image} alt={comment.commentBy.fullName} className="h-full w-full rounded-full object-cover" />
                   ) : (
