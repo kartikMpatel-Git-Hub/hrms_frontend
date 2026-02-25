@@ -2,12 +2,18 @@ import { Table, TableCell, TableRow } from '@/components/ui/table';
 import type { TravelerExpenseDto } from '../../../type/Types';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { CircleAlert, Eye, IndianRupee } from 'lucide-react';
+import { CircleAlert, Edit, Eye, IndianRupee } from 'lucide-react';
+import { useState } from 'react';
+import EditExpenseForm from './EditExpenseForm';
 
-function EmployeeExpenseCard({ expense, idx }: {
+function EmployeeExpenseCard({ expense, idx, travelId }: {
     expense: TravelerExpenseDto,
-    idx: number
+    idx: number,
+    travelId: number
 }) {
+    const [editDialogOpen, setEditDialogOpen] = useState(false)
+
+    const canEdit = expense?.status?.toLowerCase() === 'pending'
 
 
     return (
@@ -18,7 +24,7 @@ function EmployeeExpenseCard({ expense, idx }: {
             <TableCell className='flex'><IndianRupee className="h-4 w-4 mr-1" /> {expense.amount}</TableCell>
             <TableCell>{expense.status}</TableCell>
             <TableCell>{expense.expenseDate.toString().substring(0, 10)}</TableCell>
-            <TableCell>
+            <TableCell className='flex gap-2'>
                 <Dialog>
                     <DialogTrigger asChild>
                         <Button>
@@ -65,6 +71,21 @@ function EmployeeExpenseCard({ expense, idx }: {
                         </Table>
                     </DialogContent>
                 </Dialog>
+                {canEdit && (
+                    <Button
+                        onClick={() => setEditDialogOpen(true)}
+                        variant="outline"
+                        title="Edit Expense"
+                    >
+                        <Edit />
+                    </Button>
+                )}
+                <EditExpenseForm
+                    open={editDialogOpen}
+                    onOpenChange={setEditDialogOpen}
+                    expense={expense}
+                    travelId={travelId}
+                />
             </TableCell>
         </TableRow>
     )

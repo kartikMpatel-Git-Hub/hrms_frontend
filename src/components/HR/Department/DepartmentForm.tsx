@@ -2,6 +2,7 @@ import { useState } from "react"
 import type { DepartmentCreateDto } from "../../../type/Types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { CreateDepartment } from "../../../api/DepartmentService"
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet } from "@/components/ui/field"
@@ -20,10 +21,12 @@ function DepartmentForm() {
     mutationFn: CreateDepartment,
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['departments'] })
+      toast.success("Department created successfully")
       navigator("../")
     },
     onError: (err: any) => {
       // console.log(err.error.details);
+      toast.error(err?.error?.details || "Failed to create department")
       setError([err.error.details])
     }
   })

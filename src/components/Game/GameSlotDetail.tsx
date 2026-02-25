@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { ClockIcon, CalendarIcon, UsersIcon, ArrowLeftIcon, CheckCircleIcon, XCircleIcon, AlertTriangleIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/context/AuthContext";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "sonner";
 import { useState } from "react";
 
 function GameSlotDetail() {
@@ -112,8 +112,6 @@ function GameSlotDetail() {
 
     return (
         <div className="container mx-auto p-6 space-y-6">
-            <ToastContainer />
-            
             <Dialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
                 <DialogContent className="sm:max-w-md">
                     <DialogHeader>

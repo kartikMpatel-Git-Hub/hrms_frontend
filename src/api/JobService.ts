@@ -1,3 +1,4 @@
+import { id } from "date-fns/locale"
 import type { JobResponseDto, JobResponseWithReviewerDto, JobUpdateDto, PagedRequestDto, PagedResponse, ReferredJobRequestDto, ReferredResponseDto, ShareJobRequestDto, ShareResponseDto, SimpleResponseDto, UserReponseDto } from "../type/Types"
 import api from "./Api"
 
@@ -53,17 +54,24 @@ export const DeleteJob = async (id: number): Promise<SimpleResponseDto> => {
     return response.data
 }
 
-export const GetSharedJobs = async ({jobid, paged}: {jobid: number, paged: PagedRequestDto}): Promise<PagedResponse<ShareResponseDto>> => {
+export const GetSharedJobs = async ({ jobid, paged }: { jobid: number, paged: PagedRequestDto }): Promise<PagedResponse<ShareResponseDto>> => {
     const response = await api.get<PagedResponse<ShareResponseDto>>(`/job/${jobid}/share?pageNumber=${paged.pageNumber}&pageSize=${paged.pageSize}`)
     return response.data
 }
 
-export const GetJobReferrals = async ({jobid, paged }: {jobid: number , paged : PagedRequestDto}): Promise<PagedResponse<ReferredResponseDto>> => {
+export const GetJobReferrals = async ({ jobid, paged }: { jobid: number, paged: PagedRequestDto }): Promise<PagedResponse<ReferredResponseDto>> => {
     const response = await api.get<PagedResponse<ReferredResponseDto>>(`/job/${jobid}/referred?pageNumber=${paged.pageNumber}&pageSize=${paged.pageSize}`)
     return response.data
 }
 
-export const UpdateJob = async ({id, dto} : {id: number, dto: JobUpdateDto}): Promise<JobResponseDto> => {
+export const UpdateJob = async ({ id, dto }: { id: number, dto: JobUpdateDto }): Promise<JobResponseDto> => {
     const response = await api.put<JobResponseDto>(`/job/${id}`, dto)
+    return response.data
+}
+
+export const UpdateReferralStatus = async (rid: number, jobId: number, status: string): Promise<void> => {
+    console.log(rid);
+    
+    const response = await api.put(`/job/${jobId}/referred/${rid}`, { status })
     return response.data
 }

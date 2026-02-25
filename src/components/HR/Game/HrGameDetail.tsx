@@ -12,7 +12,7 @@ import { Field } from "@/components/ui/field"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import GameOperationWindowCard from "./GameOperationWindowCard"
-import { toast, ToastContainer } from "react-toastify"
+import { toast } from "sonner"
 
 function HrGameDetail() {
 
@@ -61,6 +61,7 @@ function HrGameDetail() {
         },
         onError: (err: any) => {
             setError(err?.error?.details || "Failed to create game slot. Please try again.")
+            toast.error(err?.error?.details || "Failed to create game slot")
         }
     })
 
@@ -74,6 +75,7 @@ function HrGameDetail() {
         },
         onError: (err: any) => {
             setError(err?.error?.details || "Failed to delete game operation slot. Please try again.")
+            toast.error(err?.error?.details || "Failed to delete game slot")
         }
     })
 
@@ -141,7 +143,6 @@ function HrGameDetail() {
 
     return (
         <div className="m-10">
-            <ToastContainer position="top-right" />
             <Card>
                 <CardHeader>
                     <CardTitle className="flex justify-between">

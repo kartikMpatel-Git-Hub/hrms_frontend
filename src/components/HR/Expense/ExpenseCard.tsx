@@ -4,7 +4,7 @@ import { ChangeExpenseStatus } from "../../../api/ExpenseService"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { CircleAlert, Edit, Eye, IndianRupee, PlaneTakeoff, UserSearchIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { toast } from "react-toastify"
+import { toast } from "sonner"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Table, TableCell, TableRow } from "@/components/ui/table"
 import { useNavigate } from "react-router-dom"
@@ -27,6 +27,7 @@ function ExpenseCard({ expense, idx }: {
         mutationFn: ChangeExpenseStatus,
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ["travel-traveler-expense"] })
+            toast.success("Expense status updated successfully")
             // console.log(res);
         },
         onError: (err) => {
@@ -65,61 +66,10 @@ function ExpenseCard({ expense, idx }: {
             <TableCell className="flex"><IndianRupee className="w-4" /><span>{expense.amount}</span></TableCell>
             <TableCell>{expense.category.category}</TableCell>
             <TableCell><span className={`${expense.status === "Approved" ? "text-green-500" : expense.status === "Rejected" ? "text-red-500" : "text-yellow-500"}`}>{expense.status}</span></TableCell>
-            <TableCell className="hover:cursor-pointer" title="view Travel Detail"  onClick={() => navigator(`../travel/${expense.travelId}`)}><Button variant={"outline"} className="w-fit" size={"sm"}><PlaneTakeoff className="w-4 h-4"/></Button></TableCell>
-            <TableCell className="hover:cursor-pointer" title="view Traveler Profile" onClick={() => navigator(`../${expense.travelerId}`)}><Button className="w-fit" variant={"outline"} size={"sm"}><UserSearchIcon className="w-4 h-4"/></Button></TableCell>
+            <TableCell className="hover:cursor-pointer" title="view Travel Detail" onClick={() => navigator(`../travel/${expense.travelId}`)}><Button variant={"outline"} className="w-fit" size={"sm"}><PlaneTakeoff className="w-4 h-4" /></Button></TableCell>
+            <TableCell className="hover:cursor-pointer" title="view Traveler Profile" onClick={() => navigator(`../${expense.travelerId}`)}><Button className="w-fit" variant={"outline"} size={"sm"}><UserSearchIcon className="w-4 h-4" /></Button></TableCell>
             <TableCell>{expense.expenseDate.toString().substring(0, 10)}</TableCell>
             <TableCell className="flex gap-2">
-                <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-                    <DialogTrigger asChild>
-                        <Button disabled={expense.status !== "Pending"}>
-                            <Edit />
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-sm">
-                        <DialogHeader>
-                            <DialogTitle>Edit Expense Status</DialogTitle>
-                            <DialogDescription>Change the status of this expense and add remarks if necessary.</DialogDescription>
-                        </DialogHeader>
-                        <div className="mt-2">
-                            <label className="font-bold italic">Change Status:</label>
-                            <select
-                                className="border-2 w-full p-2 rounded"
-                                name="status"
-                                value={expenseStatus.status}
-                                onChange={handleInputChange}
-                            >
-                                <option value="PENDING">Pending</option>
-                                <option value="APPROVED">Approved</option>
-                                <option value="REJECTED">Rejected</option>
-                            </select>
-                            {expenseStatus.status === "REJECTED" && (
-                                <div className="mt-2">
-                                    <label className="font-bold italic">Remarks: <span className="text-red-600">*</span></label>
-                                    <textarea
-                                        className="border-2 w-full p-2 rounded"
-                                        name="remarks"
-                                        maxLength={90}
-                                        value={expenseStatus.remarks || ""}
-                                        onChange={handleInputChange}
-                                        placeholder="Enter reason for rejection..."
-                                        rows={3}
-                                    />
-                                </div>
-                            )}
-                            <Button className="mt-2" onClick={handleApplyChanges} disabled={isPending}>
-                                Apply Changes
-                            </Button>
-                            {
-                                error && (
-                                    <div className="flex items-center gap-2 mt-2 text-red-600">
-                                        <CircleAlert className="w-4 h-4" />
-                                        <span>{error}</span>
-                                    </div>
-                                )
-                            }
-                        </div>
-                    </DialogContent>
-                </Dialog>
                 <Dialog>
                     <DialogTrigger asChild>
                         <Button>
@@ -168,6 +118,61 @@ function ExpenseCard({ expense, idx }: {
                         </div>
                     </DialogContent>
                 </Dialog>
+                {
+                    expense.status === "Pending" &&
+                    <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+                        <DialogTrigger asChild>
+                            <Button variant={"outline"} disabled={expense.status !== "Pending"}>
+                                <Edit />
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-sm">
+                            <DialogHeader>
+                                <DialogTitle>Edit Expense Status</DialogTitle>
+                                <DialogDescription>Change the status of this expense and add remarks if necessary.</DialogDescription>
+                            </DialogHeader>
+                            <div className="mt-2">
+                                <label className="font-bold italic">Change Status:</label>
+                                <select
+                                    className="border-2 w-full p-2 rounded"
+                                    name="status"
+                                    value={expenseStatus.status}
+                                    onChange={handleInputChange}
+                                >
+                                    <option value="PENDING">Pending</option>
+                                    <option value="APPROVED">Approved</option>
+                                    <option value="REJECTED">Rejected</option>
+                                </select>
+                                {expenseStatus.status === "REJECTED" && (
+                                    <div className="mt-2">
+                                        <label className="font-bold italic">Remarks: <span className="text-red-600">*</span></label>
+                                        <textarea
+                                            className="border-2 w-full p-2 rounded"
+                                            name="remarks"
+                                            maxLength={90}
+                                            value={expenseStatus.remarks || ""}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter reason for rejection..."
+                                            rows={3}
+                                        />
+                                    </div>
+                                )}
+                                <Button className="mt-2" onClick={handleApplyChanges} disabled={isPending}>
+                                    Apply Changes
+                                </Button>
+                                {
+                                    error && (
+                                        <div className="flex items-center gap-2 mt-2 text-red-600">
+                                            <CircleAlert className="w-4 h-4" />
+                                            <span>{error}</span>
+                                        </div>
+                                    )
+                                }
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+
+                }
             </TableCell>
         </TableRow>
     )

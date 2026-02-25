@@ -3,6 +3,7 @@ import type { ExpenseCategoryCreateDto } from "../../../type/Types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 import { CreateExpenseCategory } from "../../../api/ExpenseService"
+import { toast } from "sonner"
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSeparator, FieldSet } from "@/components/ui/field"
 import { ALargeSmall, AlertCircleIcon, List } from "lucide-react"
 import { Input } from "@/components/ui/input"
@@ -20,10 +21,12 @@ function ExpenseCategoryForm() {
         mutationFn: CreateExpenseCategory,
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ['expense-categories'] })
+            toast.success("Expense category created successfully")
             navigator("../")
         },
         onError: (err: any) => {
             // console.log(err.error.details);
+            toast.error(err?.error?.details || "Failed to create expense category")
             setError([err.error.details])
         }
     })

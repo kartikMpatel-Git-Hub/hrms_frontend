@@ -3,6 +3,7 @@ import type { PagedRequestDto, PostResponseDto, PostUpdateDto } from "@/type/Typ
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { toast } from "sonner"
 import { CardContent } from "../ui/card"
 import PostCard from "./PostCard"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group"
@@ -55,10 +56,13 @@ function MyPosts() {
         onSuccess: () => {
             setEditingPost(null)
             setEditError(null)
+            toast.success("Post updated successfully")
             queryClient.invalidateQueries({ queryKey: ["my-posts", paged] })
         },
         onError: (error: any) => {
-            setEditError(error?.response?.data?.message || error?.message || "Failed to update post")
+            const msg = error?.response?.data?.message || error?.message || "Failed to update post"
+            toast.error(msg)
+            setEditError(msg)
         }
     })
 

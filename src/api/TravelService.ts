@@ -66,3 +66,8 @@ export const AddTravelDocument = async ({ travelId, travelerId, formData }: { tr
     })
     return response.data
 }
+
+export const UpdateTravel = async ({ travelId, data }: { travelId: number, data: any }): Promise<TravelResponse> => {
+    const response = await api.put<TravelResponse>(`/travel/${travelId}`, data)
+    return response.data
+}

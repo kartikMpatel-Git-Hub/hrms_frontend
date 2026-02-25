@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { UpdateJob } from "@/api/JobService"
-import { toast } from "react-toastify"
+import { toast } from "sonner"
 
 interface HrJobCardProp {
     job: JobResponseDto,

@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from "@/components/ui/button"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { toast } from "react-toastify"
+import { toast } from "sonner"
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 
 function EmployeeTravelDocuments() {
@@ -32,7 +32,7 @@ function EmployeeTravelDocuments() {
     const queryClient = useQueryClient()
     const [paged, setPaged] = useState<PagedRequestDto>({
         pageNumber: 1,
-        pageSize: 1
+        pageSize: 5
     })
 
     const { data, isLoading } = useQuery({

@@ -5,6 +5,7 @@ import { Cake, Gift } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import type { DailyCelebrationResponseDto, UpcomingBookingResponseDto } from "@/type/Types"
 import { useNavigate } from "react-router-dom"
+import { toast, Toaster } from "sonner"
 
 function Dashboard() {
 
@@ -79,6 +80,7 @@ function Dashboard() {
 
     return (
         <div className="min-h-screen bg-background p-6">
+            <Toaster />
             <div className="mx-auto max-w-5xl">
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-foreground">Today's Celebrations</h1>

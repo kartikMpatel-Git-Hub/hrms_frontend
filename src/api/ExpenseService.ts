@@ -41,3 +41,8 @@ export const GetAllExpenseForHr = async ({pageNumber,pageSize} : any): Promise<P
     const response = await api.get<PagedResponse<TravelerExpenseDto>>(`/travel/all-expense?pageNumber=${pageNumber}&pageSize=${pageSize}`)
     return response.data
 }
+
+export const UpdateExpense = async ({travelId, expenseId, data}: {travelId: number, expenseId: number, data: any}): Promise<TravelerExpenseDto> => {
+    const response = await api.put<TravelerExpenseDto>(`/travel/${travelId}/expense/${expenseId}`, data)
+    return response.data
+}

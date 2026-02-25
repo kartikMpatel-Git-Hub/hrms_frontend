@@ -3,6 +3,7 @@ import type { TravelCreateRequest } from "../../../type/Types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { CreateTravel } from "../../../api/TravelService"
 import { useNavigate } from "react-router-dom"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import {
     Field,
@@ -42,10 +43,12 @@ function TravelForm() {
         mutationFn: CreateTravel,
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ['travels'] })
+            toast.success("Travel created successfully")
             navigator("../")
         },
         onError: (err: any) => {
             // console.log(err);
+            toast.error("Failed to create travel")
             setError(["Failed To add Travel"])
         }
     })

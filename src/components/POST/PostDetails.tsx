@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { GetPostById, GetPostComments, CreateComment, ToggleLikePost, DeletePost, deleteComment, editComment } from "@/api/PostService"
+import { toast } from "sonner"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import { Avatar } from "../ui/avatar"
 import { Button } from "../ui/button"
@@ -55,9 +56,11 @@ function PostDetails() {
     onSuccess: () => {
       setCommentText("")
       setErrors({})
+      toast.success("Comment added successfully")
       queryClient.invalidateQueries({ queryKey: ["postComments", postId, 1] })
     },
     onError: (error: any) => {
+      toast.error(error.message || "Failed to create comment")
       setErrors({ submit: error.message || "Failed to create comment" })
     }
   })
@@ -71,6 +74,7 @@ function PostDetails() {
       setLikeCount(isLiked ? likeCount - 1 : likeCount + 1)
     },
     onError: (error: any) => {
+      toast.error("Failed to toggle like")
       // console.error("Error toggling like:", error)
     }
   })
@@ -80,9 +84,11 @@ function PostDetails() {
       await DeletePost(postId)
     },
     onSuccess: () => {
+      toast.success("Post deleted successfully")
       navigate("../")
     },
     onError: (error: any) => {
+      toast.error(error.message || "Failed to delete post")
       setErrors({ post: error.message || "Failed to delete post" })
     }
   })
@@ -92,9 +98,11 @@ function PostDetails() {
       await deleteComment(postId, commentId)
     },
     onSuccess: () => {
+      toast.success("Comment deleted")
       queryClient.invalidateQueries({ queryKey: ["postComments", postId, 1] })
     },
     onError: (error: any) => {
+      toast.error("Failed to delete comment")
       // console.error("Error deleting comment:", error)
     }
   })
@@ -106,9 +114,11 @@ function PostDetails() {
     onSuccess: () => {
       setEditingCommentId(null)
       setEditingCommentText("")
+      toast.success("Comment updated successfully")
       queryClient.invalidateQueries({ queryKey: ["postComments", postId, 1] })
     },
     onError: (error: any) => {
+      toast.error("Failed to update comment")
       // console.error("Error editing comment:", error)
     }
   })

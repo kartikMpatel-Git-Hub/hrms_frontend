@@ -1,4 +1,5 @@
 import { CreateGame, DeleteGame, GetAllGames } from "@/api/GameService"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
@@ -27,7 +28,11 @@ function HrGames() {
         mutationFn: (game: GameCreateDto) => CreateGame(game),
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ["games"] })
+            toast.success("Game created successfully")
             setDialogOpen(false)
+        },
+        onError: (err: any) => {
+            toast.error(err?.error?.details || "Failed to create game")
         }
     })
     const { mutate: deleteGame, isPending: isDeletePending } = useMutation({
@@ -35,7 +40,11 @@ function HrGames() {
         mutationFn: (id: number) => DeleteGame(id),
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ["games"] })
+            toast.success("Game deleted successfully")
             setDialogOpen(false)
+        },
+        onError: (err: any) => {
+            toast.error(err?.error?.details || "Failed to delete game")
         }
     })
 

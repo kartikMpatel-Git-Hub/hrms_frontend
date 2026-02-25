@@ -10,7 +10,7 @@ import { Card } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
 import { Skeleton } from "@/components/ui/skeleton"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
-import { toast, ToastContainer } from "react-toastify"
+import { toast } from "sonner"
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 
 
@@ -39,6 +39,7 @@ function HrJobs() {
         mutationFn: (id: number) => DeleteJob(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["hr-jobs"] })
+            toast.success("Job deleted successfully")
         },
         onError: (error) => {
             toast.error("Failed to delete job. Please try again.")
@@ -112,7 +113,6 @@ function HrJobs() {
 
     return (
         <div>
-            <ToastContainer />
             <div className="flex justify-end mr-5">
                 <Button
                     title="Add New Job"

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import { CreateUser, GetAllUsers, GetManagers } from "@/api/UserService"
 import { GetDepartments } from "@/api/DepartmentService"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -63,10 +64,12 @@ function HrUserAddForm() {
         mutationFn: CreateUser,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["hr-users"] })
+            toast.success("User created successfully")
             navigate("../", { relative: "route" })
         },
         onError: (error: any) => {
             const errorMsg = error?.response?.data?.message || "Failed to create user"
+            toast.error(errorMsg)
             setFormErrors({ submit: errorMsg })
         },
     })

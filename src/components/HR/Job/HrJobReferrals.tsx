@@ -1,10 +1,11 @@
-import { GetJobReferrals } from "@/api/JobService"
+import { GetJobReferrals, UpdateReferralStatus } from "@/api/JobService"
+import { toast } from "sonner"
 import { Card } from "@/components/ui/card"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
 import type { ReferredResponseDto } from "@/type/Types"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { CircleAlert, Search, UserPlus } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
@@ -21,15 +22,32 @@ function HrJobReferrals() {
     const [search, setSearch] = useState<string>("")
     const [loading, setLoading] = useState<boolean>(false)
     const navigator = useNavigate()
+    const queryClient = useQueryClient()
 
     const { data, error, isLoading } = useQuery({
         queryKey: ["job-referrals", pagedRequest],
         queryFn: () => GetJobReferrals({ jobid: Number(id), paged: pagedRequest })
     })
 
-    const handleStatusChange = (id: number,status: string) => {
-        // Call API to update status
-        // console.log("Updating referral with id:", id, "to status:", status)
+    const { mutate,isPending } = useMutation({
+        mutationFn: ({ rid, status }: any) => UpdateReferralStatus(rid, Number(id), status),
+        mutationKey: ["job-referrals-status-update"],
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ["job-referrals"] })
+            toast.success("Referral status updated successfully")
+            console.log(data);
+        },
+        onError: (e)=>{
+            toast.error("Failed to update referral status")
+            console.log(e);
+        }
+    })
+
+    const handleStatusChange = (id: number, status: string) => {
+        console.log(id);
+        console.log(status);
+        mutate({ rid : id, status })
+        console.log("HERE");
     }
 
     useEffect(() => {
@@ -81,7 +99,7 @@ function HrJobReferrals() {
                                         filteredReferrals && filteredReferrals.length > 0
                                             ? (
                                                 filteredReferrals.map((r, idx) =>
-                                                    <JobReferralCard referral={r} idx={idx} key={idx} handleStatusChange={handleStatusChange} />
+                                                    <JobReferralCard referral={r} idx={idx} key={idx} handleStatusChange={handleStatusChange} isPending={isPending} />
                                                 )
                                             )
                                             : (<TableRow><TableCell colSpan={5} ><div className="flex justify-center m-10"><CircleAlert className="h-7" /><div className="font-bold m-1">No Referrals Found</div></div></TableCell></TableRow>)

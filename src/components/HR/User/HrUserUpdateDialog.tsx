@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { UpdateUser, GetManagers } from "@/api/UserService"
 import { GetDepartments } from "@/api/DepartmentService"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -92,10 +93,12 @@ function HrUserUpdateDialog({ open, onOpenChange, user }: HrUserUpdateDialogProp
         mutationFn: UpdateUser,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["hr-users"] })
+            toast.success("User updated successfully")
             onOpenChange(false)
         },
         onError: (error: any) => {
             const errorMsg = error?.response?.data?.message || "Failed to update user"
+            toast.error(errorMsg)
             setFormErrors({ submit: errorMsg })
         },
     })

@@ -10,14 +10,13 @@ function TravelCard({ travel, idx }: { travel: TravelResponse, idx: number }) {
 
     return (
         <TableRow >
-            <TableCell>{travel.id}</TableCell>
+            <TableCell>{idx+1}</TableCell>
             <TableCell>{travel.title}</TableCell>
             <TableCell>{travel.location}</TableCell>
             <TableCell>{new Date(travel.startDate).toLocaleDateString()}</TableCell>
             <TableCell>{new Date(travel.endDate).toLocaleDateString()}</TableCell>
             <TableCell className="flex gap-2">
                 <Button onClick={() => navigator(`./${travel.id}`)}><Eye /></Button>
-                {/* <Button disabled={true}><Edit /></Button> */}
             </TableCell>
         </TableRow>
     )
