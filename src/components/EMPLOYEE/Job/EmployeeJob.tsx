@@ -22,7 +22,7 @@ function EmployeeJob() {
     const [filteredJob, setFilteredJob] = useState<JobResponseDto[]>()
 
     const { data } = useQuery({
-        queryKey: ["jobs"],
+        queryKey: ["jobs", pagedRequest],
         queryFn: () => GetAllJob(pagedRequest)
     })
 

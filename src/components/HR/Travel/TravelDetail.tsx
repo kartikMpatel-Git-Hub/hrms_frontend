@@ -32,7 +32,7 @@ function TravelDetail() {
     } = useMutation({
         mutationFn: AddTraveler,
         onSuccess: (res) => {
-            queryClient.invalidateQueries({ queryKey: ['travel'] });
+            queryClient.invalidateQueries({ queryKey: ['travel', id] });
         },
         onError: (err: any) => {
             toast.error(err.error.details)
@@ -40,7 +40,7 @@ function TravelDetail() {
     });
 
     const { isLoading, data } = useQuery({
-        queryKey: ["travel"],
+        queryKey: ["travel", id],
         queryFn: () => GetTravelWithTravelers(Number(id))
     })
 

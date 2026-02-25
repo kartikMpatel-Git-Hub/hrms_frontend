@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router'
 import Login from '../components/Login'
 import NotFound from '../components/NotFound'
+import ForgetPassword from '../components/ForgetPassword'
 import HrLayout from '../components/HR/HrLayout'
 import HrTravel from '../components/HR/HrTravel'
 import TravelDetail from '../components/HR/Travel/TravelDetail'
@@ -59,6 +60,7 @@ const router = createBrowserRouter([
         errorElement: <NotFound />,
         children: [
             { index: true, element: <Login /> },
+            { path: "forget-password", element: <ForgetPassword /> },
             { path: "Welcome", element: <Welcome /> },
             { path: "*", element: <NotFound /> },
             {
@@ -243,7 +245,6 @@ const router = createBrowserRouter([
                         errorElement: <NotFound />,
                         children: [
                             { index: true, element: <MyTeams /> },
-                            { path: ":id", element: <UserProfile /> },
                             { path: ":id/travels", element: <MemberTravels /> },
                             { path: ":id/travels/:travelId/expense", element: <TravelExpense /> },
                             { path: ":id/travels/:travelId/document", element: <TravelDocument /> }

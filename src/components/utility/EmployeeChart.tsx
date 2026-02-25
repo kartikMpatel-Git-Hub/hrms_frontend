@@ -13,7 +13,7 @@ function EmployeeChart() {
     const [chartData, setChartData] = useState<UserReponseDto[]>()
 
     const { data } = useQuery({
-        queryKey: ["org-chart"],
+        queryKey: ["org-chart", id],
         queryFn: () => GetUserChart(Number(id))
     })
 

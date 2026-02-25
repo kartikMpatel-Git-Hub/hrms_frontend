@@ -28,8 +28,6 @@ function EmployeeOrganizationChart() {
 
     useEffect(() => {
         if (fetchedUsers != null) {
-            // // console.log(fetchedUsers);
-            
             setUsers(fetchedUsers)
         }
     }, [fetchedUsers])

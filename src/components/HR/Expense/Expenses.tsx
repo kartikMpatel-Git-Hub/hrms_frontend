@@ -10,19 +10,21 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Skeleton } from "@/components/ui/skeleton"
 import ExpenseCard from "./ExpenseCard"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
+
 
 function Expenses() {
 
     const navigator = useNavigate()
-    const [pageNumber, setPageNumber] = useState<PagedRequestDto>({
+    const [paged, setPaged] = useState<PagedRequestDto>({
         pageNumber: 1,
-        pageSize: 10
+        pageSize: 5
     })
     const [expense, setExpense] = useState<TravelerExpenseDto[]>()
     const [loading, setLoading] = useState(false)
     const [filteredExpense, setFilteredExpense] = useState<TravelerExpenseDto[]>()
     const [filtere, setFiltere] = useState({
-        travel:  [] as number[],
+        travel: [] as number[],
         traveler: [] as number[],
         category: [] as string[],
         status: ["Pending", "Approved", "Rejected"]
@@ -30,8 +32,8 @@ function Expenses() {
     const [search, setSearch] = useState("")
 
     const { data } = useQuery({
-        queryKey: ["hr-all-expense"],
-        queryFn: () => GetAllExpenseForHr(pageNumber)
+        queryKey: ["hr-all-expense",paged],
+        queryFn: () => GetAllExpenseForHr(paged)
     })
 
     useEffect(() => {
@@ -72,7 +74,7 @@ function Expenses() {
         navigator("./category")
     }
 
-    const handleFilterChange = (type: string, value: string|number) => {
+    const handleFilterChange = (type: string, value: string | number) => {
         let filtered = data?.data
         // if (type === "travel") {
         //     filtered = filtered?.filter(e => e.travelId === value)
@@ -227,6 +229,36 @@ function Expenses() {
                     </TableBody>
                 </Table>
             </Card>
+            {data && data.totalPages >= 1 && (
+                <div className="mt-8 flex justify-center">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.max(1, prev.pageNumber - 1) }))}
+                                    disabled={paged.pageNumber === 1}
+                                />
+                            </PaginationItem>
+                            {Array.from({ length: data.totalPages }, (_, i) => i + 1).map((page) => (
+                                <PaginationItem key={page}>
+                                    <PaginationLink
+                                        onClick={() => setPaged(prev => ({ ...prev, pageNumber: page }))}
+                                        isActive={paged.pageNumber === page}
+                                    >
+                                        {page}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            ))}
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.min(data.totalPages, prev.pageNumber + 1) }))}
+                                    disabled={paged.pageNumber === data.totalPages}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            )}
         </div>
     )
 }

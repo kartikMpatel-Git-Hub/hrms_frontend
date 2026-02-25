@@ -1,15 +1,16 @@
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Eye, UserRoundSearch } from 'lucide-react';
 import type { UserReponseDto } from '@/type/Types';
+import { TableCell, TableRow } from '@/components/ui/table';
 
 interface MemberCardProps {
-  member: UserReponseDto;
+  index : number,
+  member: UserReponseDto,
 }
 
-function MemberCard({ member }: MemberCardProps) {
+function MemberCard({ member,index }: MemberCardProps) {
   const navigate = useNavigate();
 
   const getInitials = (fullName: string) => {
@@ -26,57 +27,52 @@ function MemberCard({ member }: MemberCardProps) {
   };
 
   function handleViewProfile(): void {
-    navigate(`./${member.id}`)
+    navigate(`../${member.id}`)
   }
 
   return (
-    <Card className="w-full hover:shadow-lg transition-shadow">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Avatar className="h-12 w-12">
-              <AvatarImage
-                src={member.image}
-                alt={member.fullName}
-              />
-              <AvatarFallback>{getInitials(member.fullName)}</AvatarFallback>
-            </Avatar>
-            <div>
-              <CardTitle className="text-lg">{member.fullName}</CardTitle>
-              <CardDescription>{member.email}</CardDescription>
-            </div>
-          </div>
+    <TableRow key={member.id} className="hover:bg-muted/50">
+      <TableCell className="font-medium">{index + 1}</TableCell>
+      <TableCell>
+        <div className="flex items-center gap-3">
+          <Avatar className="h-10 w-10">
+            <AvatarImage src={member.image} alt={member.fullName} />
+            <AvatarFallback className="bg-blue-500 text-white">
+              {getInitials(member.fullName)}
+            </AvatarFallback>
+          </Avatar>
+          <span className="font-medium">{member.fullName}</span>
         </div>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-2">
-          <div className="flex justify-between">
-            <span className="text-sm font-medium text-gray-600">Role:</span>
-            <span className="text-sm">{member.role}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-sm font-medium text-gray-600">Designation:</span>
-            <span className="text-sm">{member.designation || 'N/A'}</span>
-          </div>
+      </TableCell>
+      <TableCell className="text-sm text-gray-600">
+        {member.email}
+      </TableCell>
+      <TableCell>
+        <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-sm">
+          {member.role}
+        </span>
+      </TableCell>
+      <TableCell>{member.designation || "-"}</TableCell>
+      <TableCell>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleViewTravels}
+            title="View Travels"
+          >
+            <Eye className="h-4 w-4" />
+          </Button>
+          <Button
+            size="sm"
+            onClick={handleViewProfile}
+            title="View Profile"
+          >
+            <UserRoundSearch className="h-4 w-4" />
+          </Button>
         </div>
-        <Button
-          onClick={handleViewTravels}
-          className="w-full mt-4"
-          variant="default"
-        >
-          <Eye className="mr-2 h-4 w-4" />
-          View Travels
-        </Button>
-        <Button
-          onClick={handleViewProfile}
-          className="w-full mt-4"
-          variant="default"
-        >
-          <UserRoundSearch className="mr-2 h-4 w-4" />
-          View Profile
-        </Button>
-      </CardContent>
-    </Card>
+      </TableCell>
+    </TableRow>
   );
 }
 

@@ -27,3 +27,8 @@ export const LoginService = async (credentials: LoginRequest) => {
     const response = await api.post(`Authentication/login`, credentials)
     return response.data
 }
+
+export const ForgetPasswordService = async (email: string) => {
+    const response = await api.post(`authentication/forget-password`, { email })
+    return response.data
+}

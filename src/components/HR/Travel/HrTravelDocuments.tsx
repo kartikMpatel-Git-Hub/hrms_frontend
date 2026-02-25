@@ -33,7 +33,7 @@ function HrTravelDocuments() {
     }
 
     const { data, isLoading } = useQuery({
-        queryKey: ["travel-document"],
+        queryKey: ["travel-document", id, travelerId],
         queryFn: () => GetTravelTravelerDocuments({ travelId: id, travelerId: travelerId })
     })
 

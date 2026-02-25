@@ -2,17 +2,19 @@ import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { GetEmployeeExpense } from "../../../api/ExpenseService"
-import { CircleAlert, IndianRupee, Loader, Plus, Search } from "lucide-react"
-import type { TravelerExpenseDto } from "../../../type/Types"
+import { IndianRupee, Plus, Search } from "lucide-react"
+import type { PagedRequestDto, TravelerExpenseDto } from "../../../type/Types"
 import EmployeeExpenseCard from "./EmployeeExpenseCard"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
 import { Card } from "@/components/ui/card"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
+
 
 function EmployeeTravelExpense() {
-    const { id, travelerId } = useParams<Number | any>()
+    const { id } = useParams<Number | any>()
     const [expenses, setExpenses] = useState<TravelerExpenseDto[]>()
     const navigator = useNavigate()
     const [search, setSearch] = useState<string>("")
@@ -21,16 +23,20 @@ function EmployeeTravelExpense() {
     const handleAddExpense = () => {
         navigator(`./add`)
     }
+    const [paged, setPaged] = useState<PagedRequestDto>({
+        pageNumber: 1,
+        pageSize: 5
+    })
 
     const { isLoading, data } = useQuery({
-        queryKey: ["employee-travel-expense"],
-        queryFn: () => GetEmployeeExpense({ travelId: id })
+        queryKey: ["employee-travel-expense", id,paged],
+        queryFn: () => GetEmployeeExpense(Number(id), paged)
     })
 
     useEffect(() => {
         if (data) {
-            // console.log(data);
-            setExpenses(data)
+            console.log(data);
+            setExpenses(data.data)
         }
     }, [data])
 
@@ -38,9 +44,9 @@ function EmployeeTravelExpense() {
         setLoading(true)
         if (data) {
             if (search.trim() === "") {
-                setExpenses(data)
+                setExpenses(data.data)
             } else {
-                const filtered = data?.filter(
+                const filtered = data?.data?.filter(
                     t => t.details.toLowerCase().includes(search.toLowerCase()))
                 setExpenses(filtered)
             }
@@ -116,6 +122,36 @@ function EmployeeTravelExpense() {
                     </TableBody>
                 </Table>
             </Card>
+            {data && data.totalPages >= 1 && (
+                <div className="mt-8 flex justify-center">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.max(1, prev.pageNumber - 1) }))}
+                                    disabled={paged.pageNumber === 1}
+                                />
+                            </PaginationItem>
+                            {Array.from({ length: data.totalPages }, (_, i) => i + 1).map((page) => (
+                                <PaginationItem key={page}>
+                                    <PaginationLink
+                                        onClick={() => setPaged(prev => ({ ...prev, pageNumber: page }))}
+                                        isActive={paged.pageNumber === page}
+                                    >
+                                        {page}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            ))}
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.min(data.totalPages, prev.pageNumber + 1) }))}
+                                    disabled={paged.pageNumber === data.totalPages}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            )}
         </div>
     )
 }

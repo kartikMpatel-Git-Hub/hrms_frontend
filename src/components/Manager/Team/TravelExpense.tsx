@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { GetTravelTravelerExpense } from "@/api/ExpenseService";
 import { useEffect, useState } from "react";
-import type { TravelerExpenseDto } from "@/type/Types";
+import type { PagedRequestDto, TravelerExpenseDto } from "@/type/Types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Eye, AlertCircle, IndianRupee } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 
 function TravelExpense() {
   const { travelId, id } = useParams<{ travelId: string; id: string }>();
@@ -22,17 +23,21 @@ function TravelExpense() {
 
   const tId = parseInt(travelId || "0", 10);
   const travId = parseInt(id || "0", 10);
+  const [paged, setPaged] = useState<PagedRequestDto>({
+    pageNumber: 1,
+    pageSize: 5
+  })
 
   const { data, isLoading } = useQuery({
-    queryKey: ["travel-expenses", tId, travId],
-    queryFn: () => GetTravelTravelerExpense({ travelId: tId, travelerId: travId }),
+    queryKey: ["travel-expenses", tId, travId, paged],
+    queryFn: () => GetTravelTravelerExpense(tId, travId, paged),
     enabled: tId > 0 && travId > 0,
   });
 
   useEffect(() => {
     if (data) {
-      setExpenses(data);
-      setFilteredExpenses(data);
+      setExpenses(data.data);
+      setFilteredExpenses(data.data);
     }
   }, [data]);
 
@@ -141,7 +146,7 @@ function TravelExpense() {
                 </TableHeader>
                 <TableBody>
                   {isSearching ? (
-                    Array.from({ length: 3 }).map((_, i) => (
+                    Array.from({ length: 5 }).map((_, i) => (
                       <TableRow key={i}>
                         <TableCell>
                           <Skeleton className="h-4 w-6" />
@@ -279,6 +284,36 @@ function TravelExpense() {
           )}
         </DialogContent>
       </Dialog>
+      {data && data.totalPages >= 1 && (
+        <div className="mt-8 flex justify-center">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.max(1, prev.pageNumber - 1) }))}
+                  disabled={paged.pageNumber === 1}
+                />
+              </PaginationItem>
+              {Array.from({ length: data.totalPages }, (_, i) => i + 1).map((page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink
+                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: page }))}
+                    isActive={paged.pageNumber === page}
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.min(data.totalPages, prev.pageNumber + 1) }))}
+                  disabled={paged.pageNumber === data.totalPages}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </div>
   );
 }

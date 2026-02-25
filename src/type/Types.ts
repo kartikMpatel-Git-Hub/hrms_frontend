@@ -17,6 +17,7 @@ export interface UserReponseDto {
   dateOfBirth: Date,
   dateOfJoin: Date,
   managerId: number,
+  reportTo : number,
   department: {
     id: number,
     departmentName: string

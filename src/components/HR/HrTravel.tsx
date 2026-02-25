@@ -1,21 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
 import { GetHrTravel } from "../../api/TravelService";
 import { useEffect, useState } from "react";
-import { type TravelResponse } from "../../type/Types";
+import type { PagedRequestDto, TravelResponse } from "../../type/Types";
 import TravelCard from "./Travel/TravelCard";
-import { Briefcase, CircleAlert, Eye, Loader, PlaneTakeoff, Plus, Search } from "lucide-react";
+import {  CircleAlert, Loader, PlaneTakeoff, Plus, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../ui/table";
-import { Field } from "../ui/field";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group";
 import { Skeleton } from "../ui/skeleton";
 import { Card } from "../ui/card";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 
 function HrTravel() {
 
-  const [pageNumber, setPageNumber] = useState<number>(1)
-  const [pageSize, setPageSize] = useState<number>(10)
+  const [paged, setPaged] = useState<PagedRequestDto>({
+    pageNumber: 1,
+    pageSize: 10
+  })
   const [travels, setTravels] = useState<TravelResponse[]>()
   const [filteredTravels, setFilteredTravels] = useState<TravelResponse[]>()
   const [search, setSearch] = useState<string>("")
@@ -23,8 +25,8 @@ function HrTravel() {
   const navigator = useNavigate()
 
   const { isLoading, error, data } = useQuery({
-    queryKey: ['travels'],
-    queryFn: () => GetHrTravel({ pageNumber, pageSize })
+    queryKey: ['travels', paged],
+    queryFn: () => GetHrTravel(paged)
   })
 
   useEffect(() => {
@@ -131,6 +133,36 @@ function HrTravel() {
           }
         </div> */}
       </Card>
+      {data && data.totalPages >= 1 && (
+        <div className="mt-8 flex justify-center">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.max(1, prev.pageNumber - 1) }))}
+                  disabled={paged.pageNumber === 1}
+                />
+              </PaginationItem>
+              {Array.from({ length: data.totalPages }, (_, i) => i + 1).map((page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink
+                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: page }))}
+                    isActive={paged.pageNumber === page}
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.min(data.totalPages, prev.pageNumber + 1) }))}
+                  disabled={paged.pageNumber === data.totalPages}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </div>
   )
 }

@@ -2,13 +2,15 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { GetTravelTravelerDocuments } from "@/api/TravelService";
 import { useEffect, useState } from "react";
-import type { TravelDocumentDto } from "@/type/Types";
+import type { PagedRequestDto, TravelDocumentDto } from "@/type/Types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { File, Search, Eye, Download } from "lucide-react";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
+
 
 function TravelDocument() {
   const { travelId, id } = useParams<{ travelId: string; id: string }>();
@@ -16,20 +18,24 @@ function TravelDocument() {
   const [filteredDocuments, setFilteredDocuments] = useState<TravelDocumentDto[]>([]);
   const [search, setSearch] = useState<string>("");
   const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [paged,setPaged] = useState<PagedRequestDto>({
+    pageNumber : 1,
+    pageSize : 1
+  })
 
   const tId = parseInt(travelId || "0", 10);
   const travId = parseInt(id || "0", 10);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["travel-documents", tId, travId],
-    queryFn: () => GetTravelTravelerDocuments({ travelId: tId, travelerId: travId }),
+    queryKey: ["travel-documents", tId, travId,paged],
+    queryFn: () => GetTravelTravelerDocuments(tId, travId,paged),
     enabled: tId > 0 && travId > 0,
   });
 
   useEffect(() => {
     if (data) {
-      setDocuments(data);
-      setFilteredDocuments(data);
+      setDocuments(data.data);
+      setFilteredDocuments(data.data);
     }
   }, [data]);
 
@@ -63,16 +69,6 @@ function TravelDocument() {
 
   const handleViewDocument = (url: string) => {
     window.open(url, "_blank");
-  };
-
-  const handleDownloadDocument = (url: string, fileName: string) => {
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = fileName || "document";
-    link.target = "_blank";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   };
 
   return (
@@ -191,6 +187,36 @@ function TravelDocument() {
           )}
         </CardContent>
       </Card>
+      {data && data.totalPages >= 1 && (
+        <div className="mt-8 flex justify-center">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.max(1, prev.pageNumber - 1) }))}
+                  disabled={paged.pageNumber === 1}
+                />
+              </PaginationItem>
+              {Array.from({ length: data.totalPages }, (_, i) => i + 1).map((page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink
+                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: page }))}
+                    isActive={paged.pageNumber === page}
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.min(data.totalPages, prev.pageNumber + 1) }))}
+                  disabled={paged.pageNumber === data.totalPages}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </div>
   );
 }
