@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useEffect, useState, type ChangeEvent } from 'react'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { toast, ToastContainer } from 'react-toastify'
+import { toast } from 'sonner'
 import { Textarea } from '@/components/ui/textarea'
 import { TableCell, TableRow } from '@/components/ui/table'
 

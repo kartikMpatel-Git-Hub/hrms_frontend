@@ -90,7 +90,7 @@ function EmployeeTravelExpense() {
                                         (
                                             expenses.map((e, idx) => (
 
-                                                <EmployeeExpenseCard expense={e} idx={idx} />
+                                                <EmployeeExpenseCard expense={e} idx={idx} travelId={Number(id)} key={e.id} />
                                             ))
                                         ) :
                                         (

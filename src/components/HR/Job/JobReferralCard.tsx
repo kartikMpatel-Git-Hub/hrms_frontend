@@ -7,7 +7,7 @@ import { Edit, Eye, File, UserPlus } from "lucide-react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-function JobReferralCard({ referral, idx,handleStatusChange }: { referral?: ReferredResponseDto, idx: number, handleStatusChange: (id: number,status: string) => void }) {
+function JobReferralCard({ referral, idx,handleStatusChange,isPending }: { referral?: ReferredResponseDto, idx: number, handleStatusChange: (id: number,status: string) => void, isPending : boolean }) {
     
     const navigator = useNavigate()
     const [status, setStatus] = useState<string>(referral?.status || "Pending")
@@ -22,7 +22,7 @@ function JobReferralCard({ referral, idx,handleStatusChange }: { referral?: Refe
             <TableCell className="flex gap-2">
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button>
+                        <Button disabled={isPending}>
                             <Eye />
                         </Button>
                     </DialogTrigger>
@@ -48,7 +48,7 @@ function JobReferralCard({ referral, idx,handleStatusChange }: { referral?: Refe
                 </Dialog>
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button>
+                        <Button disabled={isPending}>
                             <Edit />
                         </Button>
                     </DialogTrigger>
@@ -64,7 +64,7 @@ function JobReferralCard({ referral, idx,handleStatusChange }: { referral?: Refe
                                 <option value="Rejected">Rejected</option>
                                 <option value="Hired">Hired</option>
                             </select>
-                            <Button className="mt-2 w-full" onClick={() => referral && handleStatusChange(referral?.id,status)} disabled={true}>Apply Changes</Button>
+                            <Button className="mt-2 w-full" onClick={() => referral && handleStatusChange(referral?.id,status)} disabled={status == "Pending" ||referral?.status == "Rejected" }>Apply Changes</Button>
                         </Field>
                     </DialogContent>
                 </Dialog>

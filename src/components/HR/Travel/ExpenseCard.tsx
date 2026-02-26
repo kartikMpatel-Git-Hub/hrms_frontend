@@ -4,7 +4,7 @@ import { ChangeExpenseStatus } from "../../../api/ExpenseService"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { CircleAlert, Edit, Eye, IndianRupee } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { toast } from "react-toastify"
+import { toast } from "sonner"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Table, TableCell, TableRow } from "@/components/ui/table"
 
@@ -28,6 +28,7 @@ function ExpenseCard({ expense, travelId, travelerId, idx }: {
         mutationFn: ChangeExpenseStatus,
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ["travel-traveler-expense"] })
+            toast.success("Expense status updated successfully")
             // console.log(res);
         },
         onError: (err) => {

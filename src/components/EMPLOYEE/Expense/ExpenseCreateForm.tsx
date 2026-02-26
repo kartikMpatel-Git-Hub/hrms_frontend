@@ -3,7 +3,7 @@ import { type ExpenseCategoryResponseDto, type ExpenseCreateDto } from "../../..
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AddExpense, GetExpensesCategories } from "../../../api/ExpenseService";
 import { useParams } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "sonner";
 
 function ExpenseCreateForm() {
 
@@ -115,7 +115,6 @@ function ExpenseCreateForm() {
     }
     return (
         <div className="flex justify-center px-4 py-6">
-            <ToastContainer position="top-right" />
             <div className="w-full max-w-xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                 <div className="mb-4 text-2xl font-bold text-slate-900">
                     Add New Expense

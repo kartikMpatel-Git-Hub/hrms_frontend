@@ -18,6 +18,7 @@ import { useState, type ChangeEvent } from "react"
 import { useNavigate } from "react-router-dom"
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert"
 import { InfoIcon } from "lucide-react"
+import { toast } from "sonner"
 
 export function LoginForm({
   className,
@@ -64,6 +65,7 @@ export function LoginForm({
 
     try {
       const user = await login(credentials);
+      toast.info("Logged In !")
       switch (user.role) {
         case "HR": navigate("/hr/dashboard"); break;
         case "EMPLOYEE": navigate("/employee/dashboard"); break;

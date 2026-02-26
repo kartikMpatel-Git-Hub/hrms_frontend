@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { AddJob, GetHrByKey, GetUserByKey } from "../../../api/JobService"
 import useDebounce from "../../../hook/useDebounce"
 import { useNavigate } from "react-router-dom"
-import { toast } from "react-toastify"
+import { toast } from "sonner"
 import { Card, CardHeader } from "@/components/ui/card"
 import { Field } from "@/components/ui/field"
 import { Label } from "@/components/ui/label"
@@ -130,6 +130,7 @@ function HrJobCreateForm() {
         mutationFn: AddJob,
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ['hr-jobs'] })
+            toast.success("Job created successfully")
             navigator("../")
         },
         onError: (err) => {

@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { ClockIcon, CalendarIcon, UsersIcon, CheckCircle2Icon, XCircleIcon, HourglassIcon, HeartIcon } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "sonner";
 import GameSlotCard from "./GameSlotCard";
 
 function GameDetail() {
@@ -153,7 +153,6 @@ function GameDetail() {
 
     return (
         <div className="container mx-auto p-6 space-y-6">
-            <ToastContainer />
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold">Game Slots</h1>
                 <Button

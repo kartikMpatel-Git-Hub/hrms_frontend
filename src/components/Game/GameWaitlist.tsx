@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/context/AuthContext";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "sonner";
 
 function GameWaitlist() {
     const { id, slotId } = useParams();
@@ -78,8 +78,6 @@ function GameWaitlist() {
 
     return (
         <div className="container mx-auto p-6 space-y-6">
-            <ToastContainer />
-            
             <Dialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
                 <DialogContent className="sm:max-w-md">
                     <DialogHeader>

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import type { JobResponseDto, PagedRequestDto } from "../../../type/Types"
 import { Briefcase, Search } from "lucide-react"
 import EmployeeJobCard from "./EmployeeJobCard"
-import { toast} from "react-toastify"
+import { toast } from "sonner"
 import { Card } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 function EmployeeJob() {
 
-    const [pagedRequest, setPagedRequest] = useState<PagedRequestDto>({
+    const [paged, setPaged] = useState<PagedRequestDto>({
         pageNumber: 1,
         pageSize: 10
     })
@@ -22,8 +22,8 @@ function EmployeeJob() {
     const [filteredJob, setFilteredJob] = useState<JobResponseDto[]>()
 
     const { data } = useQuery({
-        queryKey: ["jobs", pagedRequest],
-        queryFn: () => GetAllJob(pagedRequest)
+        queryKey: ["jobs", paged],
+        queryFn: () => GetAllJob(paged)
     })
 
     const { isPending: loadingReference, mutate: referred, isSuccess: referreComplete } = useMutation({

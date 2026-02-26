@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { useParams } from "react-router-dom"
 import { GetTravelTravelerDocuments, AddTravelDocument } from "../../../api/TravelService"
 import { useEffect, useState, type ChangeEvent } from "react"
-import type { TravelDocumentDto } from "../../../type/Types"
+import type { PagedRequestDto, TravelDocumentDto } from "../../../type/Types"
 import TravelDocumentCard from "./TravelDocumentCard"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
@@ -13,7 +13,9 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { File, Search, Plus } from "lucide-react"
-import { toast, ToastContainer } from "react-toastify"
+import { toast } from "sonner"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
+
 
 function HrTravelDocuments() {
     const { id, travelerId } = useParams()
@@ -31,10 +33,13 @@ function HrTravelDocuments() {
     const isValidPdfFile = (file: File): boolean => {
         return file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')
     }
-
+    const [paged, setPaged] = useState<PagedRequestDto>({
+        pageNumber: 1,
+        pageSize: 5
+    })
     const { data, isLoading } = useQuery({
-        queryKey: ["travel-document", id, travelerId],
-        queryFn: () => GetTravelTravelerDocuments({ travelId: id, travelerId: travelerId })
+        queryKey: ["travel-document", id, travelerId, paged],
+        queryFn: () => GetTravelTravelerDocuments(Number(id), Number(travelerId), paged)
     })
 
     const { mutate: submitDocument, isPending } = useMutation({
@@ -98,7 +103,7 @@ function HrTravelDocuments() {
 
     useEffect(() => {
         if (data) {
-            setDocuments(data)
+            setDocuments(data.data)
         }
     }, [data])
 
@@ -106,10 +111,10 @@ function HrTravelDocuments() {
         setLoading(true)
         if (data) {
             if (search.trim() === "") {
-                setDocuments(data)
-                setFilteredData(data)
+                setDocuments(data.data)
+                setFilteredData(data.data)
             } else {
-                const filtered = data?.filter(
+                const filtered = data?.data?.filter(
                     t =>
                         t.documentName.toLowerCase().includes(search.toLowerCase()) ||
                         t.documentType.toLowerCase().includes(search.toLowerCase())
@@ -124,7 +129,6 @@ function HrTravelDocuments() {
 
     return (
         <>
-            <ToastContainer position="top-right"/>
             <Card className="m-10 p-5">
                 <div className="flex justify-between items-center mb-4">
                     <div className="flex justify-center font-bold text-2xl gap-1"><File className="h-8 mr-1" /><span>Travel Documents</span></div>
@@ -217,6 +221,36 @@ function HrTravelDocuments() {
                     </TableBody>
                 </Table>
             </Card>
+            {data && data.totalPages >= 1 && (
+                <div className="mt-8 flex justify-center">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.max(1, prev.pageNumber - 1) }))}
+                                    disabled={paged.pageNumber === 1}
+                                />
+                            </PaginationItem>
+                            {Array.from({ length: data.totalPages }, (_, i) => i + 1).map((page) => (
+                                <PaginationItem key={page}>
+                                    <PaginationLink
+                                        onClick={() => setPaged(prev => ({ ...prev, pageNumber: page }))}
+                                        isActive={paged.pageNumber === page}
+                                    >
+                                        {page}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            ))}
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.min(data.totalPages, prev.pageNumber + 1) }))}
+                                    disabled={paged.pageNumber === data.totalPages}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            )}
         </>
     )
 }
