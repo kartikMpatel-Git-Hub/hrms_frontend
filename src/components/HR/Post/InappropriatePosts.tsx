@@ -11,11 +11,13 @@ import { Combobox, ComboboxContent, ComboboxInput, ComboboxItem, ComboboxList } 
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { InappropriatePostTableRow } from "./InappropriatePostTableRow"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
+
 
 function InappropriatePosts() {
-    const [paged] = useState<PagedRequestDto>({
+    const [paged, setPaged] = useState<PagedRequestDto>({
         pageNumber: 1,
-        pageSize: 20
+        pageSize: 5
     })
     const navigate = useNavigate()
     const [successMessage, setSuccessMessage] = useState<string | null>(null)
@@ -98,7 +100,7 @@ function InappropriatePosts() {
     const handleToggleAppropriate = async (postId: number) => {
         setLoading(true)
         try {
-            await MarkPostInappropriate(postId,"")
+            await MarkPostInappropriate(postId, "")
             setSuccessMessage("Post marked as appropriate")
             setTimeout(() => setSuccessMessage(null), 3000)
             // Remove the post from the list
@@ -278,6 +280,36 @@ function InappropriatePosts() {
                         ))}
                 </Table>
             </div>
+            {data && data.totalPages >= 1 && (
+                <div className="mt-8 flex justify-center">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.max(1, prev.pageNumber - 1) }))}
+                                    disabled={paged.pageNumber === 1}
+                                />
+                            </PaginationItem>
+                            {Array.from({ length: data.totalPages }, (_, i) => i + 1).map((page) => (
+                                <PaginationItem key={page}>
+                                    <PaginationLink
+                                        onClick={() => setPaged(prev => ({ ...prev, pageNumber: page }))}
+                                        isActive={paged.pageNumber === page}
+                                    >
+                                        {page}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            ))}
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.min(data.totalPages, prev.pageNumber + 1) }))}
+                                    disabled={paged.pageNumber === data.totalPages}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            )}
         </div>
     )
 }

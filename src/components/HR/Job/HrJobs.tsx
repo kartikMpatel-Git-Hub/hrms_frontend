@@ -11,12 +11,14 @@ import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components
 import { Skeleton } from "@/components/ui/skeleton"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { toast, ToastContainer } from "react-toastify"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
+
 
 function HrJobs() {
 
-    const [pagedRequest, setPagedRequest] = useState<PagedRequestDto>({
+    const [paged, setPaged] = useState<PagedRequestDto>({
         pageNumber: 1,
-        pageSize: 10
+        pageSize: 2
     })
 
     const [jobs, setJobs] = useState<JobResponseDto[]>()
@@ -28,8 +30,8 @@ function HrJobs() {
 
 
     const { data } = useQuery({
-        queryKey: ["hr-jobs"],
-        queryFn: () => GetHrJobs(pagedRequest)
+        queryKey: ["hr-jobs", paged],
+        queryFn: () => GetHrJobs(paged)
     })
 
     const { mutate: deleteMutation, error: deleteError, isPending: isDeletePending } = useMutation({
@@ -50,6 +52,8 @@ function HrJobs() {
     useEffect(() => {
         setLoading(true)
         if (data) {
+            console.log(data);
+            
             if (search.trim() === "") {
                 setJobs(data.data)
                 setFilteredJobs(data.data)
@@ -195,6 +199,36 @@ function HrJobs() {
                     </Table>
                 </div>
             </Card>
+            {data && data.totalPages >= 1 && (
+                <div className="mt-8 flex justify-center">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.max(1, prev.pageNumber - 1) }))}
+                                    disabled={paged.pageNumber === 1}
+                                />
+                            </PaginationItem>
+                            {Array.from({ length: data.totalPages }, (_, i) => i + 1).map((page) => (
+                                <PaginationItem key={page}>
+                                    <PaginationLink
+                                        onClick={() => setPaged(prev => ({ ...prev, pageNumber: page }))}
+                                        isActive={paged.pageNumber === page}
+                                    >
+                                        {page}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            ))}
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.min(data.totalPages, prev.pageNumber + 1) }))}
+                                    disabled={paged.pageNumber === data.totalPages}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            )}
         </div>
     )
 }

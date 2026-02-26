@@ -7,6 +7,7 @@ import { Bell, BellRing, Loader } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 
 function Notifications() {
 
@@ -17,7 +18,7 @@ function Notifications() {
     const [notifications, setNotifications] = useState<NotificationResponseDto[]>()
 
     const { data, isLoading } = useQuery({
-        queryKey: ["my-notification"],
+        queryKey: ["my-notification", paged],
         queryFn: () => GetMyNotification(paged)
     })
 
@@ -74,6 +75,36 @@ function Notifications() {
                     </TableBody>
                 </Table>
             </Card>
+            {data && data.totalPages >= 1 && (
+                <div className="mt-8 flex justify-center">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.max(1, prev.pageNumber - 1) }))}
+                                    disabled={paged.pageNumber === 1}
+                                />
+                            </PaginationItem>
+                            {Array.from({ length: data.totalPages }, (_, i) => i + 1).map((page) => (
+                                <PaginationItem key={page}>
+                                    <PaginationLink
+                                        onClick={() => setPaged(prev => ({ ...prev, pageNumber: page }))}
+                                        isActive={paged.pageNumber === page}
+                                    >
+                                        {page}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            ))}
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.min(data.totalPages, prev.pageNumber + 1) }))}
+                                    disabled={paged.pageNumber === data.totalPages}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            )}
         </div>
     )
 }

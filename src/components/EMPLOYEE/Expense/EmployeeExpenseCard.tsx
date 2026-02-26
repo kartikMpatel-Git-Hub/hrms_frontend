@@ -14,7 +14,7 @@ function EmployeeExpenseCard({ expense, idx }: {
         <TableRow>
             <TableCell>{idx + 1}</TableCell>
             <TableCell>{expense.details}</TableCell>
-            <TableCell>{expense.category.category}</TableCell>
+            <TableCell>{expense.category?.category || "N/A"}</TableCell>
             <TableCell className='flex'><IndianRupee className="h-4 w-4 mr-1" /> {expense.amount}</TableCell>
             <TableCell>{expense.status}</TableCell>
             <TableCell>{expense.expenseDate.toString().substring(0, 10)}</TableCell>

@@ -1,4 +1,4 @@
-import type { ExpenseCategoryCreateDto, ExpenseCategoryResponseDto, PagedResponse, TravelerExpenseDto } from "../type/Types";
+import type { ExpenseCategoryCreateDto, ExpenseCategoryResponseDto, PagedRequestDto, PagedResponse, TravelerExpenseDto } from "../type/Types";
 import api from "./Api";
 
 // export const GetExpenses = async (): Promise<[]> => {
@@ -14,12 +14,12 @@ export const CreateExpenseCategory = async (newExpenseCategory : ExpenseCategory
     return response.data
 }
 
-export const GetTravelTravelerExpense = async ({travelId,travelerId} : any): Promise<TravelerExpenseDto[]> => {
-    const response = await api.get<TravelerExpenseDto[]>(`/travel/${travelId}/traveler/${travelerId}/expense`)
+export const GetTravelTravelerExpense = async (travelId : number,travelerId : number,paged:PagedRequestDto): Promise<PagedResponse<TravelerExpenseDto>> => {
+    const response = await api.get<PagedResponse<TravelerExpenseDto>>(`/travel/${travelId}/traveler/${travelerId}/expenses?pageNumber=${paged.pageNumber}&pageSize=${paged.pageSize}`)
     return response.data
 }
-export const GetEmployeeExpense = async ({travelId} : any): Promise<TravelerExpenseDto[]> => {
-    const response = await api.get<TravelerExpenseDto[]>(`/travel/${travelId}/expense`)
+export const GetEmployeeExpense = async (travelId : number ,paged : PagedRequestDto): Promise<PagedResponse<TravelerExpenseDto>> => {
+    const response = await api.get<PagedResponse<TravelerExpenseDto>>(`/travel/${travelId}/expense?pageNumber=${paged.pageNumber}&pageSize=${paged.pageSize}`)
     return response.data
 }
 

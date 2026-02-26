@@ -16,12 +16,12 @@ export const GetJobById = async (jobId: number): Promise<JobResponseWithReviewer
 }
 
 export const GetHrJobs = async ({ pageNumber = 1, pageSize = 10 }: PagedRequestDto): Promise<PagedResponse<JobResponseDto>> => {
-    const response = await api.get<PagedResponse<JobResponseDto>>(`/job/hr/created?pageNumber${pageNumber}&pageSize=${pageSize}`)
+    const response = await api.get<PagedResponse<JobResponseDto>>(`/job/hr/created?pageNumber=${pageNumber}&pageSize=${pageSize}`)
     return response.data
 }
 
 export const GetAllJob = async ({ pageNumber = 1, pageSize = 10 }: PagedRequestDto): Promise<PagedResponse<JobResponseDto>> => {
-    const response = await api.get<PagedResponse<JobResponseDto>>(`/job?pageNumber${pageNumber}&pageSize=${pageSize}`)
+    const response = await api.get<PagedResponse<JobResponseDto>>(`/job?pageNumber=${pageNumber}&pageSize=${pageSize}`)
     return response.data
 }
 

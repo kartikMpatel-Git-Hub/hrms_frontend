@@ -2,7 +2,7 @@ import type { NotificationCountDto, NotificationResponseDto, PagedResponse } fro
 import api from "./Api"
 
 export const GetMyNotification = async ({ pageNumber = 1, pageSize = 10 }): Promise<PagedResponse<NotificationResponseDto>> => {
-    const response = await api.get<PagedResponse<NotificationResponseDto>>(`/notification?pageNumber${pageNumber}&pageSize=${pageSize}`)
+    const response = await api.get<PagedResponse<NotificationResponseDto>>(`/notification?pageSize=${pageSize}&pageNumber=${pageNumber}`)
     return response.data
 }
 export const GetMyNotificationCount = async (): Promise<NotificationCountDto> => {

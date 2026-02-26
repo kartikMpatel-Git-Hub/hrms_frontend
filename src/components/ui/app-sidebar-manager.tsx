@@ -21,61 +21,61 @@ export function AppSidebarManager() {
     }
 
     return (
-        <Sidebar className="">
+        <Sidebar className="transition-all duration-300">
             <SidebarHeader>
-                <h1 className="text-2xl font-bold flex justify-center">HRMS</h1>
+                <h1 className="text-2xl font-bold text-center group-data-[collapsible=icon]:hidden">HRMS</h1>
                 <hr />
             </SidebarHeader>
-            <SidebarContent>
+            <SidebarContent className="ml-2">
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton className="my-2">
+                        <SidebarMenuButton className="my-2" asChild>
                             <NavLink
-                                className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
+                                // className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
                                 to={"./dashboard"}
                             >
-                                <HomeIcon className="w-4 h-4" /> Dashboard
+                                <HomeIcon className="w-4 h-4" /> <span>Dashboard</span>
                             </NavLink>
                         </SidebarMenuButton>
-                        <SidebarMenuButton className="my-2">
+                        <SidebarMenuButton className="my-2" asChild>
                             <NavLink
-                                className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
+                                // className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
                                 to={"./my-team"}
                             >
-                                <Users className="w-4 h-4" /> My Team
+                                <Users className="w-4 h-4" /> <span>My Team</span>
                             </NavLink>
                         </SidebarMenuButton>
-                        <SidebarMenuButton className="my-2">
+                        <SidebarMenuButton className="my-2" asChild>
                             <NavLink
-                                className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
+                                // className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
                                 to={"./job"}
                             >
-                                <Briefcase className="w-4 h-4" /> Job
+                                <Briefcase className="w-4 h-4" /> <span>Job</span>
                             </NavLink>
                         </SidebarMenuButton>
-                        <SidebarMenuButton className="my-2">
+                        <SidebarMenuButton className="my-2" asChild>
                             <NavLink
-                                className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
+                                // className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
                                 to={"./game"}
                             >
-                                <Gamepad2 className="w-4 h-4" /> Game
+                                <Gamepad2 className="w-4 h-4" /> <span>Game</span>
                             </NavLink>
                         </SidebarMenuButton>
-                        <SidebarMenuButton className="my-2">
+                        <SidebarMenuButton className="my-2" asChild>
                             <NavLink
-                                className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
+                                // className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
                                 to={"./post"}
                             >
-                                <Images className="w-4 h-4" /> Post
+                                <Images className="w-4 h-4" /> <span>Post</span>
                             </NavLink>
                         </SidebarMenuButton>
 
-                        <SidebarMenuButton className="my-2">
+                        <SidebarMenuButton className="my-2" asChild>
                             <NavLink
-                                className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
+                                // className={({ isActive }) => (isActive ? "flex p-2 gap-3 bg-gray-500/10 w-full rounded-md font-bold" : "flex p-2 gap-3 w-full rounded-md")}
                                 to={"./notification"}
                             >
-                                <Bell className="w-4 h-4" /> Notification
+                                <Bell className="w-4 h-4" /> <span>Notification</span>
                             </NavLink>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -84,28 +84,28 @@ export function AppSidebarManager() {
             <SidebarFooter>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton>
+                        <SidebarMenuButton asChild>
                             <NavLink
                                 className={`flex gap-2 w-full rounded-md`}
                                 to={"./organization-chart"}
                             >
-                                <ChartNetwork className="w-4 h-4" /> Organization Chart
+                                <ChartNetwork className="w-4 h-4" /> <span>Organization Chart</span>
                             </NavLink>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                        <SidebarMenuButton>
+                        <SidebarMenuButton asChild>
                             <NavLink
                                 className={`flex gap-2 w-full rounded-md`}
                                 to={`./${user?.id}`}
                             >
-                                <UserCircle2Icon className="w-4 h-4" /> Profile
+                                <UserCircle2Icon className="w-4 h-4" /> <span>Profile</span>
                             </NavLink>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton className="text-red-400" onClick={handleLogout}>
-                            <LogOut className="w-4 h-4" /> Logout
+                            <LogOut className="w-4 h-4" /> <span>Logout</span>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>

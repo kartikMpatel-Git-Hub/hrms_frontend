@@ -1,47 +1,30 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { GetMyTeamMembers } from '@/api/UserService';
-import { GetHrTravel, GetTravelerTravel, GetTravelTravelerDocuments } from '@/api/TravelService';
-import { GetTravelTravelerExpense } from '@/api/ExpenseService';
+import {  GetTravelerTravel} from '@/api/TravelService';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowLeft, FileText, DollarSign, Eye, IndianRupee } from 'lucide-react';
+import { FileText, IndianRupee } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { PagedRequestDto, TravelResponse } from '@/type/Types';
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 
 function MemberTravels() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const memberId = parseInt(id || '0', 10);
-  const [selectedTravel, setSelectedTravel] = useState<TravelResponse | null>(null);
-  const [viewMode, setViewMode] = useState<'documents' | 'expenses' | null>(null);
 
-  const paged: PagedRequestDto = {
+  const [paged, setPaged] = useState<PagedRequestDto>({
     pageNumber: 1,
-    pageSize: 10
-  };
+    pageSize: 5
+  })
 
   const { data: travelsData, isLoading: travelsLoading } = useQuery({
     queryKey: ['travels', memberId, paged],
     queryFn: () => GetTravelerTravel(memberId, paged),
     enabled: memberId > 0,
   });
-
-  const { data: documentsData = [] } = useQuery({
-    queryKey: ['documents', selectedTravel?.id, memberId],
-    queryFn: () => GetTravelTravelerDocuments({ travelId: selectedTravel?.id, travelerId: memberId }),
-    enabled: !!selectedTravel && viewMode === 'documents',
-  });
-
-  const { data: expensesData = [] } = useQuery({
-    queryKey: ['expenses', selectedTravel?.id, memberId],
-    queryFn: () => GetTravelTravelerExpense({ travelId: selectedTravel?.id, travelerId: memberId }),
-    enabled: !!selectedTravel && viewMode === 'expenses',
-  });
-
   const formatDate = (date: string | Date) => {
     if (!date) return 'N/A';
     return new Date(date).toLocaleDateString('en-US', {
@@ -52,21 +35,12 @@ function MemberTravels() {
   };
 
   const handleViewDocuments = (travel: TravelResponse) => {
-    setSelectedTravel(travel);
-    setViewMode('documents');
     navigate(`./${travel.id}/document`);
   };
 
   const handleViewExpenses = (travel: TravelResponse) => {
-    setSelectedTravel(travel);
-    setViewMode('expenses');
     navigate(`./${travel.id}/expense`);
 
-  };
-
-  const handleCloseDialog = () => {
-    setViewMode(null);
-    setSelectedTravel(null);
   };
 
   return (
@@ -144,76 +118,36 @@ function MemberTravels() {
           </CardContent>
         </Card>
       )}
-
-      <Dialog open={viewMode !== null} onOpenChange={() => handleCloseDialog()}>
-        <DialogContent className="max-w-2xl max-h-96 overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>
-              {viewMode === 'documents' ? 'Travel Documents' : 'Travel Expenses'}
-            </DialogTitle>
-            <DialogDescription>
-              {selectedTravel?.title} - {selectedTravel?.location}
-              <br />
-            </DialogDescription>
-          </DialogHeader>
-
-          {viewMode === 'documents' && (
-            <div>
-              {documentsData.length > 0 ? (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Document Name</TableHead>
-                      <TableHead>Type</TableHead>
-                      <TableHead>Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {documentsData.map((doc, idx) => (
-                      <TableRow key={idx}>
-                        <TableCell>{doc.documentName}</TableCell>
-                        <TableCell>{doc.documentType}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              ) : (
-                <p className="text-center text-gray-600 py-4">No documents found</p>
-              )}
-            </div>
-          )}
-
-          {viewMode === 'expenses' && (
-            <div>
-              {expensesData.length > 0 ? (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Category</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Date</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {expensesData.map((expense, idx) => (
-                      <TableRow key={idx}>
-                        <TableCell>{expense.category.category || 'N/A'}</TableCell>
-                        <TableCell className="font-medium"><IndianRupee className="h-4 w-4 inline mr-1" />{expense.amount || '0'}</TableCell>
-                        <TableCell>{expense.status || 'Pending'}</TableCell>
-                        <TableCell>{formatDate(expense.expenseDate || new Date())}</TableCell>
-                        <TableCell><Button variant="outline" size="sm" onClick={() => navigate(`./${selectedTravel?.id}/expense`)}>View</Button></TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              ) : (
-                <p className="text-center text-gray-600 py-4">No expenses found</p>
-              )}
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      {travelsData && travelsData.totalPages >= 1 && (
+        <div className="mt-8 flex justify-center">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.max(1, prev.pageNumber - 1) }))}
+                  disabled={paged.pageNumber === 1}
+                />
+              </PaginationItem>
+              {Array.from({ length: travelsData.totalPages }, (_, i) => i + 1).map((page) => (
+                <PaginationItem key={page}>
+                  <PaginationLink
+                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: page }))}
+                    isActive={paged.pageNumber === page}
+                  >
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.min(travelsData.totalPages, prev.pageNumber + 1) }))}
+                  disabled={paged.pageNumber === travelsData.totalPages}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
 import { useEffect } from "react"
-import { SidebarProvider, SidebarTrigger } from "../ui/sidebar"
+import { SidebarProvider, SidebarTrigger, SidebarRail } from "../ui/sidebar"
 import { AppSidebarEmployee } from "../ui/app-sidebar-employee"
 
 function EmployeeLayout() {
@@ -16,9 +16,14 @@ function EmployeeLayout() {
   return (
     <SidebarProvider>
       <AppSidebarEmployee />
+      <SidebarRail />
       <main className="w-full">
         <SidebarTrigger />
-        <Outlet />
+        <div>
+          <div className="flex justify-center p-2 text-2xl font-bold mb-1">HR Management System</div>
+          <hr className="mb-1" />
+          <Outlet />
+        </div>
       </main>
     </SidebarProvider>
   )

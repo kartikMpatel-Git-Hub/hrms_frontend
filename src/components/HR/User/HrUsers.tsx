@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query"
 import { GetUserForHr } from "@/api/UserService"
 import { useEffect, useState } from "react"
-import { type UserReponseDto } from "@/type/Types"
-import { Search, Plus, UserSearch } from "lucide-react"
+import type { PagedRequestDto, UserReponseDto } from "@/type/Types"
+import { Search, Plus, UserSearch, Pencil } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import HrUserUpdateDialog from "./HrUserUpdateDialog"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useNavigate } from "react-router"
 import {
@@ -16,16 +17,24 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
+
 
 function HrUsers() {
     const navigate = useNavigate()
     const [users, setUsers] = useState<UserReponseDto[]>([])
+    const [paged, setPaged] = useState<PagedRequestDto>({
+        pageNumber: 1,
+        pageSize: 5
+    })
     const [filteredUsers, setFilteredUsers] = useState<UserReponseDto[]>([])
     const [searchQuery, setSearchQuery] = useState("")
+    const [updateDialogOpen, setUpdateDialogOpen] = useState(false)
+    const [selectedUser, setSelectedUser] = useState<UserReponseDto | null>(null)
 
     const { isLoading, data, error } = useQuery({
-        queryKey: ["hr-users"],
-        queryFn: GetUserForHr,
+        queryKey: ["hr-users", paged],
+        queryFn: () => GetUserForHr(paged),
     })
 
     useEffect(() => {
@@ -72,6 +81,11 @@ function HrUsers() {
 
     function handleOpenProfile(id: number): void {
         navigate(`./${id}`)
+    }
+
+    function handleOpenUpdate(user: UserReponseDto): void {
+        setSelectedUser(user)
+        setUpdateDialogOpen(true)
     }
 
     return (
@@ -179,7 +193,10 @@ function HrUsers() {
                                         {new Date(user.dateOfJoin).toLocaleDateString()}
                                     </TableCell>
                                     <TableCell className="text-sm">
-                                        <Button onClick={() => handleOpenProfile(user.id)}><UserSearch /></Button>
+                                        <div className="flex gap-2">
+                                            <Button variant="outline" size="icon" onClick={() => handleOpenUpdate(user)}><Pencil className="w-4 h-4" /></Button>
+                                            <Button size="icon" onClick={() => handleOpenProfile(user.id)}><UserSearch className="w-4 h-4" /></Button>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             ))
@@ -194,9 +211,47 @@ function HrUsers() {
                 </Table>
             </div>
 
+            {selectedUser && (
+                <HrUserUpdateDialog
+                    open={updateDialogOpen}
+                    onOpenChange={setUpdateDialogOpen}
+                    user={selectedUser}
+                />
+            )}
+
             {!isLoading && filteredUsers.length > 0 && (
                 <div className="mt-4 text-sm text-gray-600">
                     Showing {filteredUsers.length} of {users.length} users
+                </div>
+            )}
+            {data && data.totalPages >= 1 && (
+                <div className="mt-8 flex justify-center">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.max(1, prev.pageNumber - 1) }))}
+                                    disabled={paged.pageNumber === 1}
+                                />
+                            </PaginationItem>
+                            {Array.from({ length: data.totalPages }, (_, i) => i + 1).map((page) => (
+                                <PaginationItem key={page}>
+                                    <PaginationLink
+                                        onClick={() => setPaged(prev => ({ ...prev, pageNumber: page }))}
+                                        isActive={paged.pageNumber === page}
+                                    >
+                                        {page}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            ))}
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.min(data.totalPages, prev.pageNumber + 1) }))}
+                                    disabled={paged.pageNumber === data.totalPages}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
                 </div>
             )}
         </div>

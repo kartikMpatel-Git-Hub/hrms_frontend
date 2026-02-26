@@ -107,12 +107,13 @@ export function LoginForm({
               <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
-                  {/* <a
-                    href="#"
+                  <button
+                    type="button"
+                    onClick={() => navigate('/forget-password')}
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
                     Forgot your password?
-                  </a> */}
+                  </button>
                 </div>
                 <Input id="password" type="password" required onChange={handleChangeEvent} name="password" />
               </Field>
