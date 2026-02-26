@@ -53,6 +53,8 @@ import TravelExpense from '@/components/Manager/Team/TravelExpense'
 import TravelDocument from '@/components/Manager/Team/TravelDocument'
 import EmployeeTravelDocuments from '@/components/EMPLOYEE/Travel/EmployeeTravelDocuments'
 import UserProfile from '@/components/utility/UserProfile'
+import JobToReview from '@/components/utility/JobToReview'
+import JobReferrals from '@/components/utility/JobReferrals'
 
 const router = createBrowserRouter([
     {
@@ -110,6 +112,8 @@ const router = createBrowserRouter([
                             { index: true, element: <HrJobs /> },
                             { path : "opportunities", element: <HrJobs /> },
                             { path: ":id", element: <HrJobDetail /> },
+                            { path : "review", element: <JobToReview /> },
+                            { path : "review/:jobId", element: <JobReferrals /> },
                             { path: "add", element: <HrJobCreateForm /> },
                             { path: ":id/referrals", element: <HrJobReferrals /> },
                             { path: ":id/shared", element: <HrJobShared /> },
@@ -185,6 +189,8 @@ const router = createBrowserRouter([
                         errorElement: <NotFound />,
                         children: [
                             { index: true, element: <EmployeeJob /> },
+                            { path : "review", element: <JobToReview /> },
+                            { path : "review/:jobId", element: <JobReferrals /> },
                         ]
                     },
                     {
@@ -229,7 +235,15 @@ const router = createBrowserRouter([
                     { index: true, path: "dashboard", element: <Dashboard /> },
                     { path: ":id", element: <UserProfile /> },
                     { path: "notification", element: <Notifications /> },
-                    { path: "job", element: <ManagerJob /> },
+                    {
+                        path: "job",
+                        errorElement: <NotFound />,
+                        children: [
+                            { index: true, element: <ManagerJob /> },
+                            { path : "review", element: <JobToReview /> },
+                            { path : "review/:jobId", element: <JobReferrals /> },
+                        ]
+                    },
                     {
                         path: "game",
                         errorElement: <NotFound />,

@@ -165,6 +165,9 @@ export interface JobResponseDto {
   isActive: boolean
 }
 
+// jobs returned by /job/review endpoint mirror the standard job DTO
+export type JobReviewDto = JobResponseDto
+
 export interface JobCreateDto {
   Title: string,
   JobRole: string,

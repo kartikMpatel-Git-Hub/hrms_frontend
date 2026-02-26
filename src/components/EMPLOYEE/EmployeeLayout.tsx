@@ -22,6 +22,7 @@ function EmployeeLayout() {
         <SidebarTrigger />
         <Toaster position="top-center" />
         <div>
+          {/* <img src="/Logo.png" alt="Roima" className="w-30 px-3 m-2"/> */}
           <div className="flex justify-center p-2 text-2xl font-bold mb-1">HR Management System</div>
           <hr className="mb-1" />
           <Outlet />

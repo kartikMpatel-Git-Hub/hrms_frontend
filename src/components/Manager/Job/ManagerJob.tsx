@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import { GetAllJob, ReferedJob, ShareJob } from "@/api/JobService"
 import { useEffect, useState } from "react"
 import type { JobResponseDto, PagedRequestDto } from "@/type/Types"
-import { Briefcase, Search, ArrowLeft } from "lucide-react"
+import { Briefcase, Search, ArrowLeft, ScanEye } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/card"
@@ -15,7 +15,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 
 
 function ManagerJob() {
-  const [paged,setPaged] = useState<PagedRequestDto>({
+  const [paged, setPaged] = useState<PagedRequestDto>({
     pageNumber: 1,
     pageSize: 5
   })
@@ -93,17 +93,27 @@ function ManagerJob() {
   return (
     <div>
       <div className="mb-4">
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           size="sm"
           onClick={() => navigator(-1)}
         >
           <ArrowLeft size={18} /> Back
         </Button>
+        <div className="flex justify-end mr-10">
+          <Button onClick={() => navigator("./review")} className="">
+            <ScanEye />  Job To Review
+          </Button>
+        </div>
       </div>
 
       <Card className="m-2">
-        <div className="flex justify-center font-bold text-2xl gap-1 mx-10"><Briefcase className="h-8" /><span>Job Opportunities</span></div>
+        <div className="font-bold text-2xl gap-1 mx-10">
+          <div className="flex justify-center ">
+            <Briefcase className="h-8" /><span>Job List</span>
+          </div>
+
+        </div>
         <div className="mx-5">
           <InputGroup className="">
             <InputGroupInput placeholder="Search jobs..." onChange={(e) => setSearch(e.target.value)} value={search} />

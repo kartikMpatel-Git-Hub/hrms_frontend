@@ -65,6 +65,7 @@ export function LoginForm({
 
     try {
       const user = await login(credentials);
+      
       toast.info("Logged In !")
       switch (user.role) {
         case "HR": navigate("/hr/dashboard"); break;

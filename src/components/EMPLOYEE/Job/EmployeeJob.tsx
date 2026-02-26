@@ -2,24 +2,28 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import { GetAllJob, ReferedJob, ShareJob } from "../../../api/JobService"
 import { useEffect, useState } from "react"
 import type { JobResponseDto, PagedRequestDto } from "../../../type/Types"
-import { Briefcase, Search } from "lucide-react"
+import { Briefcase, ScanEye, Search } from "lucide-react"
 import EmployeeJobCard from "./EmployeeJobCard"
 import { toast } from "sonner"
 import { Card } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
+import { Button } from "@/components/ui/button"
+import { useNavigate } from "react-router-dom"
 
 function EmployeeJob() {
 
     const [paged, setPaged] = useState<PagedRequestDto>({
         pageNumber: 1,
-        pageSize: 10
+        pageSize: 5
     })
     const [search, setSearch] = useState<string>("")
     const [loading, setLoading] = useState<boolean>(false)
     const [jobs, setJobs] = useState<JobResponseDto[]>()
     const [filteredJob, setFilteredJob] = useState<JobResponseDto[]>()
+    const navigator = useNavigate()
 
     const { data } = useQuery({
         queryKey: ["jobs", paged],
@@ -86,7 +90,17 @@ function EmployeeJob() {
     return (
         <div>
             <Card className="m-2">
-                <div className="flex justify-center font-bold text-2xl gap-1 mx-10"><Briefcase className="h-8" /><span>Job List</span></div>
+                <div className="font-bold text-2xl gap-1 mx-10">
+                    <div className="flex justify-center ">
+                        <Briefcase className="h-8" /><span>Job List</span>
+                    </div>
+                    <div className="flex justify-end">
+                        <Button onClick={()=> navigator("./review")} className="">
+                            <ScanEye />
+                            Job To Review
+                        </Button>
+                    </div>
+                </div>
                 <div className="mx-5">
                     <InputGroup className="">
                         <InputGroupInput placeholder="Search Game..." onChange={(e) => setSearch(e.target.value)} value={search} />
@@ -134,7 +148,7 @@ function EmployeeJob() {
                                     ) :
                                     (
                                         Array.from({ length: 5 }).map((_, i) => (
-                                            <TableRow  key={i}>
+                                            <TableRow key={i}>
                                                 <TableCell><Skeleton className="h-8 w-8" /></TableCell>
                                                 <TableCell><Skeleton className="h-4 w-40" /></TableCell>
                                                 <TableCell><Skeleton className="h-4 w-20" /></TableCell>
@@ -152,6 +166,36 @@ function EmployeeJob() {
                     </Table>
                 </div>
             </Card>
+            {data && data.totalPages >= 1 && (
+                <div className="mt-8 flex justify-center">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.max(1, prev.pageNumber - 1) }))}
+                                    disabled={paged.pageNumber === 1}
+                                />
+                            </PaginationItem>
+                            {Array.from({ length: data.totalPages }, (_, i) => i + 1).map((page) => (
+                                <PaginationItem key={page}>
+                                    <PaginationLink
+                                        onClick={() => setPaged(prev => ({ ...prev, pageNumber: page }))}
+                                        isActive={paged.pageNumber === page}
+                                    >
+                                        {page}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            ))}
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.min(data.totalPages, prev.pageNumber + 1) }))}
+                                    disabled={paged.pageNumber === data.totalPages}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            )}
         </div >
     )
 }

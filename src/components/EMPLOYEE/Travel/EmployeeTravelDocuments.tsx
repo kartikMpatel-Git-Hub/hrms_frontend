@@ -224,7 +224,7 @@ function EmployeeTravelDocuments() {
                                         <TableCell><Skeleton className="h-4 w-24" /></TableCell>
                                         <TableCell className="flex gap-2">
                                             <Skeleton className="h-8 w-8" />
-                                            <Skeleton className="h-8 w-8" />
+                                            {/* <Skeleton className="h-8 w-8" /> */}
                                         </TableCell>
                                     </TableRow>
                                 ))
