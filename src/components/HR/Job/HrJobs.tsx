@@ -4,7 +4,7 @@ import type { JobResponseDto, PagedRequestDto } from "../../../type/Types"
 import { DeleteJob, GetHrJobs, ReferedJob, ShareJob } from "../../../api/JobService"
 import HrJobCard from "./HrJobCard"
 import { useNavigate } from "react-router-dom"
-import { Briefcase, CircleAlert, Plus, Search } from "lucide-react"
+import { Briefcase, CircleAlert, Plus, ScanEye, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table"
@@ -18,7 +18,7 @@ function HrJobs() {
 
     const [paged, setPaged] = useState<PagedRequestDto>({
         pageNumber: 1,
-        pageSize: 2
+        pageSize: 3
     })
 
     const [jobs, setJobs] = useState<JobResponseDto[]>()
@@ -54,7 +54,7 @@ function HrJobs() {
         setLoading(true)
         if (data) {
             console.log(data);
-            
+
             if (search.trim() === "") {
                 setJobs(data.data)
                 setFilteredJobs(data.data)
@@ -80,7 +80,7 @@ function HrJobs() {
     const { isPending: loadingReference, mutate: referred, isSuccess: referreComplete } = useMutation({
         mutationKey: ["referred-job"],
         mutationFn: ReferedJob,
-        onSuccess: () => {
+        onSuccess: (res) => {
             toast.success("Referrence Added Successfully !")
         },
         onError: (err: any) => {
@@ -113,13 +113,19 @@ function HrJobs() {
 
     return (
         <div>
-            <div className="flex justify-end mr-5">
+            <div className="flex justify-end mr-5 gap-3">
                 <Button
                     title="Add New Job"
                     onClick={handleOpenAddForm}
                 >
                     <Plus /> Add Job
                 </Button>
+                <div className="flex justify-end">
+                    <Button onClick={() => navigator("./review")} className="">
+                        <ScanEye />
+                        Job To Review
+                    </Button>
+                </div>
             </div>
             <Card className="m-2">
                 <div className="flex justify-center font-bold text-2xl gap-1"><Briefcase className="h-8" /><span>Jobs Openings</span></div>

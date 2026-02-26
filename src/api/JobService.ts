@@ -1,5 +1,4 @@
-import { id } from "date-fns/locale"
-import type { JobResponseDto, JobResponseWithReviewerDto, JobUpdateDto, PagedRequestDto, PagedResponse, ReferredJobRequestDto, ReferredResponseDto, ShareJobRequestDto, ShareResponseDto, SimpleResponseDto, UserReponseDto } from "../type/Types"
+import type { JobResponseDto, JobResponseWithReviewerDto, JobUpdateDto, PagedRequestDto, PagedResponse, ReferredJobRequestDto, ReferredResponseDto, ShareResponseDto, SimpleResponseDto, UserReponseDto } from "../type/Types"
 import api from "./Api"
 
 export const AddJob = async ({ dto }: any): Promise<JobResponseDto> => {
@@ -23,6 +22,11 @@ export const GetHrJobs = async ({ pageNumber = 1, pageSize = 10 }: PagedRequestD
 
 export const GetAllJob = async ({ pageNumber = 1, pageSize = 10 }: PagedRequestDto): Promise<PagedResponse<JobResponseDto>> => {
     const response = await api.get<PagedResponse<JobResponseDto>>(`/job?pageNumber=${pageNumber}&pageSize=${pageSize}`)
+    return response.data
+}
+
+export const GetJobsToReview = async ({ pageNumber = 1, pageSize = 10 }: PagedRequestDto): Promise<PagedResponse<JobResponseDto>> => {
+    const response = await api.get<PagedResponse<JobResponseDto>>(`/job/review?pageNumber=${pageNumber}&pageSize=${pageSize}`)
     return response.data
 }
 

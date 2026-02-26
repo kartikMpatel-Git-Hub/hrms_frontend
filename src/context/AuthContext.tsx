@@ -7,6 +7,7 @@ export interface User {
   id: number;
   email: string;
   role: string;
+  image: string;
 }
 
 export interface AuthContextType {
@@ -41,7 +42,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: ['login'] });
       localStorage.setItem("token", res.token);
-      const userData = { id: res.id, email: res.email, role: res.role };
+      console.log(res);
+      const userData = { id: res.id, email: res.email, role: res.role,image : res.image };
       localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
       setAuthError(null);
@@ -81,6 +83,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (credentials: LoginRequest) => {
     setAuthError(null);
     const res = await loginMutateAsync(credentials);
+    console.log(res);
     return { id: res.id, email: res.email, role: res.role } as User;
   };
 

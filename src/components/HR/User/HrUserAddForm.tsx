@@ -68,7 +68,7 @@ function HrUserAddForm() {
             navigate("../", { relative: "route" })
         },
         onError: (error: any) => {
-            const errorMsg = error?.response?.data?.message || "Failed to create user"
+            const errorMsg = error?.error?.details || "Failed to create user"
             toast.error(errorMsg)
             setFormErrors({ submit: errorMsg })
         },

@@ -10,10 +10,12 @@ import { CircleAlert, Search, UserPlus } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import JobReferralCard from "./JobReferralCard"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
+
 
 function HrJobReferrals() {
     const { id } = useParams()
-    const [pagedRequest, setPagedRequest] = useState({
+    const [paged, setPaged] = useState({
         pageNumber: 1,
         pageSize: 10
     })
@@ -25,11 +27,11 @@ function HrJobReferrals() {
     const queryClient = useQueryClient()
 
     const { data, error, isLoading } = useQuery({
-        queryKey: ["job-referrals", pagedRequest],
-        queryFn: () => GetJobReferrals({ jobid: Number(id), paged: pagedRequest })
+        queryKey: ["job-referrals",id, paged],
+        queryFn: () => GetJobReferrals({ jobid: Number(id), paged: paged })
     })
 
-    const { mutate,isPending } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: ({ rid, status }: any) => UpdateReferralStatus(rid, Number(id), status),
         mutationKey: ["job-referrals-status-update"],
         onSuccess: (data) => {
@@ -37,7 +39,7 @@ function HrJobReferrals() {
             toast.success("Referral status updated successfully")
             console.log(data);
         },
-        onError: (e)=>{
+        onError: (e) => {
             toast.error("Failed to update referral status")
             console.log(e);
         }
@@ -46,8 +48,7 @@ function HrJobReferrals() {
     const handleStatusChange = (id: number, status: string) => {
         console.log(id);
         console.log(status);
-        mutate({ rid : id, status })
-        console.log("HERE");
+        mutate({ rid: id, status })
     }
 
     useEffect(() => {
@@ -121,6 +122,36 @@ function HrJobReferrals() {
                     </Table>
                 </div>
             </Card>
+            {data && data.totalPages >= 1 && (
+                <div className="mt-8 flex justify-center">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.max(1, prev.pageNumber - 1) }))}
+                                    disabled={paged.pageNumber === 1}
+                                />
+                            </PaginationItem>
+                            {Array.from({ length: data.totalPages }, (_, i) => i + 1).map((page) => (
+                                <PaginationItem key={page}>
+                                    <PaginationLink
+                                        onClick={() => setPaged(prev => ({ ...prev, pageNumber: page }))}
+                                        isActive={paged.pageNumber === page}
+                                    >
+                                        {page}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            ))}
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.min(data.totalPages, prev.pageNumber + 1) }))}
+                                    disabled={paged.pageNumber === data.totalPages}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            )}
         </div>
     )
 }

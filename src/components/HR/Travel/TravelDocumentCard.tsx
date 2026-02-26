@@ -12,7 +12,7 @@ function TravelDocumentCard({ document }: { document: TravelDocumentDto }) {
       <TableCell className="font-semibold">{document.uploadedAt.toString().substring(0, 10).toUpperCase()}</TableCell>
       <TableCell className="flex gap-3">
         <Button onClick={() => window.open(document?.documentUrl, "_blank")}><Eye /></Button>
-        <Button disabled={true}><Download /> </Button>
+        {/* <Button disabled={true}><Download /> </Button> */}
       </TableCell>
     </TableRow>
   )
