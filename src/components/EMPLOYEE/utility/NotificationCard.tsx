@@ -10,7 +10,7 @@ function NotificationCard({ notification, idx }: { notification: NotificationRes
         {notification.description}
       </TableCell>
       <TableCell>
-        {notification.notificationDate.toString().substring(0, 10)}
+        {notification.notificationDate.toString().substring(0, 10) + " at " + notification.notificationDate.toString().substring(11, 16)}
       </TableCell>
     </TableRow>
   )

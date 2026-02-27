@@ -93,13 +93,6 @@ function ManagerJob() {
   return (
     <div>
       <div className="mb-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => navigator(-1)}
-        >
-          <ArrowLeft size={18} /> Back
-        </Button>
         <div className="flex justify-end mr-10">
           <Button onClick={() => navigator("./review")} className="">
             <ScanEye />  Job To Review
@@ -127,6 +120,7 @@ function ManagerJob() {
               <TableCell>Sr. No</TableCell>
               <TableCell>Title</TableCell>
               <TableCell>Role</TableCell>
+              <TableCell>Place</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Action</TableCell>
             </TableHeader>

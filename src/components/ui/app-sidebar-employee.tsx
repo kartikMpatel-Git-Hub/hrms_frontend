@@ -118,7 +118,7 @@ export function AppSidebarEmployee() {
                                 className={`flex gap-2 w-full rounded-md`}
                                 to={`./${user?.id}`}
                             >
-                                <img src={user?.image} className="h-5 w-5 rounded-2xl" /> <span className="font-bold">{user?.email}</span>
+                                <img src={user?.image} className="w-5 rounded-2xl" /> <span className="font-bold">{user?.email}</span>
                             </NavLink>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

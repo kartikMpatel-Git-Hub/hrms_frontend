@@ -89,16 +89,16 @@ function EmployeeJob() {
 
     return (
         <div>
+            <div className="flex justify-end mr-5">
+                <Button onClick={() => navigator("./review")} className="">
+                    <ScanEye />
+                    Job To Review
+                </Button>
+            </div>
             <Card className="m-2">
                 <div className="font-bold text-2xl gap-1 mx-10">
                     <div className="flex justify-center ">
                         <Briefcase className="h-8" /><span>Job List</span>
-                    </div>
-                    <div className="flex justify-end">
-                        <Button onClick={()=> navigator("./review")} className="">
-                            <ScanEye />
-                            Job To Review
-                        </Button>
                     </div>
                 </div>
                 <div className="mx-5">
@@ -109,61 +109,64 @@ function EmployeeJob() {
                         </InputGroupAddon>
                         <InputGroupAddon align="inline-end">{jobs?.length || 0} Results</InputGroupAddon>
                     </InputGroup>
-                    <Table>
-                        <TableHeader className="font-bold">
-                            <TableCell>Sr. No</TableCell>
-                            <TableCell>Title</TableCell>
-                            <TableCell>Role</TableCell>
-                            {/* <TableCell>Place</TableCell> */}
-                            <TableCell>Status</TableCell>
-                            <TableCell>Action</TableCell>
-                        </TableHeader>
-                        <TableBody>
-                            {
-                                !loading ?
-                                    (
-                                        filteredJob && filteredJob.length > 0 ?
-                                            (
-                                                filteredJob.map((j, idx) => (
-                                                    <EmployeeJobCard
-                                                        job={j}
-                                                        key={j.id}
-                                                        handleReferred={handleReferred}
-                                                        handleShare={handleShare}
-                                                        idx={idx}
-                                                        isCompleted={referreComplete || shareComplete}
-                                                        isPending={loadingShare || loadingReference}
-                                                    />
-                                                ))
-                                            ) :
-                                            (
-                                                <TableRow>
-                                                    <TableCell colSpan={6}>
-                                                        <div className="flex justify-center p-2 font-bold">
-                                                            No Job Found
-                                                        </div>
+                    <div className="">
+                        <Table className="">
+                            <TableHeader className="font-bold">
+                                <TableCell>Sr. No</TableCell>
+                                <TableCell>Title</TableCell>
+                                <TableCell>Role</TableCell>
+                                <TableCell>Place</TableCell>
+                                <TableCell>Status</TableCell>
+                                <TableCell>Action</TableCell>
+                            </TableHeader>
+                            <TableBody>
+                                {
+                                    !loading ?
+                                        (
+                                            filteredJob && filteredJob.length > 0 ?
+                                                (
+                                                    filteredJob.map((j, idx) => (
+                                                        <EmployeeJobCard
+                                                            job={j}
+                                                            key={j.id}
+                                                            handleReferred={handleReferred}
+                                                            handleShare={handleShare}
+                                                            idx={idx}
+                                                            isCompleted={referreComplete || shareComplete}
+                                                            isPending={loadingShare || loadingReference}
+                                                        />
+                                                    ))
+                                                ) :
+                                                (
+                                                    <TableRow>
+                                                        <TableCell colSpan={6}>
+                                                            <div className="flex justify-center p-2 font-bold">
+                                                                No Job Found
+                                                            </div>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )
+                                        ) :
+                                        (
+                                            Array.from({ length: 5 }).map((_, i) => (
+                                                <TableRow key={i}>
+                                                    <TableCell><Skeleton className="h-8 w-8" /></TableCell>
+                                                    <TableCell><Skeleton className="h-4 w-40" /></TableCell>
+                                                    <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                                                    <TableCell><Skeleton className="h-4 w-full" /></TableCell>
+                                                    <TableCell className="flex gap-2">
+                                                        <Skeleton className="h-8 w-8" />
+                                                        <Skeleton className="h-8 w-8" />
+                                                        <Skeleton className="h-8 w-8" />
                                                     </TableCell>
                                                 </TableRow>
-                                            )
-                                    ) :
-                                    (
-                                        Array.from({ length: 5 }).map((_, i) => (
-                                            <TableRow key={i}>
-                                                <TableCell><Skeleton className="h-8 w-8" /></TableCell>
-                                                <TableCell><Skeleton className="h-4 w-40" /></TableCell>
-                                                <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-                                                <TableCell><Skeleton className="h-4 w-full" /></TableCell>
-                                                <TableCell className="flex gap-2">
-                                                    <Skeleton className="h-8 w-8" />
-                                                    <Skeleton className="h-8 w-8" />
-                                                    <Skeleton className="h-8 w-8" />
-                                                </TableCell>
-                                            </TableRow>
-                                        ))
-                                    )
-                            }
-                        </TableBody>
-                    </Table>
+                                            ))
+                                        )
+                                }
+                            </TableBody>
+                        </Table>
+                    </div>
+
                 </div>
             </Card>
             {data && data.totalPages >= 1 && (

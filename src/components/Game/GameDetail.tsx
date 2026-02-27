@@ -1,4 +1,4 @@
-import { BookGameSlot, GetAvailablePlayers, GetGameSlots, IsUserInterestedInGame, ChangeUserInterest } from "@/api/GameService";
+import { BookGameSlot, GetAvailablePlayers, GetGameSlots, IsUserInterestedInGame, ChangeUserInterest, DeleteGameSlot } from "@/api/GameService";
 import type { GameSlotResponseDto, UserReponseDto } from "@/type/Types";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -104,7 +104,7 @@ function GameDetail() {
             setOpenBookingDialog(false);
             setSelectedPlayers([]);
             setSelectedSlot(null);
-            toast.success("Slot booked successfully!");
+            toast.success("booking added in queue successfully!");
         },
         onError: (error: any) => {
             // console.log(error);
@@ -132,6 +132,21 @@ function GameDetail() {
     };
     const handleViewDetails = (slotId: number) => {
         navigate(`./${slotId}/details`);
+    };
+
+    const deleteSlotMutation = useMutation({
+        mutationFn: (slotId: number) => DeleteGameSlot(Number(id), slotId),
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ["game-slot", id] });
+            toast.success(data.message || "Game slot deleted successfully.");
+        },
+        onError: () => {
+            toast.error("Failed to delete slot");
+        }
+    });
+
+    const handleDeleteSlot = (slotId: number) => {
+        deleteSlotMutation.mutate(slotId);
     };
 
     const formatTime = (time: string) => {
@@ -216,6 +231,8 @@ function GameDetail() {
                                 onBook={handleBookSlot}
                                 onViewWaitlist={handleViewWaitlist}
                                 onViewDetails={handleViewDetails}
+                                onDelete={handleDeleteSlot}
+                                isDeleting={deleteSlotMutation.isPending}
                             />
                         ))}
                     </div>

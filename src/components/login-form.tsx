@@ -65,7 +65,7 @@ export function LoginForm({
 
     try {
       const user = await login(credentials);
-      
+
       toast.info("Logged In !")
       switch (user.role) {
         case "HR": navigate("/hr/dashboard"); break;
@@ -86,6 +86,9 @@ export function LoginForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <div className="flex justify-center">
+        <img src="/Logo.png" className="w-20" />
+      </div>
       <Card className="p-4">
         <CardHeader>
           <CardTitle className="flex justify-center text-2xl font-bold">Login</CardTitle>
@@ -101,7 +104,7 @@ export function LoginForm({
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="example@roimaint.com"
                   required
                   onChange={handleChangeEvent}
                   name="email"

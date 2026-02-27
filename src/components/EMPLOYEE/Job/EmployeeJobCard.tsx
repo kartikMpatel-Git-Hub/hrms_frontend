@@ -1,5 +1,5 @@
 import { type JobResponseDto } from '../../../type/Types'
-import { ALargeSmall, Briefcase, Eye, File, LucideUserPlus, Mail,  Send, Text, User } from 'lucide-react'
+import { ALargeSmall, Briefcase, Eye, ExternalLink, File, LucideUserPlus, Mail, MapPin, Send, ScrollText, Text, User, ClipboardList } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { useEffect, useState, type ChangeEvent } from 'react'
@@ -8,6 +8,8 @@ import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { Textarea } from '@/components/ui/textarea'
 import { TableCell, TableRow } from '@/components/ui/table'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
 
 interface EmployeeJobCardProp {
     job: JobResponseDto,
@@ -152,7 +154,7 @@ function EmployeeJobCard({ job, idx, isPending, handleReferred, handleShare, isC
             <TableCell>{idx + 1}</TableCell>
             <TableCell>{job.title}</TableCell>
             <TableCell>{job.jobRole}</TableCell>
-            {/* <TableCell>{job.place}</TableCell> */}
+            <TableCell>{job.place}</TableCell>
             <TableCell>{job.isActive ? "Active" : "Closed"}</TableCell>
             <TableCell className='flex gap-2'>
                 <Dialog>
@@ -161,19 +163,75 @@ function EmployeeJobCard({ job, idx, isPending, handleReferred, handleShare, isC
                             <Eye />
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-sm">
-                        <DialogHeader>
-                            <DialogTitle className='flex'><Briefcase className='w-4 h-5 mr-1' /> JOB DETAILS<span className='text-sm'>{job.isActive ? "(Active)" : "(closed)"}</span></DialogTitle>
-                            <DialogDescription>
-                                Here Is Description Related To this Perticular Job
-                            </DialogDescription>
-                        </DialogHeader>
-                        <div className='flex flex-col gap-2'>
-                            <div><span className='font-bold mr-1 italic'>Title:</span>{job.title.toUpperCase()}</div>
-                            <div><span className='font-bold mr-1 italic'>Role :</span>{job.jobRole.toUpperCase()}</div>
-                            <div><span className='font-bold mr-1 italic'>Place:</span>{job.place.toUpperCase()}</div>
-                            <div><span className='font-bold mr-1 italic'>Requirements:</span>{job.requirements}</div>
-                            <Button onClick={() => window.open(job.jdUrl, "_blank")}><Eye /> View JD</Button>
+                    <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-xl">
+                        <div className="bg-linear-to-r from-primary/10 via-primary/5 to-transparent px-6 pt-6 pb-4">
+                            <DialogHeader className="space-y-2">
+                                <div className="flex items-center justify-between">
+                                    <DialogTitle className="flex items-center gap-2 text-lg font-bold tracking-tight">
+                                        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/15">
+                                            <Briefcase className="w-4 h-4 text-primary" />
+                                        </div>
+                                        Job Details
+                                    </DialogTitle>
+                                    <Badge variant={job.isActive ? "success" : "destructive"} className="text-xs px-2.5 py-1 rounded-full">
+                                        {job.isActive ? "Active" : "Closed"}
+                                    </Badge>
+                                </div>
+                                <DialogDescription className="text-muted-foreground text-sm">
+                                    Complete information about this job position
+                                </DialogDescription>
+                            </DialogHeader>
+                        </div>
+                        <Separator />
+                        <div className="px-6 pb-6 pt-2 space-y-4">
+                            <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+                                <div className="flex items-center justify-center w-9 h-9 rounded-md bg-primary/10 shrink-0 mt-0.5">
+                                    <ClipboardList className="w-4 h-4 text-primary" />
+                                </div>
+                                <div className="min-w-0">
+                                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Title</p>
+                                    <p className="text-sm font-semibold mt-0.5 wrap-break-word">{job.title}</p>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+                                    <div className="flex items-center justify-center w-9 h-9 rounded-md bg-accent shrink-0 mt-0.5">
+                                        <User className="w-4 h-4 text-accent-foreground" />
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Role</p>
+                                        <p className="text-sm font-semibold mt-0.5 wrap-break-word">{job.jobRole}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+                                    <div className="flex items-center justify-center w-9 h-9 rounded-md bg-secondary shrink-0 mt-0.5">
+                                        <MapPin className="w-4 h-4 text-secondary-foreground" />
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Location</p>
+                                        <p className="text-sm font-semibold mt-0.5 wrap-break-word">{job.place}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <div className="flex items-center justify-center w-9 h-9 rounded-md bg-muted shrink-0">
+                                        <ScrollText className="w-4 h-4 text-muted-foreground" />
+                                    </div>
+                                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Requirements</p>
+                                </div>
+                                <p className="text-sm leading-relaxed text-foreground/80 pl-11 wrap-break-word">{job.requirements}</p>
+                            </div>
+
+                            <Button
+                                className="w-full gap-2"
+                                onClick={() => window.open(job.jdUrl, "_blank")}
+                            >
+                                <ExternalLink className="w-4 h-4" />
+                                View Job Description
+                            </Button>
                         </div>
                     </DialogContent>
                 </Dialog>

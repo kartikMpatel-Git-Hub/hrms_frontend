@@ -116,7 +116,7 @@ export function AppSidebarHr() {
                                 <NavLink to={"./notification"} className="relative">
                                 <div className="flex">
                                     <BellRing className="w-4 h-4"/>
-                                    <div className="font-bold">{count}</div>
+                                    <div className="font-bold">{count && count > 9 ? "9+" : count}</div>
                                 </div>
                                     <span>Notification</span>
                                 </NavLink>
@@ -143,7 +143,7 @@ export function AppSidebarHr() {
                                 className={`flex gap-2 w-full rounded-md`}
                                 to={`./${user?.id}`}
                             >
-                                <img src={user?.image} className="h-5 w-5 rounded-2xl" /> <span className="font-bold">{user?.email}</span>
+                                <img src={user?.image} className="w-5 rounded-2xl" /> <span className="font-bold">{user?.email}</span>
                             </NavLink>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

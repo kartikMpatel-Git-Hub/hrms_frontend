@@ -72,7 +72,7 @@ export function ForgetPasswordForm({
       await ForgetPasswordService(email.trim());
       setSuccessMessage('New password has been sent to your email. Please check your inbox.');
       setEmail('');
-      
+
       setTimeout(() => {
         navigate('/');
       }, 3000);
@@ -90,6 +90,9 @@ export function ForgetPasswordForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <div className="flex justify-center">
+        <img src="/Logo.png" className="w-20" />
+      </div>
       <Card className="p-4">
         <CardHeader>
           <CardTitle className="flex justify-center text-2xl font-bold">Forgot Password</CardTitle>

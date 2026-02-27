@@ -36,7 +36,7 @@ function EmployeeTravelDocuments() {
     })
 
     const { data, isLoading } = useQuery({
-        queryKey: ["employee-travel-document", id, user?.id,paged],
+        queryKey: ["employee-travel-document", id, user?.id, paged],
         queryFn: () => GetTravelTravelerDocuments(Number(id), Number(user?.id), paged),
         enabled: !!user?.id && !!id
     })
@@ -133,58 +133,58 @@ function EmployeeTravelDocuments() {
 
     return (
         <div>
+            <div className="flex justify-end mr-5">
+                <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+                    <DialogTrigger asChild>
+                        <Button className="w-fit"><Plus size={18} /> Add Document</Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                            <DialogTitle>Add Travel Document</DialogTitle>
+                            <DialogDescription>
+                                Upload a PDF document for this travel
+                            </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                            <Field>
+                                <FieldLabel>Document Name</FieldLabel>
+                                <Input
+                                    placeholder="Enter document name"
+                                    maxLength={25}
+                                    value={documentName}
+                                    onChange={(e) => setDocumentName(e.target.value)}
+                                />
+                            </Field>
+                            <Field>
+                                <FieldLabel>Document Type</FieldLabel>
+                                <Input
+                                    placeholder="e.g., Ticket, Invoice, Receipt"
+                                    maxLength={40}
+                                    value={documentType}
+                                    onChange={(e) => setDocumentType(e.target.value)}
+                                />
+                            </Field>
+                            <Field>
+                                <FieldLabel>Document File</FieldLabel>
+                                <Input
+                                    type="file"
+                                    accept=".pdf,application/pdf"
+                                    onChange={handleFileChange}
+                                />
+                                {documentFile && <p className="text-sm text-green-600">✓ {documentFile.name}</p>}
+                            </Field>
+                            {fileError && <p className="text-sm text-red-600">{fileError}</p>}
+                        </div>
+                        <DialogFooter>
+                            <Button variant="outline" onClick={() => setOpenDialog(false)}>Cancel</Button>
+                            <Button onClick={handleSubmitDocument} disabled={isPending}>
+                                {isPending ? "Uploading..." : "Upload Document"}
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            </div>
             <Card className="m-10 p-5">
-                <div className="flex justify-end">
-                    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-                        <DialogTrigger asChild>
-                            <Button className="w-fit"><Plus size={18} /> Add Document</Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-md">
-                            <DialogHeader>
-                                <DialogTitle>Add Travel Document</DialogTitle>
-                                <DialogDescription>
-                                    Upload a PDF document for this travel
-                                </DialogDescription>
-                            </DialogHeader>
-                            <div className="space-y-4">
-                                <Field>
-                                    <FieldLabel>Document Name</FieldLabel>
-                                    <Input
-                                        placeholder="Enter document name"
-                                        maxLength={25}
-                                        value={documentName}
-                                        onChange={(e) => setDocumentName(e.target.value)}
-                                    />
-                                </Field>
-                                <Field>
-                                    <FieldLabel>Document Type</FieldLabel>
-                                    <Input
-                                        placeholder="e.g., Ticket, Invoice, Receipt"
-                                        maxLength={40}
-                                        value={documentType}
-                                        onChange={(e) => setDocumentType(e.target.value)}
-                                    />
-                                </Field>
-                                <Field>
-                                    <FieldLabel>Document File</FieldLabel>
-                                    <Input
-                                        type="file"
-                                        accept=".pdf,application/pdf"
-                                        onChange={handleFileChange}
-                                    />
-                                    {documentFile && <p className="text-sm text-green-600">✓ {documentFile.name}</p>}
-                                </Field>
-                                {fileError && <p className="text-sm text-red-600">{fileError}</p>}
-                            </div>
-                            <DialogFooter>
-                                <Button variant="outline" onClick={() => setOpenDialog(false)}>Cancel</Button>
-                                <Button onClick={handleSubmitDocument} disabled={isPending}>
-                                    {isPending ? "Uploading..." : "Upload Document"}
-                                </Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
-                </div>
                 <div className="flex justify-center font-bold text-2xl gap-1 mb-4"><File className="h-8 mr-1" /><span>Travel Documents</span></div>
                 <InputGroup className="mb-4">
                     <InputGroupInput placeholder="Search Document..." onChange={(e) => setSearch(e.target.value)} value={search} />
@@ -234,35 +234,35 @@ function EmployeeTravelDocuments() {
                 </Table>
             </Card>
             {data && data.totalPages >= 1 && (
-        <div className="mt-8 flex justify-center">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.max(1, prev.pageNumber - 1) }))}
-                  disabled={paged.pageNumber === 1}
-                />
-              </PaginationItem>
-              {Array.from({ length: data.totalPages }, (_, i) => i + 1).map((page) => (
-                <PaginationItem key={page}>
-                  <PaginationLink
-                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: page }))}
-                    isActive={paged.pageNumber === page}
-                  >
-                    {page}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.min(data.totalPages, prev.pageNumber + 1) }))}
-                  disabled={paged.pageNumber === data.totalPages}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
-      )}
+                <div className="mt-8 flex justify-center">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.max(1, prev.pageNumber - 1) }))}
+                                    disabled={paged.pageNumber === 1}
+                                />
+                            </PaginationItem>
+                            {Array.from({ length: data.totalPages }, (_, i) => i + 1).map((page) => (
+                                <PaginationItem key={page}>
+                                    <PaginationLink
+                                        onClick={() => setPaged(prev => ({ ...prev, pageNumber: page }))}
+                                        isActive={paged.pageNumber === page}
+                                    >
+                                        {page}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            ))}
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => setPaged(prev => ({ ...prev, pageNumber: Math.min(data.totalPages, prev.pageNumber + 1) }))}
+                                    disabled={paged.pageNumber === data.totalPages}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            )}
         </div>
     )
 }
