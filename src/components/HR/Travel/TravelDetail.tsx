@@ -130,87 +130,93 @@ function TravelDetail() {
                 </Card>
                 <div className="font-bold flex justify-center text-2xl border-b-2 border-t-2 border-border m-4 py-2">Travelers</div>
                 <div className="rounded-lg border border-border">
-                <Table>
-                    <TableHeader>
-                        <TableRow className="hover:bg-transparent">
-                            <TableCell className="font-bold">Image</TableCell>
-                            <TableCell className="font-bold">Traveler Name</TableCell>
-                            <TableCell className="font-bold">Email</TableCell>
-                            <TableCell className="font-bold">Designation</TableCell>
-                            <TableCell className="font-bold">Action</TableCell>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {
-                            travel?.travelers && travel?.travelers?.length > 0 ?
-                                travel?.travelers?.map((t, idx) => (
-                                    <TravelerCard
-                                        traveler={t.travelerr}
-                                        handleOpenExpense={handleOpenExpense}
-                                        handleOpenDocument={handleOpenDocument}
-                                        key={t.id} />
-                                ))
-                                :
-                                (
-                                    <TableRow className="hover:bg-transparent">
-                                        <TableCell colSpan={5} >
-                                            <div className="flex justify-center font-semibold text-destructive">
-                                                No Travelers
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                )
-                        }
-                    </TableBody>
-                </Table>
+                    <Table>
+                        <TableHeader>
+                            <TableRow className="hover:bg-transparent">
+                                <TableCell className="font-bold">Image</TableCell>
+                                <TableCell className="font-bold">Traveler Name</TableCell>
+                                <TableCell className="font-bold">Email</TableCell>
+                                <TableCell className="font-bold">Designation</TableCell>
+                                <TableCell className="font-bold">Action</TableCell>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {
+                                travel?.travelers && travel?.travelers?.length > 0 ?
+                                    travel?.travelers?.map((t, idx) => (
+                                        <TravelerCard
+                                            traveler={t.travelerr}
+                                            handleOpenExpense={handleOpenExpense}
+                                            handleOpenDocument={handleOpenDocument}
+                                            key={t.id} />
+                                    ))
+                                    :
+                                    (
+                                        <TableRow className="hover:bg-transparent">
+                                            <TableCell colSpan={5} >
+                                                <div className="flex justify-center font-semibold text-destructive">
+                                                    No Travelers
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    )
+                            }
+                        </TableBody>
+                    </Table>
                 </div>
-                <div className="flex justify-center p-3 font-bold text-2xl border-t-2 border-b-2 border-border m-3">
-                    Search Traveler
-                </div>
-                <div>
-                    <InputGroup className="">
-                        <InputGroupInput placeholder="Search Traveler..." onChange={handleChange} value={searchTerm} />
-                        <InputGroupAddon>
-                            <Search />
-                        </InputGroupAddon>
-                        <InputGroupAddon align="inline-end">{travelers?.length || 0} results</InputGroupAddon>
-                    </InputGroup>
-                </div>
-                <div className="my-4">
-                    {
-                        !loading
-                            ? (travelers && travelers?.length > 0
-                                ? (
-                                    <ItemGroup className="p-3">
-                                        {
-                                            travelers?.map((t) => (
-                                                <EmployeesCard
-                                                    key={t.id}
-                                                    t={t}
-                                                    handleAddTraveler={handleAddTraveler}
-                                                    isPending={isPending}
-                                                />
-                                            ))
-                                        }
-                                    </ItemGroup>
-                                )
-                                : (<Alert>
-                                    <InfoIcon />
-                                    <AlertTitle>No Travelers Found</AlertTitle>
-                                    <AlertDescription>Try searching with different name</AlertDescription>
-                                </Alert>)
-                            )
-                            : (
-                                <div className="flex flex-col gap-4 p-3">
-                                    {
-                                        Array.from({ length: 5 }).map((_, i) => (
-                                            <SkeletonAvatar key={i} />
-                                        ))
-                                    }
-                                </div>
-                            )
-                    }
-                </div>
+                {
+                    new Date() < new Date(travel?.startDate || "") &&
+                    <div>
+                        <div className="flex justify-center p-3 font-bold text-2xl border-t-2 border-b-2 border-border m-3">
+                            Search Traveler
+                        </div>
+                        <div>
+                            <InputGroup className="">
+                                <InputGroupInput placeholder="Search Traveler..." onChange={handleChange} value={searchTerm} />
+                                <InputGroupAddon>
+                                    <Search />
+                                </InputGroupAddon>
+                                <InputGroupAddon align="inline-end">{travelers?.length || 0} results</InputGroupAddon>
+                            </InputGroup>
+                        </div>
+                        <div className="my-4">
+                            {
+                                !loading
+                                    ? (travelers && travelers?.length > 0
+                                        ? (
+                                            <ItemGroup className="p-3">
+                                                {
+                                                    travelers?.map((t) => (
+                                                        <EmployeesCard
+                                                            key={t.id}
+                                                            t={t}
+                                                            handleAddTraveler={handleAddTraveler}
+                                                            isPending={isPending}
+                                                        />
+                                                    ))
+                                                }
+                                            </ItemGroup>
+                                        )
+                                        : (<Alert>
+                                            <InfoIcon />
+                                            <AlertTitle>No Travelers Found</AlertTitle>
+                                            <AlertDescription>Try searching with different name</AlertDescription>
+                                        </Alert>)
+                                    )
+                                    : (
+                                        <div className="flex flex-col gap-4 p-3">
+                                            {
+                                                Array.from({ length: 5 }).map((_, i) => (
+                                                    <SkeletonAvatar key={i} />
+                                                ))
+                                            }
+                                        </div>
+                                    )
+                            }
+                        </div>
+                    </div>
+                }
+
             </div>
             <EditTravelForm
                 open={editDialogOpen}

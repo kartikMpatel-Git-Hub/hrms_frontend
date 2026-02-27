@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import type { TravelResponse } from '../../../type/Types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { IndianRupee, MapPin, CalendarClock, Files } from 'lucide-react'
+import { IndianRupee, MapPin, CalendarClock, Files, Eye } from 'lucide-react'
 import { TableCell, TableRow } from '@/components/ui/table'
 
 function EmployeeTravelCard({ travel, idx }: { travel: TravelResponse, idx: number }) {
@@ -14,6 +14,10 @@ function EmployeeTravelCard({ travel, idx }: { travel: TravelResponse, idx: numb
 
     const handleViewTravelDocuments = () => {
         navigator(`./${travel.id}/documents`)
+    }
+
+    const handleViewTravelDetails = () => {
+        navigator(`./${travel.id}`)
     }
 
     const formatDate = (date: Date | string) => {
@@ -38,6 +42,14 @@ function EmployeeTravelCard({ travel, idx }: { travel: TravelResponse, idx: numb
             </TableCell>
             <TableCell>
                 <div className="flex gap-2">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleViewTravelDetails}
+                        title="View Details"
+                    >
+                        <Eye className="h-4 w-4" />
+                    </Button>
                     <Button
                         variant="outline"
                         size="sm"

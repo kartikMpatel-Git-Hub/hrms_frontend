@@ -2,9 +2,11 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Field } from "@/components/ui/field"
 import { TableCell, TableRow } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/context/AuthContext"
 import type { ReferredResponseDto } from "@/type/Types"
-import { Edit, Eye, File, UserPlus } from "lucide-react"
+import { Calendar, Edit, ExternalLink, Eye, Mail, MessageSquareText, User, UserPlus } from "lucide-react"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
@@ -28,23 +30,102 @@ function JobReferralCard({ referral, idx, handleStatusChange, isPending }: { ref
                             <Eye />
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-sm">
-                        <DialogHeader>
-                            <DialogTitle className="flex p-1 gap-1"><UserPlus /> View Referral Details</DialogTitle>
-                            <DialogDescription>View the details of this referral.</DialogDescription>
-                        </DialogHeader>
-                        <div className="flex flex-col gap-2">
-                            <div className="flex gap-2"><span className="font-bold italic">Name:</span> {referral?.referedPersonName}</div>
-                            <div className="flex gap-2"><span className="font-bold italic">Email:</span> {referral?.referedPersonEmail}</div>
-                            <div className="flex gap-2"><span className="font-bold italic">Status:</span> {referral?.status}</div>
-                            <div className="flex gap-2"><span className="font-bold italic">Note:</span> {referral?.note}</div>
-                            <div className="flex gap-2"><span className="font-bold italic">Referred At:</span> {referral?.referedAt?.toString().substring(0, 10)}</div>
-                            <div className="flex gap-2"><span className="font-bold italic">Referred By:</span> {referral?.referer}</div>
-                            <div className="flex justify-center mt-5">
-                                <Button className="w-full" onClick={() => window.open(referral?.cvUrl, "_blank")}>
-                                    <File /> View CV
-                                </Button>
+                    <DialogContent className="sm:max-w-md p-0 overflow-hidden rounded-xl">
+                        {/* Header */}
+                        <div className="bg-linear-to-r from-primary/10 via-primary/5 to-transparent px-6 pt-6 pb-4">
+                            <DialogHeader className="space-y-2">
+                                <div className="flex items-center justify-between">
+                                    <DialogTitle className="flex items-center gap-2 text-lg font-bold tracking-tight">
+                                        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/15">
+                                            <UserPlus className="w-4 h-4 text-primary" />
+                                        </div>
+                                        Referral Details
+                                    </DialogTitle>
+                                    <Badge
+                                        variant={
+                                            referral?.status === "Hired" ? "success"
+                                            : referral?.status === "Rejected" ? "destructive"
+                                            : referral?.status === "Interview" || referral?.status === "Shortlisted" ? "warning"
+                                            : "secondary"
+                                        }
+                                        className="text-xs px-2.5 py-1 rounded-full"
+                                    >
+                                        {referral?.status}
+                                    </Badge>
+                                </div>
+                                <DialogDescription className="text-muted-foreground text-sm">
+                                    Complete information about this referral
+                                </DialogDescription>
+                            </DialogHeader>
+                        </div>
+
+                        <Separator />
+
+                        {/* Body */}
+                        <div className="px-6 pb-6 pt-2 space-y-4">
+                            {/* Name & Email Row */}
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+                                    <div className="flex items-center justify-center w-9 h-9 rounded-md bg-primary/10 shrink-0 mt-0.5">
+                                        <User className="w-4 h-4 text-primary" />
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Name</p>
+                                        <p className="text-sm font-semibold mt-0.5 wrap-break-word">{referral?.referedPersonName}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+                                    <div className="flex items-center justify-center w-9 h-9 rounded-md bg-accent shrink-0 mt-0.5">
+                                        <Mail className="w-4 h-4 text-accent-foreground" />
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Email</p>
+                                        <p className="text-sm font-semibold mt-0.5 wrap-break-word">{referral?.referedPersonEmail}</p>
+                                    </div>
+                                </div>
                             </div>
+
+                            {/* Referred By & Date Row */}
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+                                    <div className="flex items-center justify-center w-9 h-9 rounded-md bg-secondary shrink-0 mt-0.5">
+                                        <UserPlus className="w-4 h-4 text-secondary-foreground" />
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Referred By</p>
+                                        <p className="text-sm font-semibold mt-0.5 wrap-break-word">{referral?.referer}</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+                                    <div className="flex items-center justify-center w-9 h-9 rounded-md bg-muted shrink-0 mt-0.5">
+                                        <Calendar className="w-4 h-4 text-muted-foreground" />
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Referred At</p>
+                                        <p className="text-sm font-semibold mt-0.5">{referral?.referedAt?.toString().substring(0, 10)}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Note */}
+                            <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <div className="flex items-center justify-center w-9 h-9 rounded-md bg-muted shrink-0">
+                                        <MessageSquareText className="w-4 h-4 text-muted-foreground" />
+                                    </div>
+                                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Note</p>
+                                </div>
+                                <p className="text-sm leading-relaxed text-foreground/80 pl-11 wrap-break-word">{referral?.note}</p>
+                            </div>
+
+                            {/* View CV Button */}
+                            <Button
+                                className="w-full gap-2"
+                                onClick={() => window.open(referral?.cvUrl, "_blank")}
+                            >
+                                <ExternalLink className="w-4 h-4" />
+                                View CV
+                            </Button>
                         </div>
                     </DialogContent>
                 </Dialog>

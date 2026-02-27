@@ -87,3 +87,8 @@ export const UpdateGameDetail = async (gameId: number, dto: GameCreateDto): Prom
     const response = await api.put<GameResponseDto>(`/game/${gameId}`, dto)
     return response.data
 }
+
+export const DeleteGameSlot = async (gameId: number, slotId: number): Promise<{ message: string }> => {
+    const response = await api.delete<{ message: string }>(`/game/${gameId}/slots/${slotId}/delete`)
+    return response.data
+}

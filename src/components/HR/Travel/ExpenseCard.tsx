@@ -29,6 +29,7 @@ function ExpenseCard({ expense, travelId, travelerId, idx }: {
         onSuccess: (res) => {
             queryClient.invalidateQueries({ queryKey: ["travel-traveler-expense"] })
             toast.success("Expense status updated successfully")
+            setIsEditOpen(false)
             // console.log(res);
         },
         onError: (err) => {
@@ -57,7 +58,6 @@ function ExpenseCard({ expense, travelId, travelerId, idx }: {
         }
         const expenseId = expense.id
         mutate({ travelId, travelerId, expenseId, dto: expenseStatus })
-        setIsEditOpen(false)
     }
 
     return (
